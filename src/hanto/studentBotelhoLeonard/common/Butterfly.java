@@ -13,27 +13,30 @@ import hanto.common.HantoPlayerColor;
  */
 public class Butterfly implements HantoPiece{
 	private HantoPieceType type;
+	private HantoPlayerColor color;
 	/**
-	 * 
+	 * Default constructor for the Butterfly piece.
 	 */
-	
-	
 	public Butterfly() {
-		// TODO Auto-generated constructor stub
 		type = HantoPieceType.BUTTERFLY;
+	}
+	/**
+	 * Parameterized constructor for 
+	 * @param color the color of the player who owns to piece.
+	 */
+	public Butterfly(HantoPlayerColor color) {
+		this.type = HantoPieceType.BUTTERFLY;
+		this.color = color;
 	}
 	
 
 	@Override
 	public HantoPlayerColor getColor() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.color;
 	}
 
 	@Override
 	public HantoPieceType getType() {
-		// TODO Auto-generated method stub
 		return this.type;
 	}
-
 }
