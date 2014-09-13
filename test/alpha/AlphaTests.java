@@ -8,7 +8,7 @@ public class AlphaTests {
 
 	@Test
 	public void test() {
-		fail("Not yet implemented");
+		//Butterfly b1 = new Butterfly();
 	}
 
 }
