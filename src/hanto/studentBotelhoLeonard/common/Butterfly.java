@@ -3,6 +3,7 @@
  */
 package hanto.studentBotelhoLeonard.common;
 
+import hanto.common.HantoCoordinate;
 import hanto.common.HantoPiece;
 import hanto.common.HantoPieceType;
 import hanto.common.HantoPlayerColor;
@@ -14,12 +15,7 @@ import hanto.common.HantoPlayerColor;
 public class Butterfly implements HantoPiece{
 	private HantoPieceType type;
 	private HantoPlayerColor color;
-	/**
-	 * Default constructor for the Butterfly piece.
-	 */
-	public Butterfly() {
-		type = HantoPieceType.BUTTERFLY;
-	}
+
 	/**
 	 * Parameterized constructor for 
 	 * @param color the color of the player who owns to piece.
@@ -39,4 +35,6 @@ public class Butterfly implements HantoPiece{
 	public HantoPieceType getType() {
 		return this.type;
 	}
+
+
 }
