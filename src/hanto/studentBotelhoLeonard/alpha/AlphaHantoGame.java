@@ -26,17 +26,38 @@ public class AlphaHantoGame implements HantoGame {
 			HantoCoordinate to) throws HantoException {
 		// We only have butterflies, we realize this isn't technically extensible
 		// but no other pieces exist yet so TDD dictates we must do it this way. 
-		if (pieceType != HantoPieceType.BUTTERFLY) throw new HantoException("Unrecognized Piece Type");
-		//System.out.println(board.getBoard().size());
-		if ((board.getBoard().size() == 0) && (to.getX() != 0) && (to.getY() != 0)) throw new HantoException("Invalid Position to move to");
+		MoveResult result;
 		
-		Butterfly butterfly = new Butterfly(HantoPlayerColor.BLUE);
-		board.addPiece(to, butterfly);
+		// This line is 100% alpha hanto code specific.
+		if (from != null) throw new HantoException("Can't move pieces in Alpha Hanto. Only place new pieces.");
+		
+		if (pieceType != HantoPieceType.BUTTERFLY) throw new HantoException("Unrecognized Piece Type");
+		
+		if ((board.getBoard().isEmpty()) && (to.getX() != 0) && (to.getY() != 0)) throw new HantoException("Invalid Position to move to");
+		
+		HantoPlayerColor color;
+		
+		if (turnCount % 2 ==  0) { // if the turn count is even - blue should go
+			color = HantoPlayerColor.BLUE;
+		}
+		else { // turn count is odd - red should go
+			color = HantoPlayerColor.RED;
+		}
+		
+		Butterfly butterfly = new Butterfly(color);
+		board.addPiece(to, butterfly, turnCount);
 
 		turnCount++;
-		return MoveResult.OK;
+		
+		if (turnCount == 2) { // Alpha Hanto ends after turn 2
+			result = MoveResult.DRAW;
+		}
+		else {
+			result = MoveResult.OK;
+		}
+		
+		return result;
 	}
-
 
 
 	@Override
@@ -44,11 +65,29 @@ public class AlphaHantoGame implements HantoGame {
 		return board.getPieceAt(where);
 	}
 
+	
 	@Override
 	public String getPrintableBoard() {
-		// TODO Auto-generated method stub
+		// Re-ordering map to be in order to print, not order of addition
+//		HantoBoard orderedBoard = new HantoBoard();
+//		HantoPiece piece;
+//		
+//		
+//		sortOnY()		
+//		sortOnX()
+//		
+//		for (int y = turnCount; y > -(turnCount); y--) {
+//			for (int x = -(turnCount); x < turnCount; x++) {
+//				piece = board.getPieceAt(new PieceCoordinate(x, y));
+//				if (piece != null) {
+//					// print piece
+//				}
+//			}
+//		}
+		
 		return null;
 	}
+	
 	
 	/**
 	 * @return the board

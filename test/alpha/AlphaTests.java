@@ -2,7 +2,6 @@ package alpha;
 
 import static org.junit.Assert.*;
 import hanto.HantoGameFactory;
-import hanto.common.HantoCoordinate;
 import hanto.common.HantoException;
 import hanto.common.HantoGame;
 import hanto.common.HantoGameID;
@@ -19,17 +18,15 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.List;
 
 public class AlphaTests {
 	// Test Butterfly exists
-	private static HantoGameFactory factory;
+	//private static HantoGameFactory factory;
 	private HantoGame game;
 	
 	@BeforeClass
 	public static void initializeClass() {
-		factory = HantoGameFactory.getInstance();
+		//factory = HantoGameFactory.getInstance();
 	}
 
 	@Before
@@ -70,7 +67,7 @@ public class AlphaTests {
 	@Test
 	public void testButterflyIsNotBlue() {		
 		Butterfly butterfly = new Butterfly(HantoPlayerColor.RED);
-		assertNotEquals(HantoPlayerColor.BLUE, butterfly.getColor());
+		assertNotSame(HantoPlayerColor.BLUE, butterfly.getColor());
 	}
 
 
@@ -97,18 +94,18 @@ public class AlphaTests {
 	// Notion of board maintaining pieces
 
 	@Test
-	public void testAddPieceToBoard() {
+	public void testAddPieceToBoard() throws HantoException {
 		HantoBoard hantoBoard = new HantoBoard();
-		hantoBoard.addPiece(new PieceCoordinate(0,0), new Butterfly(HantoPlayerColor.RED));
+		hantoBoard.addPiece(new PieceCoordinate(0,0), new Butterfly(HantoPlayerColor.RED), 0);
 		assertFalse(hantoBoard.getBoard().isEmpty());
 	}
 
 	@Test
-	public void testAddPieceToBoardAtPostion() {
+	public void testAddPieceToBoardAtPostion() throws HantoException {
 		HantoBoard hantoBoard = new HantoBoard();
 		Butterfly butterfly = new Butterfly(HantoPlayerColor.RED);
 		PieceCoordinate coordinate = new PieceCoordinate(0,0);
-		hantoBoard.addPiece(coordinate, butterfly);
+		hantoBoard.addPiece(coordinate, butterfly, 0);
 		assertEquals(butterfly, hantoBoard.getPieceAt(coordinate));
 	}
 
@@ -166,26 +163,68 @@ public class AlphaTests {
 	}
 	
 	@Test
-	public void testSecondPlayerIsRed() throws HantoException {
-		HantoGame hantoGame = HantoGameFactory.makeHantoGame(HantoGameID.ALPHA_HANTO);
-		PieceCoordinate destinationCoord = new PieceCoordinate(0, 0);
-		hantoGame.makeMove(HantoPieceType.BUTTERFLY, null, destinationCoord);
+	public void redPlacesButterflyNextToBlueButterfly() throws HantoException
+	{
+		game.makeMove(HantoPieceType.BUTTERFLY, null, new PieceCoordinate(0, 0));
+		game.makeMove(HantoPieceType.BUTTERFLY, null, new PieceCoordinate(0, 1));
+		final HantoPiece p = game.getPieceAt(new PieceCoordinate(0, 1));
+		assertEquals(HantoPieceType.BUTTERFLY, p.getType());
+		assertEquals(HantoPlayerColor.RED, p.getColor());
 	}
+	
+	@Test
+	public void testCoordinatesAdjacent() {
+		PieceCoordinate coordinate1 = new PieceCoordinate(0,0);
+		PieceCoordinate coordinate2 = new PieceCoordinate(1,0);
+		PieceCoordinate coordinate3 = new PieceCoordinate(1,10);
+		
+		assertTrue(coordinate1.isAdjacentTo(coordinate2));
+		assertFalse(coordinate1.isAdjacentTo(coordinate3));
+	}
+	
+	@Test
+	public void testSameCoordinatesNotAdjacent() {
+		PieceCoordinate coordinate1 = new PieceCoordinate(0,0);
+		PieceCoordinate coordinate2 = new PieceCoordinate(0,0);
+		assertFalse(coordinate1.isAdjacentTo(coordinate2));
+	}
+	
+	@Test
+	public void testCoordinatesNotAdjacent() {
+		PieceCoordinate coordinate1 = new PieceCoordinate(0, 0);
+		PieceCoordinate coordinate2 = new PieceCoordinate(4, 4);
+		assertFalse(coordinate1.isAdjacentTo(coordinate2));
+	}
+	
+	@Test(expected=HantoException.class)
+	public void redPlacesButterflyNotNextToBlueButterfly() throws HantoException
+	{
+		game.makeMove(HantoPieceType.BUTTERFLY, null, new PieceCoordinate(0, 0));
+		game.makeMove(HantoPieceType.BUTTERFLY, null, new PieceCoordinate(5, 5));
 
-	//	@Test
-	//	public void testPlaceButterflyOnBoard() {		
-	//		Butterfly butterfly = new Butterfly(HantoPlayerColor.BLUE);
-	//		HantoGameFactory.getInstance();
-	//		HantoGame hantoGame = HantoGameFactory.makeHantoGame(HantoGameID.ALPHA_HANTO);
-	//		
-	//		MoveResult moveResult = hantoGame.makeMove(butterfly.getType(), null, destinationCoord);
-	//		assertNotEquals(HantoPlayerColor.BLUE, butterfly.getColor());
-	//		
-	//		@Override
-	//		public MoveResult makeMove(HantoPieceType pieceType, HantoCoordinate from,
-	//				HantoCoordinate to) throws HantoException {
-	//			// TODO Auto-generated method stub
-	//			return null;
-	//		}
-	//	}
+	}
+	
+	@Test
+	public void redMakesValidSecondMoveAndGameIsDrawn() throws HantoException
+	{
+		game.makeMove(HantoPieceType.BUTTERFLY, null, new PieceCoordinate(0, 0));
+		final MoveResult mr = game.makeMove(HantoPieceType.BUTTERFLY, null, new PieceCoordinate(-1, 1));
+		assertEquals(MoveResult.DRAW, mr);
+	}
+	
+	
+	@Test(expected=HantoException.class)
+	public void redPlacesButterflyNonAdjacentToBlueButterfly() throws HantoException
+	{
+		game.makeMove(HantoPieceType.BUTTERFLY, null, new PieceCoordinate(0, 0));
+		game.makeMove(HantoPieceType.BUTTERFLY, null, new PieceCoordinate(0, 2));
+	}
+	
+	
+	@Test(expected=HantoException.class)
+	public void attemptToMoveRatherThanPlace() throws HantoException
+	{
+		game.makeMove(HantoPieceType.BUTTERFLY, new PieceCoordinate(0, 1), new PieceCoordinate(0, 0));
+	}
+	
 }

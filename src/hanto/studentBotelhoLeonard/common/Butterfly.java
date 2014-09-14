@@ -3,7 +3,6 @@
  */
 package hanto.studentBotelhoLeonard.common;
 
-import hanto.common.HantoCoordinate;
 import hanto.common.HantoPiece;
 import hanto.common.HantoPieceType;
 import hanto.common.HantoPlayerColor;
