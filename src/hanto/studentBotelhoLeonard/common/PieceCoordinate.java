@@ -95,5 +95,9 @@ public class PieceCoordinate implements HantoCoordinate {
 		return true;
 	}
 	
+	public String toString() {
+		return "(" + x + ", " + y + ")";
+	}
+	
 
 }

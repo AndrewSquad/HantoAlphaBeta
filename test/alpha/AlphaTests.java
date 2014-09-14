@@ -15,19 +15,12 @@ import hanto.studentBotelhoLeonard.common.HantoBoard;
 import hanto.studentBotelhoLeonard.common.PieceCoordinate;
 
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 
 public class AlphaTests {
-	// Test Butterfly exists
-	//private static HantoGameFactory factory;
+
 	private HantoGame game;
-	
-	@BeforeClass
-	public static void initializeClass() {
-		//factory = HantoGameFactory.getInstance();
-	}
 
 	@Before
 	public void setup()	{

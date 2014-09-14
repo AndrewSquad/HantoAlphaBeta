@@ -68,24 +68,7 @@ public class AlphaHantoGame implements HantoGame {
 	
 	@Override
 	public String getPrintableBoard() {
-		// Re-ordering map to be in order to print, not order of addition
-//		HantoBoard orderedBoard = new HantoBoard();
-//		HantoPiece piece;
-//		
-//		
-//		sortOnY()		
-//		sortOnX()
-//		
-//		for (int y = turnCount; y > -(turnCount); y--) {
-//			for (int x = -(turnCount); x < turnCount; x++) {
-//				piece = board.getPieceAt(new PieceCoordinate(x, y));
-//				if (piece != null) {
-//					// print piece
-//				}
-//			}
-//		}
-		
-		return null;
+		return board.toString();
 	}
 	
 	

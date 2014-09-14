@@ -6,6 +6,7 @@ package hanto.studentBotelhoLeonard.common;
 import hanto.common.HantoCoordinate;
 import hanto.common.HantoException;
 import hanto.common.HantoPiece;
+import hanto.common.HantoPlayerColor;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -24,7 +25,7 @@ public class HantoBoard {
 	public HantoBoard() {
 		board = new HashMap<HantoCoordinate, HantoPiece>();
 	}
-	
+
 	/**
 	 * @return the board
 	 */
@@ -40,31 +41,60 @@ public class HantoBoard {
 	public HantoPiece getPieceAt(HantoCoordinate coordinate) {
 		return board.get(coordinate);
 	}
-	
+
 	// Rules
-	
+
 	// Place a new piece next to your own unless its first turn
 	public boolean validateNewPieceAdd(HantoCoordinate coordinate, HantoPiece piece, int turnCount) {
 		PieceCoordinate origin = new PieceCoordinate(0, 0);
-		boolean isAdjacent = origin.isAdjacentTo(new PieceCoordinate(coordinate));
-		
+		boolean isAdjacentToOrigin = origin.isAdjacentTo(new PieceCoordinate(coordinate));
+
 		if (turnCount == 0 && coordinate.getX() == 0 && coordinate.getY() == 0) return true;
-		else if (turnCount == 1 && isAdjacent) return true;
-		else if (turnCount > 1) return addedNextToSameColor(coordinate, piece);
+		else if (turnCount == 1 && isAdjacentToOrigin) return true;
+		else if (turnCount > 1) return isAdjacent(coordinate, piece);
 		return false;
 	}
 
-	
-	private boolean addedNextToSameColor(HantoCoordinate coordinate, HantoPiece piece) {
+	private boolean isAdjacent(HantoCoordinate coordinate, HantoPiece piece) {
 		Iterator<Entry<HantoCoordinate, HantoPiece>> pieces = board.entrySet().iterator();
 		PieceCoordinate next;
 		while(pieces.hasNext()) {
-			 next = (PieceCoordinate) pieces.next();
-			 if (next.isAdjacentTo(coordinate)) {
-				 HantoPiece otherPiece = board.get(next);
-				 if ((otherPiece.getColor() == piece.getColor())) return true;
-			 }
+			next = (PieceCoordinate) pieces.next();
+			if (next.isAdjacentTo(coordinate)) {
+				return true;			 
+			}
 		}
 		return false;
 	}
+	
+	public String toString() {
+		String result = "";
+		
+		Iterator<Entry<HantoCoordinate, HantoPiece>> pieces = board.entrySet().iterator();
+		HantoPiece piece;
+		PieceCoordinate coordinate;
+		String color;
+		while(pieces.hasNext()) {
+			Entry<HantoCoordinate, HantoPiece> entry = pieces.next();
+			coordinate = (PieceCoordinate) entry.getKey();
+			piece = board.get(coordinate);
+			color = piece.getColor() == HantoPlayerColor.RED ? "RED" : "BLUE";
+			result += piece.getType().getPrintableName() + " " + color + " " + coordinate.toString() + "\n";
+		}
+		return result;
+	}
+
+
+	//	private boolean addedNextToSameColor(HantoCoordinate coordinate, HantoPiece piece) {
+	//		Iterator<Entry<HantoCoordinate, HantoPiece>> pieces = board.entrySet().iterator();
+	//		PieceCoordinate next;
+	//		while(pieces.hasNext()) {
+	//			 next = (PieceCoordinate) pieces.next();
+	//			 if (next.isAdjacentTo(coordinate)) {
+	//				 HantoPiece otherPiece = board.get(next);
+	//				 if ((otherPiece.getColor() == piece.getColor())) return true;
+	//			 }
+	//		}
+	//		return false;
+	//	}
 }

@@ -7,20 +7,18 @@ import hanto.common.HantoPieceType;
 import hanto.common.HantoPlayerColor;
 
 /**
- * @author Andrew & Andrew | Leonard and Botelho
+ * @author Andy
  *
  */
-public class Butterfly extends HantoGamePiece {
-
+public class Sparrow extends HantoGamePiece {
 
 	/**
 	 * Parameterized constructor for 
 	 * @param color the color of the player who owns to piece.
 	 */
-	public Butterfly(HantoPlayerColor color) {
-		this.type = HantoPieceType.BUTTERFLY;
+	public Sparrow(HantoPlayerColor color) {
+		this.type = HantoPieceType.SPARROW;
 		this.color = color;
 	}
-	
 
 }
