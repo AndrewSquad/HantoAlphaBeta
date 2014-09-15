@@ -34,7 +34,9 @@ public class HantoBoard {
 	}
 
 	public void addPiece(HantoCoordinate coordinate, HantoPiece piece, int turnCount) throws HantoException{
-		if (!validateNewPieceAdd(coordinate, piece, turnCount)) throw new HantoException("Adding new piece must be next to piece of same color!");
+		if (!validateNewPieceAdd(coordinate, piece, turnCount)) {
+			throw new HantoException("Invalid position!");
+		}
 		board.put(coordinate, piece);
 	}
 
@@ -44,28 +46,29 @@ public class HantoBoard {
 
 	// Rules
 
-	// Place a new piece next to your own unless its first turn
+	// Place a new piece next to another piece unless its first turn
 	public boolean validateNewPieceAdd(HantoCoordinate coordinate, HantoPiece piece, int turnCount) {
-		PieceCoordinate origin = new PieceCoordinate(0, 0);
-		boolean isAdjacentToOrigin = origin.isAdjacentTo(new PieceCoordinate(coordinate));
-
+		// if first turn, piece must be put in center of board
 		if (turnCount == 0 && coordinate.getX() == 0 && coordinate.getY() == 0) return true;
-		else if (turnCount == 1 && isAdjacentToOrigin) return true;
-		else if (turnCount > 1) return isAdjacent(coordinate, piece);
-		return false;
+
+		// otherwise, a new piece must be adjacent to an existing piece
+		return isAdjacentToAnyPiece(coordinate, piece);
 	}
 
-	private boolean isAdjacent(HantoCoordinate coordinate, HantoPiece piece) {
+	
+	private boolean isAdjacentToAnyPiece(HantoCoordinate coordinate, HantoPiece piece) {
 		Iterator<Entry<HantoCoordinate, HantoPiece>> pieces = board.entrySet().iterator();
 		PieceCoordinate next;
 		while(pieces.hasNext()) {
-			next = (PieceCoordinate) pieces.next();
+			Entry<HantoCoordinate, HantoPiece> entry = pieces.next();
+			next = (PieceCoordinate) entry.getKey();
 			if (next.isAdjacentTo(coordinate)) {
 				return true;			 
 			}
 		}
 		return false;
 	}
+	
 	
 	public String toString() {
 		String result = "";
@@ -84,7 +87,7 @@ public class HantoBoard {
 		return result;
 	}
 
-
+	// Will be used in later versions...
 	//	private boolean addedNextToSameColor(HantoCoordinate coordinate, HantoPiece piece) {
 	//		Iterator<Entry<HantoCoordinate, HantoPiece>> pieces = board.entrySet().iterator();
 	//		PieceCoordinate next;

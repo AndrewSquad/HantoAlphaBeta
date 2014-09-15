@@ -129,11 +129,8 @@ public class AlphaTests {
 	
 	@Test
 	public void testAlphaHantoGetPieceAt() throws HantoException {
-		Butterfly butterfly = new Butterfly(HantoPlayerColor.BLUE);
-		HantoGameFactory.getInstance();
-		HantoGame hantoGame = HantoGameFactory.makeHantoGame(HantoGameID.ALPHA_HANTO);
 		PieceCoordinate destinationCoord = new PieceCoordinate(0, 0);
-		MoveResult moveResult = hantoGame.makeMove(butterfly.getType(), null, destinationCoord);		
+		MoveResult moveResult = game.makeMove(HantoPieceType.BUTTERFLY, null, destinationCoord);		
 		assertEquals(MoveResult.OK, moveResult);
 	}
 	
@@ -194,7 +191,6 @@ public class AlphaTests {
 	{
 		game.makeMove(HantoPieceType.BUTTERFLY, null, new PieceCoordinate(0, 0));
 		game.makeMove(HantoPieceType.BUTTERFLY, null, new PieceCoordinate(5, 5));
-
 	}
 	
 	@Test

@@ -27,16 +27,13 @@ public class AlphaHantoGame implements HantoGame {
 		// We only have butterflies, we realize this isn't technically extensible
 		// but no other pieces exist yet so TDD dictates we must do it this way. 
 		MoveResult result;
+		HantoPlayerColor color;
 		
 		// This line is 100% alpha hanto code specific.
 		if (from != null) throw new HantoException("Can't move pieces in Alpha Hanto. Only place new pieces.");
 		
 		if (pieceType != HantoPieceType.BUTTERFLY) throw new HantoException("Unrecognized Piece Type");
-		
-		if ((board.getBoard().isEmpty()) && (to.getX() != 0) && (to.getY() != 0)) throw new HantoException("Invalid Position to move to");
-		
-		HantoPlayerColor color;
-		
+						
 		if (turnCount % 2 ==  0) { // if the turn count is even - blue should go
 			color = HantoPlayerColor.BLUE;
 		}
