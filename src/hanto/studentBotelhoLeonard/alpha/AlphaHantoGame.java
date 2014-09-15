@@ -19,14 +19,25 @@ import hanto.common.MoveResult;
 import hanto.studentBotelhoLeonard.common.Butterfly;
 import hanto.studentBotelhoLeonard.common.HantoBoard;
 
+/**
+ * An implementation of the HantoGame interface for the Alpha version of Hanto.
+ * Each player can only place 1 butterfly on the board.
+ * @author Andy Botelho and Andrew Leonard
+ *
+ */
 public class AlphaHantoGame implements HantoGame {
 
 	private int turnCount;
 	private HantoBoard board;
 
+	/**
+	 * Constructor for AlphaHantoGame.
+	 * Creates a HantoBoard telling it that each player gets 1 butterfly.
+	 */
 	public AlphaHantoGame() {
 		turnCount = 0;
 		
+		// Tell the HantoBoard how many of each pieces a player gets
 		Map<HantoPieceType, Integer> pieceLimits = new HashMap<HantoPieceType, Integer>();
 		pieceLimits.put(HantoPieceType.BUTTERFLY, 1);
 		board = new HantoBoard(pieceLimits);
@@ -36,14 +47,14 @@ public class AlphaHantoGame implements HantoGame {
 	@Override
 	public MoveResult makeMove(HantoPieceType pieceType, HantoCoordinate from,
 			HantoCoordinate to) throws HantoException {
-		// We only have butterflies, we realize this isn't technically extensible
-		// but no other pieces exist yet so TDD dictates we must do it this way. 
+
 		MoveResult result;
 		HantoPlayerColor color;
 		
 		// This line is 100% alpha hanto code specific.
 		if (from != null) throw new HantoException("Can't move pieces in Alpha Hanto. Only place new pieces.");
 		
+		// If the given pieceType is not a Butterfly, throw exception
 		if (pieceType != HantoPieceType.BUTTERFLY) throw new HantoException("Unrecognized Piece Type");
 						
 		if (turnCount % 2 ==  0) { // if the turn count is even - blue should go
@@ -54,7 +65,7 @@ public class AlphaHantoGame implements HantoGame {
 		}
 		
 		Butterfly butterfly = new Butterfly(color);
-		board.addPiece(to, butterfly, turnCount);
+		board.addPiece(to, butterfly, turnCount/2);
 
 		turnCount++;
 		

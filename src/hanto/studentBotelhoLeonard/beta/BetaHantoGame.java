@@ -19,12 +19,24 @@ import hanto.studentBotelhoLeonard.common.Butterfly;
 import hanto.studentBotelhoLeonard.common.HantoBoard;
 import hanto.studentBotelhoLeonard.common.Sparrow;
 
+/**
+ * An implementation of the HantoGame interface for the Beta version of Hanto.
+ * Each player gets one Butterfly and five Sparrows. Pieces can only be placed not moved.
+ * It is now possible for there to be a winner and a loser.
+ * @author Andy Botelho and Andrew Leonard
+ *
+ */
 public class BetaHantoGame implements HantoGame {
 	
 	private HantoPlayerColor movesFirst;
 	private int turnCount;
 	private HantoBoard board;
 	
+	/**
+	 * Constructor for BetaHanto. Creates a HantoBoard telling it that each player gets 
+	 * one Butterfly and five Sparrows.
+	 * @param movesFirst a HantoPlayerColor indicating which player goes first.
+	 */
 	public BetaHantoGame(HantoPlayerColor movesFirst) {
 		this.movesFirst = movesFirst;
 		turnCount = 0;
@@ -71,25 +83,8 @@ public class BetaHantoGame implements HantoGame {
 		
 		board.addPiece(to, piece, turnCount/2); // our makeMove logic requires that we increment turncount when either player moves, correcting for external use.
 		
-		// check winning conditions
-		boolean isBlueWinner = board.checkIfLost(HantoPlayerColor.RED);
-		boolean isRedWinner = board.checkIfLost(HantoPlayerColor.BLUE);
-		if (isBlueWinner && isRedWinner) {
-			result = MoveResult.DRAW;
-		}
-		else if (isBlueWinner) {
-			result = MoveResult.BLUE_WINS;
-		}
-		else if (isRedWinner) {
-			result = MoveResult.RED_WINS;
-		}
-		// check for draw
-		else if (!board.anyPiecesLeftToPlay()) {
-			result = MoveResult.DRAW;
-		}
-		else {
-			result = MoveResult.OK;
-		}
+		result = board.determineGameResult();
+
 		turnCount++;
 		return result;
 	}

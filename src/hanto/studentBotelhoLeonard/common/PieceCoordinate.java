@@ -16,7 +16,9 @@ public class PieceCoordinate implements HantoCoordinate {
 	private int y;
 
 	/**
-	 * Constructor for coordinates
+	 * Constructor for a PieceCoordinate
+	 * @param x - the x coordinate of the PieceCoordinate
+	 * @param y - the y coordinate of the PieceCoordinate
 	 */
 	public PieceCoordinate(int x, int y) {
 		this.x = x;
@@ -25,6 +27,7 @@ public class PieceCoordinate implements HantoCoordinate {
 
 	/**
 	 * Copy constructor for coordinates (interface to class)
+	 * @param coordinate the HantoCoordinate we are converting into a PieceCoordinate
 	 */
 	public PieceCoordinate(HantoCoordinate coordinate) {
 		x = coordinate.getX();
@@ -48,6 +51,12 @@ public class PieceCoordinate implements HantoCoordinate {
 	}
 
 
+	/**
+	 * Given another HantoCoordinate object, this method determines if this HantoCoordinate and the other 
+	 * HantoCoordinate are adjacent to each other.
+	 * @param otherCoordinate the other HantoCoordinate to determine adjacency with.
+	 * @return a boolean indicating if the two HantoCoordinates are adjacent.
+	 */
 	public boolean isAdjacentTo(HantoCoordinate otherCoordinate) {
 		if (otherCoordinate.equals(this)) return false;
 

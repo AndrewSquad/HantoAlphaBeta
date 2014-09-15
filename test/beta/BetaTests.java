@@ -225,7 +225,13 @@ public class BetaTests {
 	}
 	
 	@Test(expected=HantoException.class)
-	public void putPieceOnSameTile() throws HantoException {
+	public void putPieceOnSameTileRightAway() throws HantoException {
+		game.makeMove(HantoPieceType.BUTTERFLY, null, new PieceCoordinate(0, 0));
+		game.makeMove(HantoPieceType.BUTTERFLY, null, new PieceCoordinate(0, 0));
+	}
+	
+	@Test(expected=HantoException.class)
+	public void putPieceOnSameTileLater() throws HantoException {
 		game.makeMove(HantoPieceType.BUTTERFLY, null, new PieceCoordinate(0, 0));
 		game.makeMove(HantoPieceType.BUTTERFLY, null, new PieceCoordinate(0, 1));
 		game.makeMove(HantoPieceType.SPARROW, null, new PieceCoordinate(0, 0));
@@ -244,19 +250,7 @@ public class BetaTests {
 		game.makeMove(HantoPieceType.BUTTERFLY, null, new PieceCoordinate(0, 1));
 		game.makeMove(HantoPieceType.BUTTERFLY, null, new PieceCoordinate(1, 1));
 	}
-	
-	@Test
-	public void testBoardHasPiecesLeftToPlay() throws HantoException {
-		Map<HantoPieceType, Integer> pieceLimits = new HashMap<HantoPieceType, Integer>();
-		pieceLimits.put(HantoPieceType.BUTTERFLY, 1);
-		HantoBoard board = new HantoBoard(pieceLimits);
-		
-		board.addPiece(new PieceCoordinate(0,0), new Butterfly(HantoPlayerColor.BLUE), 0);
-		assertTrue(board.anyPiecesLeftToPlay());
-		
-		board.addPiece(new PieceCoordinate(0,1), new Butterfly(HantoPlayerColor.RED), 1);
-		assertFalse(board.anyPiecesLeftToPlay());
-	}
+
 	
 	@Test(expected=HantoException.class)
 	public void noButterflyAfterThreeTurns() throws HantoException {
