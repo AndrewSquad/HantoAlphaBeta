@@ -1,6 +1,8 @@
 package beta;
 
 import static org.junit.Assert.*;
+
+
 import hanto.HantoGameFactory;
 import hanto.common.HantoException;
 import hanto.common.HantoGame;
@@ -100,7 +102,13 @@ public class BetaTests {
 	{
 		game.makeMove(HantoPieceType.BUTTERFLY, new PieceCoordinate(0, 1), new PieceCoordinate(0, 0));
 	}
-	
-	
+
+	@Test(expected=HantoException.class)
+	public void bluePlacesTwoButterflies() throws HantoException 
+	{
+		game.makeMove(HantoPieceType.BUTTERFLY, null, new PieceCoordinate(0, 0));
+		game.makeMove(HantoPieceType.BUTTERFLY, null, new PieceCoordinate(0, 1));
+		game.makeMove(HantoPieceType.BUTTERFLY, null, new PieceCoordinate(1, 1));
+	}
 
 }

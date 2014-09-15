@@ -6,6 +6,7 @@ package hanto.studentBotelhoLeonard.common;
 import hanto.common.HantoCoordinate;
 import hanto.common.HantoException;
 import hanto.common.HantoPiece;
+import hanto.common.HantoPieceType;
 import hanto.common.HantoPlayerColor;
 
 import java.util.HashMap;
@@ -20,33 +21,78 @@ import java.util.Map.Entry;
 public class HantoBoard {
 
 	private Map<HantoCoordinate, HantoPiece> board;
-	//private Set<HantoRules> rules;
+	private Map<HantoPieceType, Integer> bluePiecesLeft;
+	private Map<HantoPieceType, Integer> redPiecesLeft;
 
+	
+	/**
+	 * Constructor for HantoBoard that takes no parameters.  
+	 * Makes a new HashMap, mapping a coordinate to a HantoPiece object.
+	 */
 	public HantoBoard() {
 		board = new HashMap<HantoCoordinate, HantoPiece>();
 	}
+	
+	
+	/**
+	 * 
+	 * @param pieceLimits
+	 */
+	public HantoBoard(Map<HantoPieceType, Integer> pieceLimits) {
+		board = new HashMap<HantoCoordinate, HantoPiece>();
+		bluePiecesLeft = new HashMap<HantoPieceType, Integer>(pieceLimits);
+		redPiecesLeft = new HashMap<HantoPieceType, Integer>(pieceLimits);
+	}
 
+	
 	/**
 	 * @return the board
 	 */
 	public Map<HantoCoordinate, HantoPiece> getBoard() {
 		return board;
 	}
-
-	public void addPiece(HantoCoordinate coordinate, HantoPiece piece, int turnCount) throws HantoException{
-		if (!validateNewPieceAdd(coordinate, piece, turnCount)) {
-			throw new HantoException("Invalid position!");
-		}
-		board.put(coordinate, piece);
-	}
-
+	
+	/**
+	 * 
+	 * @param coordinate
+	 * @return
+	 */
 	public HantoPiece getPieceAt(HantoCoordinate coordinate) {
 		return board.get(coordinate);
 	}
 
-	// Rules
+	
+	/**
+	 * 
+	 * @param coordinate
+	 * @param piece
+	 * @param turnCount
+	 * @throws HantoException
+	 */
+	public void addPiece(HantoCoordinate coordinate, HantoPiece piece, int turnCount) throws HantoException{
+		if (!validateNewPieceAdd(coordinate, piece, turnCount)) {
+			throw new HantoException("Invalid position!");
+		}
+		
+		int piecesLeft = playerPiecesLeft(piece.getColor(), piece.getType());
+		if (piecesLeft == 0) {
+			throw new HantoException("Player has no more pieces of that type left!");
+		}
+		
+		if (piece.getColor() == HantoPlayerColor.BLUE) bluePiecesLeft.put(piece.getType(), (piecesLeft - 1));
+		else redPiecesLeft.put(piece.getType(), (piecesLeft - 1));
+		
+		board.put(coordinate, piece);
+	}
+	
 
-	// Place a new piece next to another piece unless its first turn
+	/**
+	 * 
+	 * @param coordinate
+	 * @param piece
+	 * @param turnCount
+	 * @return
+	 */
 	public boolean validateNewPieceAdd(HantoCoordinate coordinate, HantoPiece piece, int turnCount) {
 		// if first turn, piece must be put in center of board
 		if (turnCount == 0 && coordinate.getX() == 0 && coordinate.getY() == 0) return true;
@@ -67,6 +113,16 @@ public class HantoBoard {
 			}
 		}
 		return false;
+	}
+	
+	
+	private int playerPiecesLeft(HantoPlayerColor player, HantoPieceType pieceType) {
+		if (player == HantoPlayerColor.BLUE) {
+			return bluePiecesLeft.get(pieceType);
+		}
+		else {
+			return redPiecesLeft.get(pieceType);
+		}
 	}
 	
 	

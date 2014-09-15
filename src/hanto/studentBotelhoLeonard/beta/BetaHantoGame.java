@@ -1,5 +1,8 @@
 package hanto.studentBotelhoLeonard.beta;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import hanto.common.HantoCoordinate;
 import hanto.common.HantoException;
 import hanto.common.HantoGame;
@@ -20,7 +23,11 @@ public class BetaHantoGame implements HantoGame {
 	public BetaHantoGame(HantoPlayerColor movesFirst) {
 		this.movesFirst = movesFirst;
 		this.turnCount = 0;
-		this.board = new HantoBoard();
+		
+		Map<HantoPieceType, Integer> pieceLimits = new HashMap<HantoPieceType, Integer>();
+		pieceLimits.put(HantoPieceType.BUTTERFLY, 1);
+		pieceLimits.put(HantoPieceType.SPARROW, 5);
+		this.board = new HantoBoard(pieceLimits);
 	}
 
 	@Override
@@ -30,8 +37,9 @@ public class BetaHantoGame implements HantoGame {
 		HantoPiece piece;
 		
 		// Beta can only place new pieces
-		if (from != null) throw new HantoException("Can't move pieces in Alpha Hanto. Only place new pieces.");
+		if (from != null) throw new HantoException("Can't move pieces in Beta Hanto. Only place new pieces.");
 		
+		// determine which player is making a move
 		if (turnCount % 2 == 0) { // on even turns, the color movesFirst moves
 			color = movesFirst;
 		}
