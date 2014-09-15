@@ -87,6 +87,13 @@ public class AlphaTests {
 		PieceCoordinate destinationCoord = new PieceCoordinate(0, 0);
 		assertEquals(0, destinationCoord.getY());
 	}
+	
+	@Test
+	public void testNullNotEqualCoordinate() {
+		PieceCoordinate coordinate1 = new PieceCoordinate(0, 0);
+		PieceCoordinate coordinate2 = null;
+		assertFalse(coordinate1.equals(coordinate2));
+	}
 
 	// Notion of board maintaining pieces
 
@@ -228,6 +235,13 @@ public class AlphaTests {
 	public void attemptToMoveRatherThanPlace() throws HantoException
 	{
 		game.makeMove(HantoPieceType.BUTTERFLY, new PieceCoordinate(0, 1), new PieceCoordinate(0, 0));
+	}
+	
+	@Test
+	public void testToString() throws HantoException {
+		game.makeMove(HantoPieceType.BUTTERFLY, null, new PieceCoordinate(0, 0));
+		game.makeMove(HantoPieceType.BUTTERFLY, null, new PieceCoordinate(0, 1));
+		assertEquals("Butterfly RED (0, 1)\nButterfly BLUE (0, 0)\n", game.getPrintableBoard());
 	}
 	
 }

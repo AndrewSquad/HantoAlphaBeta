@@ -1,3 +1,8 @@
+/**
+ * @author Andrew & Andrew || Botelho & Leonard
+ * BetaHantoGame version of Hanto.  Each player can only place 1 butterfly and 5 sparrows.
+ */
+
 package hanto.studentBotelhoLeonard.beta;
 
 import java.util.HashMap;
@@ -22,18 +27,19 @@ public class BetaHantoGame implements HantoGame {
 	
 	public BetaHantoGame(HantoPlayerColor movesFirst) {
 		this.movesFirst = movesFirst;
-		this.turnCount = 0;
+		turnCount = 0;
 		
 		Map<HantoPieceType, Integer> pieceLimits = new HashMap<HantoPieceType, Integer>();
 		pieceLimits.put(HantoPieceType.BUTTERFLY, 1);
 		pieceLimits.put(HantoPieceType.SPARROW, 5);
-		this.board = new HantoBoard(pieceLimits);
+		board = new HantoBoard(pieceLimits);
 	}
 
 	@Override
 	public MoveResult makeMove(HantoPieceType pieceType, HantoCoordinate from, HantoCoordinate to) throws HantoException {
 		HantoPlayerColor color;
 		HantoPiece piece;
+		MoveResult result;
 		
 		// Beta can only place new pieces
 		if (from != null) throw new HantoException("Can't move pieces in Beta Hanto. Only place new pieces.");
@@ -43,8 +49,12 @@ public class BetaHantoGame implements HantoGame {
 			color = movesFirst;
 		}
 		else { // on odd turns, the color opposite of movesFirst moves
-			if (movesFirst == HantoPlayerColor.BLUE) color = HantoPlayerColor.RED;
-			else color = HantoPlayerColor.BLUE;
+			if (movesFirst == HantoPlayerColor.BLUE) {
+				color = HantoPlayerColor.RED;
+			}
+			else {
+				color = HantoPlayerColor.BLUE;
+			}
 		}
 		
 		// switch case for adding different types of game pieces
@@ -59,18 +69,29 @@ public class BetaHantoGame implements HantoGame {
 				throw new HantoException("Unrecognized game piece type!");
 		}
 		
-		board.addPiece(to, piece, turnCount);
+		board.addPiece(to, piece, turnCount/2); // our makeMove logic requires that we increment turncount when either player moves, correcting for external use.
 		
 		// check winning conditions
-		
-		// check for draw
-		if (!board.anyPiecesLeftToPlay()) {
-			return MoveResult.DRAW;
+		boolean isBlueWinner = board.checkIfLost(HantoPlayerColor.RED);
+		boolean isRedWinner = board.checkIfLost(HantoPlayerColor.BLUE);
+		if (isBlueWinner && isRedWinner) {
+			result = MoveResult.DRAW;
 		}
-		
+		else if (isBlueWinner) {
+			result = MoveResult.BLUE_WINS;
+		}
+		else if (isRedWinner) {
+			result = MoveResult.RED_WINS;
+		}
+		// check for draw
+		else if (!board.anyPiecesLeftToPlay()) {
+			result = MoveResult.DRAW;
+		}
+		else {
+			result = MoveResult.OK;
+		}
 		turnCount++;
-		
-		return MoveResult.OK;
+		return result;
 	}
 
 	@Override
@@ -81,13 +102,6 @@ public class BetaHantoGame implements HantoGame {
 	@Override
 	public String getPrintableBoard() {
 		return board.toString();
-	}
-	
-	/** Used for testing
-	 * @return the board
-	 */
-	public HantoBoard getBoard() {
-		return board;
 	}
 
 }

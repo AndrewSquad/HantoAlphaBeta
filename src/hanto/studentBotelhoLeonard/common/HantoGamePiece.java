@@ -18,12 +18,12 @@ public abstract class HantoGamePiece implements HantoPiece {
 
 	@Override
 	public HantoPlayerColor getColor() {
-		return this.color;
+		return color;
 	}
 
 	@Override
 	public HantoPieceType getType() {
-		return this.type;
+		return type;
 	}
 
 }

@@ -1,5 +1,6 @@
 /**
- * 
+ * @author Andrew & Andrew || Botelho & Leonard
+ * This is the HantoBoard class that manages if moves are valid and what is currently on the board.
  */
 package hanto.studentBotelhoLeonard.common;
 
@@ -14,24 +15,12 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
-/**
- * @author Andrew & Andrew || Botelho & Leonard
- *
- */
+
 public class HantoBoard {
 
 	private Map<HantoCoordinate, HantoPiece> board;
 	private Map<HantoPieceType, Integer> bluePiecesLeft;
 	private Map<HantoPieceType, Integer> redPiecesLeft;
-
-	
-//	/**
-//	 * Constructor for HantoBoard that takes no parameters.  
-//	 * Makes a new HashMap, mapping a coordinate to a HantoPiece object.
-//	 */
-//	public HantoBoard() {
-//		board = new HashMap<HantoCoordinate, HantoPiece>();
-//	}
 	
 	
 	/**
@@ -75,7 +64,7 @@ public class HantoBoard {
 			throw new HantoException("Invalid position!");
 		}
 		
-		if(turnCount > 2 && !anyButterfliesOnBoard()){
+		if(turnCount > 2 && !playerPlacedButterfly(piece.getColor()) && piece.getType() != HantoPieceType.BUTTERFLY){
 			throw new HantoException("A buttefly needs to be on the board by turn 4!");
 		}
 		
@@ -83,8 +72,12 @@ public class HantoBoard {
 		if (piecesLeft == 0) {
 			throw new HantoException("Player has no more pieces of that type left!");
 		}
-		if (piece.getColor() == HantoPlayerColor.BLUE) bluePiecesLeft.put(piece.getType(), (piecesLeft - 1));
-		else redPiecesLeft.put(piece.getType(), (piecesLeft - 1));
+		if (piece.getColor() == HantoPlayerColor.BLUE) {
+			bluePiecesLeft.put(piece.getType(), (piecesLeft - 1));
+		}
+		else {
+			redPiecesLeft.put(piece.getType(), (piecesLeft - 1));
+		}
 		
 		board.put(coordinate, piece);
 	}
@@ -126,7 +119,42 @@ public class HantoBoard {
 		
 		return totalPiecesLeft > 0;
 	}
+	
+	/**
+	 * 
+	 * @param color player color
+	 * @return true if given player has lost
+	 */
+	public boolean checkIfLost(HantoPlayerColor color) {
+		HantoPiece tempPiece;
+		Iterator<Entry<HantoCoordinate, HantoPiece>> pieces = board.entrySet().iterator();
+		PieceCoordinate coordinate = null;
+		while(pieces.hasNext()) {
+			Entry<HantoCoordinate, HantoPiece> entry = pieces.next();
+			coordinate = (PieceCoordinate) entry.getKey();
+			tempPiece = board.get(coordinate);
+			if (tempPiece.getType() == HantoPieceType.BUTTERFLY && tempPiece.getColor() == color) {
+				return has6Neighbors(coordinate);
+			}
+		}
+		return false;
+	}
 
+
+	private boolean has6Neighbors(PieceCoordinate butterflyPos) {
+		int neighbors = 0;
+		
+		Iterator<Entry<HantoCoordinate, HantoPiece>> pieces = board.entrySet().iterator();
+		PieceCoordinate next;
+		while(pieces.hasNext()) {
+			Entry<HantoCoordinate, HantoPiece> entry = pieces.next();
+			next = (PieceCoordinate) entry.getKey();
+			if (next.isAdjacentTo(butterflyPos)) neighbors++;
+		}
+		
+		return neighbors == 6;
+		
+	}
 	
 	
 	private boolean isAdjacentToAnyPiece(HantoCoordinate coordinate, HantoPiece piece) {
@@ -166,20 +194,17 @@ public class HantoBoard {
 	}
 	
 	
-	private boolean anyButterfliesOnBoard() {
-		Iterator<Entry<HantoCoordinate, HantoPiece>> pieces = board.entrySet().iterator();
-		HantoPiece piece;
-		PieceCoordinate coordinate;
-		boolean butterflyFound = false;
-		
-		while(pieces.hasNext()) {
-			Entry<HantoCoordinate, HantoPiece> entry = pieces.next();
-			coordinate = (PieceCoordinate) entry.getKey();
-			piece = board.get(coordinate);
-			if(piece.getType() == HantoPieceType.BUTTERFLY) butterflyFound = true;
+	private boolean playerPlacedButterfly(HantoPlayerColor player) {
+		boolean hasButterfly = true;
+		if (player == HantoPlayerColor.BLUE) {
+			if (bluePiecesLeft.get(HantoPieceType.BUTTERFLY) > 0) hasButterfly = false;
 		}
 		
-		return butterflyFound;
+		else {
+			if (redPiecesLeft.get(HantoPieceType.BUTTERFLY) > 0) hasButterfly = false;
+		}
+		
+		return hasButterfly;
 	}
 	
 	/**
@@ -203,17 +228,4 @@ public class HantoBoard {
 		return result;
 	}
 
-	// Will be used in later versions...
-	//	private boolean addedNextToSameColor(HantoCoordinate coordinate, HantoPiece piece) {
-	//		Iterator<Entry<HantoCoordinate, HantoPiece>> pieces = board.entrySet().iterator();
-	//		PieceCoordinate next;
-	//		while(pieces.hasNext()) {
-	//			 next = (PieceCoordinate) pieces.next();
-	//			 if (next.isAdjacentTo(coordinate)) {
-	//				 HantoPiece otherPiece = board.get(next);
-	//				 if ((otherPiece.getColor() == piece.getColor())) return true;
-	//			 }
-	//		}
-	//		return false;
-	//	}
 }

@@ -1,3 +1,9 @@
+/**
+ * @author Andrew & Andrew || Botelho & Leonard
+ * AlphaHantoGame version of Hanto.
+ * Each player can only place one butterfly.
+ */
+
 package hanto.studentBotelhoLeonard.alpha;
 
 import java.util.HashMap;
@@ -19,11 +25,11 @@ public class AlphaHantoGame implements HantoGame {
 	private HantoBoard board;
 
 	public AlphaHantoGame() {
-		this.turnCount = 0;
+		turnCount = 0;
 		
 		Map<HantoPieceType, Integer> pieceLimits = new HashMap<HantoPieceType, Integer>();
 		pieceLimits.put(HantoPieceType.BUTTERFLY, 1);
-		this.board = new HantoBoard(pieceLimits);
+		board = new HantoBoard(pieceLimits);
 	}
 
 	
@@ -72,21 +78,6 @@ public class AlphaHantoGame implements HantoGame {
 	@Override
 	public String getPrintableBoard() {
 		return board.toString();
-	}
-	
-	
-	/** Used for testing
-	 * @return the board
-	 */
-	public HantoBoard getBoard() {
-		return board;
-	}
-
-	/**
-	 * @return the turnCount
-	 */
-	public int getTurnCount() {
-		return turnCount;
 	}
 
 }

@@ -18,7 +18,7 @@ public class Butterfly extends HantoGamePiece {
 	 * @param color the color of the player who owns to piece.
 	 */
 	public Butterfly(HantoPlayerColor color) {
-		this.type = HantoPieceType.BUTTERFLY;
+		type = HantoPieceType.BUTTERFLY;
 		this.color = color;
 	}
 	

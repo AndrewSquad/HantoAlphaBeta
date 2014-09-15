@@ -71,6 +71,124 @@ public class BetaTests {
 	public void cantMoveCrab() throws HantoException {
 		game.makeMove(HantoPieceType.CRAB, null, new PieceCoordinate(0,0));
 	}
+
+
+	@Test
+	public void testButterflyIsTypeButterfly() {		
+		Butterfly butterfly = new Butterfly(HantoPlayerColor.BLUE);
+		assertEquals(HantoPieceType.BUTTERFLY, butterfly.getType());
+	}
+
+	@Test
+	public void testButterflyPrintsProperly() {		
+		Butterfly butterfly = new Butterfly(HantoPlayerColor.BLUE);
+		assertEquals("Butterfly", butterfly.getType().getPrintableName());
+	}
+	
+	@Test
+	public void testSparrowPrintsProperly() {		
+		Sparrow sparrow = new Sparrow(HantoPlayerColor.BLUE);
+		assertEquals("Sparrow", sparrow.getType().getPrintableName());
+	}
+
+	@Test
+	public void testButterflySymbolPrintsProperly() {		
+		Butterfly butterfly = new Butterfly(HantoPlayerColor.BLUE);
+		assertEquals("B", butterfly.getType().getSymbol());
+	}
+	
+	@Test
+	public void testSparrowSymbolPrintsProperly() {		
+		Sparrow sparrow = new Sparrow(HantoPlayerColor.BLUE);
+		assertEquals("S", sparrow.getType().getSymbol());
+	}
+
+	@Test
+	public void testCoordinatesGetX() {
+		PieceCoordinate destinationCoord = new PieceCoordinate(0, 0);
+		assertEquals(0, destinationCoord.getX());
+	}
+
+	@Test
+	public void testCoordinatesGetY() {
+		PieceCoordinate destinationCoord = new PieceCoordinate(0, 0);
+		assertEquals(0, destinationCoord.getY());
+	}
+
+	@Test
+	public void testAddPieceToBoard() throws HantoException {
+		Map<HantoPieceType, Integer> pieceLimits = new HashMap<HantoPieceType, Integer>();
+		pieceLimits.put(HantoPieceType.BUTTERFLY, 1);
+		HantoBoard hantoBoard = new HantoBoard(pieceLimits);
+		hantoBoard.addPiece(new PieceCoordinate(0,0), new Butterfly(HantoPlayerColor.RED), 0);
+		assertFalse(hantoBoard.getBoard().isEmpty());
+	}
+
+	@Test
+	public void testAddPieceToBoardAtPostion() throws HantoException {
+		Map<HantoPieceType, Integer> pieceLimits = new HashMap<HantoPieceType, Integer>();
+		pieceLimits.put(HantoPieceType.BUTTERFLY, 1);
+		HantoBoard hantoBoard = new HantoBoard(pieceLimits);
+		Butterfly butterfly = new Butterfly(HantoPlayerColor.RED);
+		PieceCoordinate coordinate = new PieceCoordinate(0,0);
+		hantoBoard.addPiece(coordinate, butterfly, 0);
+		assertEquals(butterfly, hantoBoard.getPieceAt(coordinate));
+	}
+	
+	@Test
+	public void testHantoGetPieceAt() throws HantoException {
+		PieceCoordinate destinationCoord = new PieceCoordinate(0, 0);
+		MoveResult moveResult = game.makeMove(HantoPieceType.BUTTERFLY, null, destinationCoord);		
+		assertEquals(MoveResult.OK, moveResult);
+	}
+	
+	@Test
+	public void afterFirstMoveBlueButterflyIsAt0_0() throws HantoException	{
+		game.makeMove(HantoPieceType.BUTTERFLY, null, new PieceCoordinate(0, 0));
+		final HantoPiece p = game.getPieceAt(new PieceCoordinate(0, 0));
+		assertEquals(HantoPieceType.BUTTERFLY, p.getType());
+		assertEquals(HantoPlayerColor.BLUE, p.getColor());
+	}
+		
+	@Test
+	public void testCoordinatesAdjacent() {
+		PieceCoordinate coordinate1 = new PieceCoordinate(0,0);
+		PieceCoordinate coordinate2 = new PieceCoordinate(1,0);
+		PieceCoordinate coordinate3 = new PieceCoordinate(1,10);
+		
+		assertTrue(coordinate1.isAdjacentTo(coordinate2));
+		assertFalse(coordinate1.isAdjacentTo(coordinate3));
+	}
+	
+	@Test
+	public void testSameCoordinatesNotAdjacent() {
+		PieceCoordinate coordinate1 = new PieceCoordinate(0,0);
+		PieceCoordinate coordinate2 = new PieceCoordinate(0,0);
+		assertFalse(coordinate1.isAdjacentTo(coordinate2));
+	}
+	
+	@Test
+	public void testCoordinatesNotAdjacent() {
+		PieceCoordinate coordinate1 = new PieceCoordinate(0, 0);
+		PieceCoordinate coordinate2 = new PieceCoordinate(4, 4);
+		assertFalse(coordinate1.isAdjacentTo(coordinate2));
+	}
+	
+	@Test
+	public void testCopyingHantoCoordinates() {
+		PieceCoordinate coordinate1 = new PieceCoordinate(0, 0);
+		PieceCoordinate coordinate2 = new PieceCoordinate(coordinate1);
+		assertEquals(coordinate1, coordinate2);
+	}
+	
+	
+	@Test
+	public void testNullNotEqualCoordinate() {
+		PieceCoordinate coordinate1 = new PieceCoordinate(0, 0);
+		PieceCoordinate coordinate2 = null;
+		assertFalse(coordinate1.equals(coordinate2));
+	}
+
 	
 	@Test
 	public void pieceColorIsCorrect() throws HantoException {
@@ -140,21 +258,29 @@ public class BetaTests {
 		assertFalse(board.anyPiecesLeftToPlay());
 	}
 	
-	//TODO: clear up the definition of a turn
 	@Test(expected=HantoException.class)
 	public void noButterflyAfterThreeTurns() throws HantoException {
 		game.makeMove(HantoPieceType.SPARROW, null, new PieceCoordinate(0, 0));
 		game.makeMove(HantoPieceType.SPARROW, null, new PieceCoordinate(0, 1));
 		game.makeMove(HantoPieceType.SPARROW, null, new PieceCoordinate(1, 1));
 		game.makeMove(HantoPieceType.SPARROW, null, new PieceCoordinate(1, 2));
+		game.makeMove(HantoPieceType.SPARROW, null, new PieceCoordinate(2, 1));
+		game.makeMove(HantoPieceType.SPARROW, null, new PieceCoordinate(2, 2));
+		game.makeMove(HantoPieceType.SPARROW, null, new PieceCoordinate(3, 2));
+
 	}
-	//TODO: clear up the definition of a turn
+
 	@Test(expected=HantoException.class)
 	public void onlyOneButterFlyAfterThreeTurns() throws HantoException {
 		game.makeMove(BUTTERFLY, null, new PieceCoordinate(0, 0));
 		game.makeMove(SPARROW, null, new PieceCoordinate(0, 1));
 		game.makeMove(SPARROW, null, new PieceCoordinate(1, 1));
 		game.makeMove(SPARROW, null, new PieceCoordinate(2, 1));
+		game.makeMove(SPARROW, null, new PieceCoordinate(2, 2));
+		game.makeMove(SPARROW, null, new PieceCoordinate(3, 2));
+		game.makeMove(SPARROW, null, new PieceCoordinate(3, 3));
+		game.makeMove(SPARROW, null, new PieceCoordinate(4, 3));
+
 	}
 	
 	@Test
@@ -172,6 +298,54 @@ public class BetaTests {
 		game.makeMove(HantoPieceType.SPARROW, null, new PieceCoordinate(4, 3));
 		MoveResult mv = game.makeMove(HantoPieceType.SPARROW, null, new PieceCoordinate(4, 4));
 		assertEquals(MoveResult.DRAW, mv);
+	}
+	
+	
+	@Test
+	public void redIsWinner() throws HantoException {
+		game.makeMove(HantoPieceType.BUTTERFLY, null, new PieceCoordinate(0, 0));
+		game.makeMove(HantoPieceType.SPARROW, null, new PieceCoordinate(0, 1));
+		game.makeMove(HantoPieceType.SPARROW, null, new PieceCoordinate(1, 0));
+		game.makeMove(HantoPieceType.BUTTERFLY, null, new PieceCoordinate(1, -1));
+		game.makeMove(HantoPieceType.SPARROW, null, new PieceCoordinate(0, -1));
+		game.makeMove(HantoPieceType.SPARROW, null, new PieceCoordinate(-1, 0));
+		MoveResult mv = game.makeMove(HantoPieceType.SPARROW, null, new PieceCoordinate(-1, 1));
+		assertEquals(MoveResult.RED_WINS, mv);
+	}
+	
+	@Test
+	public void blueIsWinner() throws HantoException {
+		game = HantoGameFactory.makeHantoGame(HantoGameID.BETA_HANTO, HantoPlayerColor.RED);
+		game.makeMove(HantoPieceType.BUTTERFLY, null, new PieceCoordinate(0, 0));
+		game.makeMove(HantoPieceType.SPARROW, null, new PieceCoordinate(0, 1));
+		game.makeMove(HantoPieceType.SPARROW, null, new PieceCoordinate(1, 0));
+		game.makeMove(HantoPieceType.BUTTERFLY, null, new PieceCoordinate(1, -1));
+		game.makeMove(HantoPieceType.SPARROW, null, new PieceCoordinate(0, -1));
+		game.makeMove(HantoPieceType.SPARROW, null, new PieceCoordinate(-1, 0));
+		MoveResult mv = game.makeMove(HantoPieceType.SPARROW, null, new PieceCoordinate(-1, 1));
+		assertEquals(MoveResult.BLUE_WINS, mv);
+	}
+	
+	@Test
+	public void bothButterfliesSurrounded() throws HantoException {
+		game.makeMove(HantoPieceType.BUTTERFLY, null, new PieceCoordinate(0, 0));
+		game.makeMove(HantoPieceType.BUTTERFLY, null, new PieceCoordinate(1, 0));
+		game.makeMove(HantoPieceType.SPARROW, null, new PieceCoordinate(0, -1));
+		game.makeMove(HantoPieceType.SPARROW, null, new PieceCoordinate(-1, 0));
+		game.makeMove(HantoPieceType.SPARROW, null, new PieceCoordinate(-1, 1));
+		game.makeMove(HantoPieceType.SPARROW, null, new PieceCoordinate(0, 1));
+		game.makeMove(HantoPieceType.SPARROW, null, new PieceCoordinate(1, 1));
+		game.makeMove(HantoPieceType.SPARROW, null, new PieceCoordinate(2, 0));
+		game.makeMove(HantoPieceType.SPARROW, null, new PieceCoordinate(2, -1));
+		MoveResult mv = game.makeMove(HantoPieceType.SPARROW, null, new PieceCoordinate(1, -1));
+		assertEquals(MoveResult.DRAW, mv);
+	}
+	
+	@Test
+	public void testToString() throws HantoException {
+		game.makeMove(HantoPieceType.BUTTERFLY, null, new PieceCoordinate(0, 0));
+		game.makeMove(HantoPieceType.BUTTERFLY, null, new PieceCoordinate(0, 1));
+		assertEquals("Butterfly RED (0, 1)\nButterfly BLUE (0, 0)\n", game.getPrintableBoard());
 	}
 
 
