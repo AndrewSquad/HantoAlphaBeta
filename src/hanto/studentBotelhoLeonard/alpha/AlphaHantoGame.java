@@ -1,5 +1,8 @@
 package hanto.studentBotelhoLeonard.alpha;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import hanto.common.HantoCoordinate;
 import hanto.common.HantoException;
 import hanto.common.HantoGame;
@@ -17,7 +20,10 @@ public class AlphaHantoGame implements HantoGame {
 
 	public AlphaHantoGame() {
 		this.turnCount = 0;
-		this.board = new HantoBoard();
+		
+		Map<HantoPieceType, Integer> pieceLimits = new HashMap<HantoPieceType, Integer>();
+		pieceLimits.put(HantoPieceType.BUTTERFLY, 1);
+		this.board = new HantoBoard(pieceLimits);
 	}
 
 	
@@ -69,7 +75,7 @@ public class AlphaHantoGame implements HantoGame {
 	}
 	
 	
-	/**
+	/** Used for testing
 	 * @return the board
 	 */
 	public HantoBoard getBoard() {

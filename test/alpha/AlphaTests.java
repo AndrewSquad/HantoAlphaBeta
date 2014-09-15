@@ -1,6 +1,10 @@
 package alpha;
 
 import static org.junit.Assert.*;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import hanto.HantoGameFactory;
 import hanto.common.HantoException;
 import hanto.common.HantoGame;
@@ -88,14 +92,18 @@ public class AlphaTests {
 
 	@Test
 	public void testAddPieceToBoard() throws HantoException {
-		HantoBoard hantoBoard = new HantoBoard();
+		Map<HantoPieceType, Integer> pieceLimits = new HashMap<HantoPieceType, Integer>();
+		pieceLimits.put(HantoPieceType.BUTTERFLY, 1);
+		HantoBoard hantoBoard = new HantoBoard(pieceLimits);
 		hantoBoard.addPiece(new PieceCoordinate(0,0), new Butterfly(HantoPlayerColor.RED), 0);
 		assertFalse(hantoBoard.getBoard().isEmpty());
 	}
 
 	@Test
 	public void testAddPieceToBoardAtPostion() throws HantoException {
-		HantoBoard hantoBoard = new HantoBoard();
+		Map<HantoPieceType, Integer> pieceLimits = new HashMap<HantoPieceType, Integer>();
+		pieceLimits.put(HantoPieceType.BUTTERFLY, 1);
+		HantoBoard hantoBoard = new HantoBoard(pieceLimits);
 		Butterfly butterfly = new Butterfly(HantoPlayerColor.RED);
 		PieceCoordinate coordinate = new PieceCoordinate(0,0);
 		hantoBoard.addPiece(coordinate, butterfly, 0);
@@ -145,6 +153,12 @@ public class AlphaTests {
 	@Test(expected=HantoException.class)
 	public void bluePlacesNonButterfly() throws HantoException	{
 		game.makeMove(HantoPieceType.SPARROW, null, new PieceCoordinate(0, 0));
+	}
+	
+	@Test(expected=HantoException.class)
+	public void putPieceOnSameTile() throws HantoException {
+		game.makeMove(HantoPieceType.BUTTERFLY, null, new PieceCoordinate(0, 0));
+		game.makeMove(HantoPieceType.BUTTERFLY, null, new PieceCoordinate(0, 0));
 	}
 	
 	@Test(expected=HantoException.class)

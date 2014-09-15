@@ -32,7 +32,6 @@ public class BetaHantoGame implements HantoGame {
 
 	@Override
 	public MoveResult makeMove(HantoPieceType pieceType, HantoCoordinate from, HantoCoordinate to) throws HantoException {
-		MoveResult result;
 		HantoPlayerColor color;
 		HantoPiece piece;
 		
@@ -61,6 +60,14 @@ public class BetaHantoGame implements HantoGame {
 		}
 		
 		board.addPiece(to, piece, turnCount);
+		
+		// check winning conditions
+		
+		// check for draw
+		if (!board.anyPiecesLeftToPlay()) {
+			return MoveResult.DRAW;
+		}
+		
 		turnCount++;
 		
 		return MoveResult.OK;
@@ -74,6 +81,13 @@ public class BetaHantoGame implements HantoGame {
 	@Override
 	public String getPrintableBoard() {
 		return board.toString();
+	}
+	
+	/** Used for testing
+	 * @return the board
+	 */
+	public HantoBoard getBoard() {
+		return board;
 	}
 
 }
