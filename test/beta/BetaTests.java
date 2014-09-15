@@ -1,6 +1,7 @@
 package beta;
 
 import static org.junit.Assert.*;
+import static hanto.common.HantoPieceType.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -139,12 +140,21 @@ public class BetaTests {
 		assertFalse(board.anyPiecesLeftToPlay());
 	}
 	
+	//TODO: clear up the definition of a turn
 	@Test(expected=HantoException.class)
 	public void noButterflyAfterThreeTurns() throws HantoException {
 		game.makeMove(HantoPieceType.SPARROW, null, new PieceCoordinate(0, 0));
 		game.makeMove(HantoPieceType.SPARROW, null, new PieceCoordinate(0, 1));
 		game.makeMove(HantoPieceType.SPARROW, null, new PieceCoordinate(1, 1));
 		game.makeMove(HantoPieceType.SPARROW, null, new PieceCoordinate(1, 2));
+	}
+	//TODO: clear up the definition of a turn
+	@Test(expected=HantoException.class)
+	public void onlyOneButterFlyAfterThreeTurns() throws HantoException {
+		game.makeMove(BUTTERFLY, null, new PieceCoordinate(0, 0));
+		game.makeMove(SPARROW, null, new PieceCoordinate(0, 1));
+		game.makeMove(SPARROW, null, new PieceCoordinate(1, 1));
+		game.makeMove(SPARROW, null, new PieceCoordinate(2, 1));
 	}
 	
 	@Test
