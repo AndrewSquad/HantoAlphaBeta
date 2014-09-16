@@ -7,7 +7,8 @@ import hanto.common.HantoCoordinate;
 
 /**
  * @author Andrew & Andrew || Leonard & Botelho
- *
+ * Class for PieceCoordinate objects, which represent coordinates on the hexagon game board.
+ * This class implements the HantoCoordinate interface.
  */
 public class PieceCoordinate implements HantoCoordinate {
 
@@ -107,6 +108,10 @@ public class PieceCoordinate implements HantoCoordinate {
 		return true;
 	}
 
+	/**
+	 * toString() method for the PieceCoordinate that returns a string with the x and y coordinates
+	 * of the PieceCoordinate.
+	 */
 	public String toString() {
 		return "(" + x + ", " + y + ")";
 	}

@@ -6,9 +6,6 @@
 
 package hanto.studentBotelhoLeonard.alpha;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import hanto.common.HantoCoordinate;
 import hanto.common.HantoException;
 import hanto.common.HantoGame;
@@ -36,11 +33,8 @@ public class AlphaHantoGame implements HantoGame {
 	 */
 	public AlphaHantoGame() {
 		turnCount = 0;
-		
-		// Tell the HantoBoard how many of each pieces a player gets
-		Map<HantoPieceType, Integer> pieceLimits = new HashMap<HantoPieceType, Integer>();
-		pieceLimits.put(HantoPieceType.BUTTERFLY, 1);
-		board = new HantoBoard(pieceLimits);
+
+		board = new HantoBoard();
 	}
 
 	
@@ -51,11 +45,7 @@ public class AlphaHantoGame implements HantoGame {
 		MoveResult result;
 		HantoPlayerColor color;
 		
-		// This line is 100% alpha hanto code specific.
-		if (from != null) throw new HantoException("Can't move pieces in Alpha Hanto. Only place new pieces.");
-		
-		// If the given pieceType is not a Butterfly, throw exception
-		if (pieceType != HantoPieceType.BUTTERFLY) throw new HantoException("Unrecognized Piece Type");
+		validateMove(pieceType, from, to);
 						
 		if (turnCount % 2 ==  0) { // if the turn count is even - blue should go
 			color = HantoPlayerColor.BLUE;
@@ -65,7 +55,7 @@ public class AlphaHantoGame implements HantoGame {
 		}
 		
 		Butterfly butterfly = new Butterfly(color);
-		board.addPiece(to, butterfly, turnCount/2);
+		board.addPiece(to, butterfly);
 
 		turnCount++;
 		
@@ -89,6 +79,27 @@ public class AlphaHantoGame implements HantoGame {
 	@Override
 	public String getPrintableBoard() {
 		return board.toString();
+	}
+	
+	// Validates potential moves
+	private void validateMove(HantoPieceType pieceType, HantoCoordinate from, HantoCoordinate to) throws HantoException {
+		
+		if (from != null) { // Can only place new pieces
+			throw new HantoException("Can't move pieces in Alpha Hanto. Only place new pieces.");
+		}
+		
+		// If the given pieceType is not a Butterfly, throw exception
+		if (pieceType != HantoPieceType.BUTTERFLY) {
+			throw new HantoException("Unrecognized Piece Type");	
+		}
+		
+		// First move must be at (0, 0)
+		if (board.getBoard().isEmpty()) {
+			if (to.getX() != 0 || to.getY() != 0) throw new HantoException("First move must be at (0, 0)!");
+		}
+		
+		else if (!board.isAdjacentToAnyPiece(to) || board.isTileAlreadyOccupied(to)) throw new HantoException("Invalid Move");
+				
 	}
 
 }

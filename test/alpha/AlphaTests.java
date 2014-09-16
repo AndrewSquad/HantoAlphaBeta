@@ -1,9 +1,10 @@
+/**
+ * @author Andrew & Andrew || Botelho & Leonard
+ * Tests for Alpha Hanto
+ */
 package alpha;
 
 import static org.junit.Assert.*;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import hanto.HantoGameFactory;
 import hanto.common.HantoException;
@@ -99,21 +100,17 @@ public class AlphaTests {
 
 	@Test
 	public void testAddPieceToBoard() throws HantoException {
-		Map<HantoPieceType, Integer> pieceLimits = new HashMap<HantoPieceType, Integer>();
-		pieceLimits.put(HantoPieceType.BUTTERFLY, 1);
-		HantoBoard hantoBoard = new HantoBoard(pieceLimits);
-		hantoBoard.addPiece(new PieceCoordinate(0,0), new Butterfly(HantoPlayerColor.RED), 0);
+		HantoBoard hantoBoard = new HantoBoard();
+		hantoBoard.addPiece(new PieceCoordinate(0,0), new Butterfly(HantoPlayerColor.RED));
 		assertFalse(hantoBoard.getBoard().isEmpty());
 	}
 
 	@Test
 	public void testAddPieceToBoardAtPostion() throws HantoException {
-		Map<HantoPieceType, Integer> pieceLimits = new HashMap<HantoPieceType, Integer>();
-		pieceLimits.put(HantoPieceType.BUTTERFLY, 1);
-		HantoBoard hantoBoard = new HantoBoard(pieceLimits);
+		HantoBoard hantoBoard = new HantoBoard();
 		Butterfly butterfly = new Butterfly(HantoPlayerColor.RED);
 		PieceCoordinate coordinate = new PieceCoordinate(0,0);
-		hantoBoard.addPiece(coordinate, butterfly, 0);
+		hantoBoard.addPiece(coordinate, butterfly);
 		assertEquals(butterfly, hantoBoard.getPieceAt(coordinate));
 	}
 
@@ -177,10 +174,11 @@ public class AlphaTests {
 	public void redPlacesButterflyNextToBlueButterfly() throws HantoException
 	{
 		game.makeMove(HantoPieceType.BUTTERFLY, null, new PieceCoordinate(0, 0));
-		game.makeMove(HantoPieceType.BUTTERFLY, null, new PieceCoordinate(0, 1));
+		MoveResult mv = game.makeMove(HantoPieceType.BUTTERFLY, null, new PieceCoordinate(0, 1));
 		final HantoPiece p = game.getPieceAt(new PieceCoordinate(0, 1));
 		assertEquals(HantoPieceType.BUTTERFLY, p.getType());
 		assertEquals(HantoPlayerColor.RED, p.getColor());
+		assertEquals(MoveResult.DRAW, mv);
 	}
 	
 	@Test
@@ -201,9 +199,16 @@ public class AlphaTests {
 	}
 	
 	@Test
-	public void testCoordinatesNotAdjacent() {
+	public void testCoordinatesNotAdjacent1() {
 		PieceCoordinate coordinate1 = new PieceCoordinate(0, 0);
 		PieceCoordinate coordinate2 = new PieceCoordinate(4, 4);
+		assertFalse(coordinate1.isAdjacentTo(coordinate2));
+	}
+	
+	@Test
+	public void testCoordinatesNotAdjacent2() {
+		PieceCoordinate coordinate1 = new PieceCoordinate(0, 0);
+		PieceCoordinate coordinate2 = new PieceCoordinate(1, 1);
 		assertFalse(coordinate1.isAdjacentTo(coordinate2));
 	}
 	
