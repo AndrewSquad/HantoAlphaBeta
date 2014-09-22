@@ -19,6 +19,7 @@ import hanto.common.HantoPlayerColor;
 import hanto.common.MoveResult;
 import hanto.studentBotelhoLeonard.common.Butterfly;
 import hanto.studentBotelhoLeonard.common.HantoBoard;
+import hanto.studentBotelhoLeonard.common.PieceCoordinate;
 import hanto.studentBotelhoLeonard.common.Sparrow;
 
 /**
@@ -72,9 +73,13 @@ public class BetaHantoGame implements HantoGame {
 				throw new HantoException("Unrecognized game piece type!");
 		}
 		
-		validateMove(pieceType, from, to, color);
+		// use copy constructor on given HantoCoordinates
+		PieceCoordinate newFrom = from == null? null : new PieceCoordinate(from);
+		PieceCoordinate newTo = to == null? null : new PieceCoordinate(to);
+		
+		validateMove(pieceType, newFrom, newTo, color);
 		decrementPieceTypeForPlayer(color, pieceType);
-		board.addPiece(to, piece);
+		board.addPiece(newTo, piece);
 		result = determineGameResult();
 
 		turnCount++;

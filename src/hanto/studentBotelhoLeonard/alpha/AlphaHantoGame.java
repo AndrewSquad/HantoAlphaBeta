@@ -15,6 +15,7 @@ import hanto.common.HantoPlayerColor;
 import hanto.common.MoveResult;
 import hanto.studentBotelhoLeonard.common.Butterfly;
 import hanto.studentBotelhoLeonard.common.HantoBoard;
+import hanto.studentBotelhoLeonard.common.PieceCoordinate;
 
 /**
  * An implementation of the HantoGame interface for the Alpha version of Hanto.
@@ -45,7 +46,11 @@ public class AlphaHantoGame implements HantoGame {
 		MoveResult result;
 		HantoPlayerColor color;
 		
-		validateMove(pieceType, from, to);
+		// use copy constructor on given HantoCoordinates
+		PieceCoordinate newFrom = from == null? null : new PieceCoordinate(from);
+		PieceCoordinate newTo = to == null? null : new PieceCoordinate(to);
+		
+		validateMove(pieceType, newFrom, newTo);
 						
 		if (turnCount % 2 ==  0) { // if the turn count is even - blue should go
 			color = HantoPlayerColor.BLUE;
@@ -55,7 +60,7 @@ public class AlphaHantoGame implements HantoGame {
 		}
 		
 		Butterfly butterfly = new Butterfly(color);
-		board.addPiece(to, butterfly);
+		board.addPiece(newTo, butterfly);
 
 		turnCount++;
 		
