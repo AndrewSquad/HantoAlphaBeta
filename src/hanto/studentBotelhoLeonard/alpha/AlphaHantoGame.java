@@ -77,7 +77,8 @@ public class AlphaHantoGame implements HantoGame {
 
 	@Override
 	public HantoPiece getPieceAt(HantoCoordinate where) {
-		return board.getPieceAt(where);
+		PieceCoordinate coordinate = new PieceCoordinate(where); // copy constructor
+		return board.getPieceAt(coordinate);
 	}
 
 	
@@ -87,7 +88,7 @@ public class AlphaHantoGame implements HantoGame {
 	}
 	
 	// Validates potential moves
-	private void validateMove(HantoPieceType pieceType, HantoCoordinate from, HantoCoordinate to) throws HantoException {
+	private void validateMove(HantoPieceType pieceType, PieceCoordinate from, PieceCoordinate to) throws HantoException {
 		
 		if (from != null) { // Can only place new pieces
 			throw new HantoException("Can't move pieces in Alpha Hanto. Only place new pieces.");
