@@ -74,32 +74,12 @@ public class BetaHantoGame extends BaseHantoGame implements HantoGame {
 		turnCount++;
 		return result;
 	}
-	
-
-	// determines whose turn it is based on movesFirst and turnCount
-	private HantoPlayerColor whoseTurnIsIt() {
-		HantoPlayerColor color;
-		// determine which player is making a move
-		if (turnCount % 2 == 0) { // on even turns, the color movesFirst moves
-			color = movesFirst;
-		}
-		else { // on odd turns, the color opposite of movesFirst moves
-			if (movesFirst == HantoPlayerColor.BLUE) {
-				color = HantoPlayerColor.RED;
-			}
-			else {
-				color = HantoPlayerColor.BLUE;
-			}
-		}
-		
-		return color;
-	}
 
 	
 	// Validates potential moves
 	private void validateMove(HantoPieceType pieceType, PieceCoordinate from, PieceCoordinate to, HantoPlayerColor color) throws HantoException {
 		// Can only place new pieces
-		if (from != null) throw new HantoException("Can't move pieces in Alpha Hanto. Only place new pieces.");
+		if (from != null) throw new HantoException("Can't move pieces in Beta Hanto. Only place new pieces.");
 
 		// First move must be at (0, 0)
 		if (board.getBoard().isEmpty()) {

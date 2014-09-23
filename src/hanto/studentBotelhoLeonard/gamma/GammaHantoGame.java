@@ -15,6 +15,7 @@ import hanto.common.HantoPieceType;
 import hanto.common.HantoPlayerColor;
 import hanto.common.MoveResult;
 import hanto.studentBotelhoLeonard.common.BaseHantoGame;
+import hanto.studentBotelhoLeonard.common.PieceCoordinate;
 
 public class GammaHantoGame extends BaseHantoGame implements HantoGame {
 	
@@ -33,6 +34,21 @@ public class GammaHantoGame extends BaseHantoGame implements HantoGame {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	
+	// Validates potential moves
+		private void validateMove(HantoPieceType pieceType, PieceCoordinate from, PieceCoordinate to, HantoPlayerColor color) throws HantoException {
+			
+			if(from == null) // if the piece is being placed on the board
+			{
+				
+			}
+			
+			else // if the piece is being moved
+			{
+				
+			}
+		}
 
 
 }

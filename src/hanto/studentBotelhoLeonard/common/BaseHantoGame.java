@@ -44,6 +44,26 @@ public abstract class BaseHantoGame implements HantoGame {
 	}
 	
 	
+	// determines whose turn it is based on movesFirst and turnCount
+	protected HantoPlayerColor whoseTurnIsIt() {
+		HantoPlayerColor color;
+		// determine which player is making a move
+		if (turnCount % 2 == 0) { // on even turns, the color movesFirst moves
+			color = movesFirst;
+		}
+		else { // on odd turns, the color opposite of movesFirst moves
+			if (movesFirst == HantoPlayerColor.BLUE) {
+				color = HantoPlayerColor.RED;
+			}
+			else {
+				color = HantoPlayerColor.BLUE;
+			}
+		}
+		
+		return color;
+	}
+	
+	
 	// given a player color, this method determines whether or not he/she has placed a butterfly yet
 	protected boolean hasPlayerPlacedButterfly(HantoPlayerColor player) {
 		boolean hasPlacedButterfly = true;
