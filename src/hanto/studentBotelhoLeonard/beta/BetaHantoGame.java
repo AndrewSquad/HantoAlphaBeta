@@ -6,8 +6,6 @@
 package hanto.studentBotelhoLeonard.beta;
 
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map.Entry;
 
 import hanto.common.HantoCoordinate;
 import hanto.common.HantoException;
@@ -124,16 +122,6 @@ public class BetaHantoGame extends BaseHantoGame implements HantoGame {
 				
 	}
 	
-	// decrements how many of a certain piece type the given player has left to use
-	private void decrementPieceTypeForPlayer(HantoPlayerColor player, HantoPieceType pieceType) {
-		int piecesLeft = playerPieceTypeRemaining(player, pieceType);
-		if (player == HantoPlayerColor.BLUE) {
-			bluePiecesLeft.put(pieceType, (piecesLeft - 1));
-		}
-		else {
-			redPiecesLeft.put(pieceType, (piecesLeft - 1));
-		}
-	}
 	
 	// determine the game result after this move.  makes calls to HantoBoard
 	private MoveResult determineGameResult() {
@@ -157,48 +145,6 @@ public class BetaHantoGame extends BaseHantoGame implements HantoGame {
 		}
 		
 		return result;
-	}
-	
-	// given a player color, this method determines whether or not he/she has placed a butterfly yet
-	private boolean hasPlayerPlacedButterfly(HantoPlayerColor player) {
-		boolean hasPlacedButterfly = true;
-		if (player == HantoPlayerColor.BLUE) {
-			if (bluePiecesLeft.get(HantoPieceType.BUTTERFLY) > 0) hasPlacedButterfly = false;
-		}
-		
-		else {
-			if (redPiecesLeft.get(HantoPieceType.BUTTERFLY) > 0) hasPlacedButterfly = false;
-		}
-
-		return hasPlacedButterfly;
-	}
-
-	// determines how many of a particular piece type the given player has left to put on the board
-	private int playerPieceTypeRemaining(HantoPlayerColor player, HantoPieceType pieceType) {
-		if (player == HantoPlayerColor.BLUE) {
-			return bluePiecesLeft.get(pieceType);
-		}
-		else {
-			return redPiecesLeft.get(pieceType);
-		}
-	}
-	
-	// determines if either player has many pieces left to move with
-	private boolean anyPiecesLeftToPlay() {
-		int totalPiecesLeft = 0;
-		Iterator<Entry<HantoPieceType, Integer>> bluePieceTotals = bluePiecesLeft.entrySet().iterator();
-		Iterator<Entry<HantoPieceType, Integer>> redPieceTotals = redPiecesLeft.entrySet().iterator();
-		
-		while(bluePieceTotals.hasNext()) {
-			Entry<HantoPieceType, Integer> entry = bluePieceTotals.next();
-			totalPiecesLeft += entry.getValue();
-		}
-		while(redPieceTotals.hasNext()) {
-			Entry<HantoPieceType, Integer> entry = redPieceTotals.next();
-			totalPiecesLeft += entry.getValue();
-		}
-		
-		return totalPiecesLeft > 0;
 	}
 
 }
