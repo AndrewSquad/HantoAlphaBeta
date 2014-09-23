@@ -102,6 +102,46 @@ public class HantoBoard {
 	}
 	
 	/**
+	 * Determines if a given HantoCoordinate is adjacent to any already-placed HantoPieces of the same color
+	 * @param coordinate the HantoCoordinate we are checking for
+	 * @return a boolean indicating whether or not the given HantoCoordinate is adjacent to any pieces.
+	 */
+	public boolean isAdjacentSameColorPiece(PieceCoordinate coordinate, HantoPlayerColor color) {
+		Iterator<Entry<PieceCoordinate, HantoPiece>> pieces = board.entrySet().iterator();
+		PieceCoordinate next;
+		HantoPlayerColor pieceColor;
+		while(pieces.hasNext()) {
+			Entry<PieceCoordinate, HantoPiece> entry = pieces.next();
+			next = entry.getKey();
+			pieceColor = entry.getValue().getColor();
+			if (next.isAdjacentTo(coordinate) && color == pieceColor) {
+				return true;			 
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * Determines if a given HantoCoordinate is not adjacent to any already-placed HantoPieces of the opposite color
+	 * @param coordinate the HantoCoordinate we are checking for
+	 * @return a boolean indicating whether or not the given HantoCoordinate is adjacent to any pieces.
+	 */
+	public boolean isAdjacentToOtherColorPiece(PieceCoordinate coordinate, HantoPlayerColor color) {
+		Iterator<Entry<PieceCoordinate, HantoPiece>> pieces = board.entrySet().iterator();
+		PieceCoordinate next;
+		HantoPlayerColor pieceColor;
+		while(pieces.hasNext()) {
+			Entry<PieceCoordinate, HantoPiece> entry = pieces.next();
+			next = entry.getKey();
+			pieceColor = entry.getValue().getColor();
+			if (next.isAdjacentTo(coordinate) && color != pieceColor) {
+				return true;			 
+			}
+		}
+		return false;
+	}
+	
+	/**
 	 * Determines if a given HantoCoordinate already has a piece on it
 	 * @param coordinate the HantoCoordinate we are checking for
 	 * @return a boolean indicating whether or not the given HantoCoordinate already has a piece on it

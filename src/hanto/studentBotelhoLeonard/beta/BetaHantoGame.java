@@ -7,17 +7,12 @@ package hanto.studentBotelhoLeonard.beta;
 
 import java.util.HashMap;
 
-import hanto.common.HantoCoordinate;
 import hanto.common.HantoException;
 import hanto.common.HantoGame;
-import hanto.common.HantoPiece;
 import hanto.common.HantoPieceType;
 import hanto.common.HantoPlayerColor;
-import hanto.common.MoveResult;
 import hanto.studentBotelhoLeonard.common.BaseHantoGame;
-import hanto.studentBotelhoLeonard.common.Butterfly;
 import hanto.studentBotelhoLeonard.common.PieceCoordinate;
-import hanto.studentBotelhoLeonard.common.Sparrow;
 
 /**
  * An implementation of the HantoGame interface for the Beta version of Hanto.
@@ -42,42 +37,9 @@ public class BetaHantoGame extends BaseHantoGame implements HantoGame {
 		redPiecesLeft = new HashMap<HantoPieceType, Integer>(bluePiecesLeft);
 	}
 
-	@Override
-	public MoveResult makeMove(HantoPieceType pieceType, HantoCoordinate from, HantoCoordinate to) throws HantoException {
-		HantoPlayerColor color;
-		HantoPiece piece;
-		MoveResult result;
-		
-		color = whoseTurnIsIt();
-				
-		// switch case for adding different types of game pieces
-		switch(pieceType) {
-			case BUTTERFLY:
-				piece = new Butterfly(color);
-				break;
-			case SPARROW:
-				piece = new Sparrow(color);
-				break;
-			default:
-				throw new HantoException("Unrecognized game piece type!");
-		}
-		
-		// use copy constructor on given HantoCoordinates
-		PieceCoordinate newFrom = (from == null? null : new PieceCoordinate(from));
-		PieceCoordinate newTo = (to == null? null : new PieceCoordinate(to));
-		
-		validateMove(pieceType, newFrom, newTo, color);
-		decrementPieceTypeForPlayer(color, pieceType);
-		board.addPiece(newTo, piece);
-		result = determineGameResult();
-
-		turnCount++;
-		return result;
-	}
-
 	
 	// Validates potential moves
-	private void validateMove(HantoPieceType pieceType, PieceCoordinate from, PieceCoordinate to, HantoPlayerColor color) throws HantoException {
+	protected void validateMove(HantoPieceType pieceType, PieceCoordinate from, PieceCoordinate to, HantoPlayerColor color) throws HantoException {
 		// Can only place new pieces
 		if (from != null) throw new HantoException("Can't move pieces in Beta Hanto. Only place new pieces.");
 
@@ -100,31 +62,6 @@ public class BetaHantoGame extends BaseHantoGame implements HantoGame {
 			}
 		}
 				
-	}
-	
-	
-	// determine the game result after this move.  makes calls to HantoBoard
-	private MoveResult determineGameResult() {
-		MoveResult result;
-		boolean isBlueWinner = board.checkIfPlayerLost(HantoPlayerColor.RED);
-		boolean isRedWinner = board.checkIfPlayerLost(HantoPlayerColor.BLUE);
-		if (isBlueWinner && isRedWinner) {
-			result = MoveResult.DRAW;
-		}
-		else if (isBlueWinner) {
-			result = MoveResult.BLUE_WINS;
-		}
-		else if (isRedWinner) {
-			result = MoveResult.RED_WINS;
-		}
-		else if (!anyPiecesLeftToPlay()) { // check for draw
-			result = MoveResult.DRAW;
-		}
-		else {
-			result = MoveResult.OK;
-		}
-		
-		return result;
 	}
 
 }
