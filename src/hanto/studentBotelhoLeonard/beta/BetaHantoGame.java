@@ -7,7 +7,6 @@ package hanto.studentBotelhoLeonard.beta;
 
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Map.Entry;
 
 import hanto.common.HantoCoordinate;
@@ -17,8 +16,8 @@ import hanto.common.HantoPiece;
 import hanto.common.HantoPieceType;
 import hanto.common.HantoPlayerColor;
 import hanto.common.MoveResult;
+import hanto.studentBotelhoLeonard.common.BaseHantoGame;
 import hanto.studentBotelhoLeonard.common.Butterfly;
-import hanto.studentBotelhoLeonard.common.HantoBoard;
 import hanto.studentBotelhoLeonard.common.PieceCoordinate;
 import hanto.studentBotelhoLeonard.common.Sparrow;
 
@@ -29,23 +28,15 @@ import hanto.studentBotelhoLeonard.common.Sparrow;
  * @author Andy Botelho and Andrew Leonard
  *
  */
-public class BetaHantoGame implements HantoGame {
-	
-	private HantoPlayerColor movesFirst;
-	private int turnCount;
-	private HantoBoard board;
-	private Map<HantoPieceType, Integer> bluePiecesLeft;
-	private Map<HantoPieceType, Integer> redPiecesLeft;
-	
+public class BetaHantoGame extends BaseHantoGame implements HantoGame {
+
 	/**
 	 * Constructor for BetaHanto. Creates a HantoBoard telling it that each player gets 
 	 * one Butterfly and five Sparrows.
 	 * @param movesFirst a HantoPlayerColor indicating which player goes first.
 	 */
 	public BetaHantoGame(HantoPlayerColor movesFirst) {
-		this.movesFirst = movesFirst;
-		turnCount = 0;
-		board = new HantoBoard();
+		super(movesFirst);
 		
 		bluePiecesLeft = new HashMap<HantoPieceType, Integer>();
 		bluePiecesLeft.put(HantoPieceType.BUTTERFLY, 1);
@@ -74,8 +65,8 @@ public class BetaHantoGame implements HantoGame {
 		}
 		
 		// use copy constructor on given HantoCoordinates
-		PieceCoordinate newFrom = from == null? null : new PieceCoordinate(from);
-		PieceCoordinate newTo = to == null? null : new PieceCoordinate(to);
+		PieceCoordinate newFrom = (from == null? null : new PieceCoordinate(from));
+		PieceCoordinate newTo = (to == null? null : new PieceCoordinate(to));
 		
 		validateMove(pieceType, newFrom, newTo, color);
 		decrementPieceTypeForPlayer(color, pieceType);
@@ -84,17 +75,6 @@ public class BetaHantoGame implements HantoGame {
 
 		turnCount++;
 		return result;
-	}
-
-	@Override
-	public HantoPiece getPieceAt(HantoCoordinate where) {
-		PieceCoordinate coordinate = new PieceCoordinate(where); // copy constructor
-		return board.getPieceAt(coordinate);
-	}
-
-	@Override
-	public String getPrintableBoard() {
-		return board.toString();
 	}
 	
 
