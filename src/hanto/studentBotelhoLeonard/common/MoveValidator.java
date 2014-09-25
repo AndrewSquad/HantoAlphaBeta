@@ -12,6 +12,7 @@ public interface MoveValidator {
 	 * Determines the legality of moving a piece from one coordinate on the board to another.
 	 * @param from - the starting coordinate
 	 * @param to - the destination coordinate
+	 * @param distanceLimit - how far of a walk the piece can move
 	 * @return boolean indicating whether or not the proposed move is valid
 	 */
 	public boolean isMoveLegal(PieceCoordinate from, PieceCoordinate to);

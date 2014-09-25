@@ -15,18 +15,26 @@ import hanto.common.HantoPieceType;
 import hanto.common.HantoPlayerColor;
 import hanto.common.MoveResult;
 import hanto.studentBotelhoLeonard.common.BaseHantoGame;
-import hanto.studentBotelhoLeonard.common.PieceCoordinate;
+import hanto.studentBotelhoLeonard.common.MoveValidator;
+import hanto.studentBotelhoLeonard.common.WalkValidator;
 
 
 public class GammaHantoGame extends BaseHantoGame implements HantoGame {
 
 	public GammaHantoGame(HantoPlayerColor movesFirst) {
 		super(movesFirst);
+		
+		turnLimit = 40; // game ends after 20th full turn
 
 		bluePiecesLeft = new HashMap<HantoPieceType, Integer>();
 		bluePiecesLeft.put(HantoPieceType.BUTTERFLY, 1);
 		bluePiecesLeft.put(HantoPieceType.SPARROW, 5);
 		redPiecesLeft = new HashMap<HantoPieceType, Integer>(bluePiecesLeft);
+		
+		pieceAbilities = new HashMap<HantoPieceType, MoveValidator>();
+		pieceAbilities.put(HantoPieceType.BUTTERFLY, new WalkValidator(1, board));
+		pieceAbilities.put(HantoPieceType.SPARROW, new WalkValidator(1, board));
+		
 	}
 	
 	
@@ -36,12 +44,5 @@ public class GammaHantoGame extends BaseHantoGame implements HantoGame {
 		
 		return super.makeMove(pieceType, from, to);
 	}
-
-
-	// Validates potential moves
-	protected void validateMove(HantoPieceType pieceType, PieceCoordinate from, PieceCoordinate to, HantoPlayerColor color) throws HantoException {
-		super.validateMove(pieceType, from, to, color);
-	}
-
 
 }

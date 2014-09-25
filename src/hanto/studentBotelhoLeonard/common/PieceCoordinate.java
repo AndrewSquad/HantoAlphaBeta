@@ -82,7 +82,7 @@ public class PieceCoordinate implements HantoCoordinate {
 	 * Returns an ArrayList of the six adjacent PieceCoordinates to this PieceCoordinate object.
 	 * @return the ArrayList of six adjacent PieceCoordinates
 	 */
-	public ArrayList<PieceCoordinate> sixAdjacentCoordinates() {
+	public ArrayList<PieceCoordinate> getSixAdjacentCoordinates() {
 		ArrayList<PieceCoordinate> adjacentCoordinates = new ArrayList<PieceCoordinate>();
 		adjacentCoordinates.add(new PieceCoordinate(x, y + 1));
 		adjacentCoordinates.add(new PieceCoordinate(x + 1, y));
@@ -91,6 +91,22 @@ public class PieceCoordinate implements HantoCoordinate {
 		adjacentCoordinates.add(new PieceCoordinate(x - 1, y));
 		adjacentCoordinates.add(new PieceCoordinate(x - 1, y + 1));
 		return adjacentCoordinates;
+	}
+	
+	public int distanceFrom(PieceCoordinate dest) {
+		int deltaX = dest.getX() - x;
+		int deltaY = dest.getY() - y;
+		if (deltaX == 0) return Math.abs(deltaY);
+		
+		double slope = (double)deltaY/(double)deltaX;
+		
+		int distance = 0;
+		
+		if (slope < 0 && slope > -1) distance = deltaX;
+		else if (slope < -1) distance = deltaY;
+		else distance = Math.abs(deltaX) + Math.abs(deltaY);
+				
+		return Math.abs(distance);
 	}
 
 

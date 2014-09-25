@@ -173,29 +173,31 @@ public class HantoBoard {
 	
 	
 	/**
-	 * Determines if a given coordinate has a two-tile opening.  In other words, are there two adjacent unoccupied 
-	 * tiles that are both adjacent to the given coordinate?
-	 * @param coordinate the PieceCoordinate we are looking at
-	 * @return boolean indicating if there is a two tile opening adjacent to the given coordinate or not
+	 * Returns a list of coordinates that the given coordinate can go through to begin moving.
+	 * A tile that a coordinate can begin its move through must be adjacent to another open tile.
+	 * @param coordinate the coordinate we are trying to move from
+	 * @return the list of coordinates that the move can go through
 	 */
-	public boolean existsTwoTileOpening(PieceCoordinate coordinate) {
+	public ArrayList<PieceCoordinate> getTwoTileOpenings(PieceCoordinate coordinate) {
 		
 		ArrayList<PieceCoordinate> openTiles = new ArrayList<PieceCoordinate>();
+		ArrayList<PieceCoordinate> twoTileOpenings = new ArrayList<PieceCoordinate>();
 		
-		for (PieceCoordinate adjacentCoordinate : coordinate.sixAdjacentCoordinates()) { // for each of the six adjacent coordinates
+		for (PieceCoordinate adjacentCoordinate : coordinate.getSixAdjacentCoordinates()) { // for each of the six adjacent coordinates
 			if (!isTileAlreadyOccupied(adjacentCoordinate)) { // if the coordinate is unoccupied
 				openTiles.add(adjacentCoordinate); // add to openTiles list
 			}
 		}
 		
 		// if any of the tiles in openTiles are adjacent to each other then return true
-		for (PieceCoordinate x : openTiles) {
-			for (PieceCoordinate y : openTiles) {
-				if (x.isAdjacentTo(y)) return true;
+		for (PieceCoordinate i : openTiles) {
+			for (PieceCoordinate j : openTiles) {
+				if (i.isAdjacentTo(j)) twoTileOpenings.add(i);
 			}
 		}
+		if (twoTileOpenings.isEmpty()) return null;
 		
-		return false;
+		return twoTileOpenings;
 	}
 	
 	// determines if a particular PieceCoordinate is surrounded by 6 other occupied tiles/pieces

@@ -111,7 +111,7 @@ public class GammaTests {
 	@Test
 	public void testSixAdjacentCoordinates() {
 		PieceCoordinate coordinate = new PieceCoordinate(0 , 0);
-		ArrayList<PieceCoordinate> six = coordinate.sixAdjacentCoordinates();
+		ArrayList<PieceCoordinate> six = coordinate.getSixAdjacentCoordinates();
 		assertTrue(six.contains(new PieceCoordinate(1, 0)));
 		assertTrue(six.contains(new PieceCoordinate(0, -1)));
 		assertFalse(six.contains(new PieceCoordinate(0, -2)));
@@ -125,28 +125,67 @@ public class GammaTests {
 	}
 	
 	@Test
-	public void testTwoUnoccupiedTiles() {
+	public void testTwoUnoccupiedTiles_1() {
 		HantoBoard board = new HantoBoard();
 		board.addPiece(new PieceCoordinate(0, 0), new Sparrow(BLUE));
-		assertTrue(board.existsTwoTileOpening(new PieceCoordinate(0, 0)));
+		assertNotNull(board.getTwoTileOpenings(new PieceCoordinate(0, 0)));
 		
 		board.addPiece(new PieceCoordinate(0, 1), new Sparrow(BLUE));
 		board.addPiece(new PieceCoordinate(1, 0), new Sparrow(BLUE));
-		assertTrue(board.existsTwoTileOpening(new PieceCoordinate(0, 0)));
+		assertNotNull(board.getTwoTileOpenings(new PieceCoordinate(0, 0)));
 		
 		board.addPiece(new PieceCoordinate(1, -1), new Sparrow(BLUE));
 		board.addPiece(new PieceCoordinate(0, -1), new Sparrow(BLUE));
-		assertTrue(board.existsTwoTileOpening(new PieceCoordinate(0, 0)));
+		assertNotNull(board.getTwoTileOpenings(new PieceCoordinate(0, 0)));
 		
 		board.addPiece(new PieceCoordinate(-1, 0), new Sparrow(BLUE));
-		assertFalse(board.existsTwoTileOpening(new PieceCoordinate(0, 0)));
+		assertNull(board.getTwoTileOpenings(new PieceCoordinate(0, 0)));
 	}
+	
+	@Test
+	public void testTwoUnoccupiedTiles_2() {
+		HantoBoard board = new HantoBoard();
+		board.addPiece(new PieceCoordinate(0, 0), new Sparrow(BLUE));
+		assertNotNull(board.getTwoTileOpenings(new PieceCoordinate(0, 0)));
+		
+		board.addPiece(new PieceCoordinate(0, 1), new Sparrow(BLUE));
+		board.addPiece(new PieceCoordinate(-1, 0), new Sparrow(BLUE));
+		assertNotNull(board.getTwoTileOpenings(new PieceCoordinate(0, 0)));
+		
+		board.addPiece(new PieceCoordinate(1, -1), new Sparrow(BLUE));
+		assertNull(board.getTwoTileOpenings(new PieceCoordinate(0, 0)));
+	}
+	
+	@Test
+	public void testCoordinateDistances() {
+		PieceCoordinate coord0_0 = new PieceCoordinate(0, 0);
+		PieceCoordinate coord1_1 = new PieceCoordinate(1, 1);
+		PieceCoordinate coord2_2 = new PieceCoordinate(2, 2);
+		PieceCoordinate coord3_4 = new PieceCoordinate(3, 4);
+		PieceCoordinate coordneg2_0 = new PieceCoordinate(-2, 0);
+		PieceCoordinate coordneg3_neg4 = new PieceCoordinate(-3, -4);
+		PieceCoordinate coord3_neg4 = new PieceCoordinate(3, -4);
+		PieceCoordinate coordneg3_4 = new PieceCoordinate(-3, 4);
+		
+		assertEquals(2, coord0_0.distanceFrom(coord1_1));
+		assertEquals(11, coord2_2.distanceFrom(coordneg3_neg4));
+		assertEquals(9, coordneg3_neg4.distanceFrom(coord1_1));
+		assertEquals(7, coord0_0.distanceFrom(coord3_4));
+		assertEquals(5, coordneg2_0.distanceFrom(coordneg3_neg4));
+		assertEquals(4, coord3_neg4.distanceFrom(coord0_0));	
+		assertEquals(8, coord3_neg4.distanceFrom(coordneg3_4));
+		assertEquals(5, coord3_neg4.distanceFrom(coord1_1));
+		assertEquals(4, coordneg3_4.distanceFrom(coord1_1));
+		assertEquals(8, coord3_neg4.distanceFrom(coord3_4));	
+
+	}
+		
 	
 	@Test
 	public void blueMovesButterfly() throws HantoException {
 		game.makeMove(BUTTERFLY, null, new PieceCoordinate(0, 0));
 		game.makeMove(BUTTERFLY, null, new PieceCoordinate(0, 1));
-		MoveResult mv = game.makeMove(BUTTERFLY, null, new PieceCoordinate(1, 0));
+		MoveResult mv = game.makeMove(BUTTERFLY, new PieceCoordinate(0, 0), new PieceCoordinate(1, 0));
 		assertEquals(OK, mv);
 		assertEquals(null, game.getPieceAt(new PieceCoordinate(0, 0)));
 	

@@ -31,6 +31,8 @@ public class BetaHantoGame extends BaseHantoGame implements HantoGame {
 	public BetaHantoGame(HantoPlayerColor movesFirst) {
 		super(movesFirst);
 		
+		turnLimit = 12; // game ends after 6th full turn
+		
 		bluePiecesLeft = new HashMap<HantoPieceType, Integer>();
 		bluePiecesLeft.put(HantoPieceType.BUTTERFLY, 1);
 		bluePiecesLeft.put(HantoPieceType.SPARROW, 5);

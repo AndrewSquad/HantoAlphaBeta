@@ -16,9 +16,11 @@ public abstract class BaseHantoGame implements HantoGame {
 
 	protected HantoPlayerColor movesFirst;
 	protected int turnCount;
+	protected int turnLimit;
 	protected HantoBoard board;
 	protected Map<HantoPieceType, Integer> bluePiecesLeft;
 	protected Map<HantoPieceType, Integer> redPiecesLeft;
+	protected Map<HantoPieceType, MoveValidator> pieceAbilities;
 
 	public BaseHantoGame(HantoPlayerColor movesFirst) {
 		this.movesFirst = movesFirst;
@@ -53,17 +55,18 @@ public abstract class BaseHantoGame implements HantoGame {
 
 		validateMove(pieceType, newFrom, newTo, color);
 		
-		if (newFrom == null) {
+		if (newFrom == null) { // if we're placing a new piece
 			decrementPieceTypeForPlayer(color, pieceType);
 			board.addPiece(newTo, piece);
 		}
-		else {
+		else { // if we're moving an existing piece
 			board.moveExistingPiece(newFrom, newTo, piece);
 		}
 		
-		result = determineGameResult();
-
+		
 		turnCount++;
+		result = determineGameResult();
+		
 		return result;
 	}
 	
@@ -93,7 +96,6 @@ public abstract class BaseHantoGame implements HantoGame {
 		else { 
 			validateMoveExistingPiece(pieceType, from, to, color);
 		}
-
 	}
 	
 	
@@ -102,9 +104,7 @@ public abstract class BaseHantoGame implements HantoGame {
 		// player must place Butterfly before moving an existing piece
 		if(!hasPlayerPlacedButterfly(color)) throw new HantoException("Must place Butterfly before moving an existing piece!");
 
-		// if (!board.isAdjacentToAnyPiece(to) || board.isTileAlreadyOccupied(to)) {
-		// 		throw new HantoException("Invalid Move");
-		// }
+		if(!pieceAbilities.get(pieceType).isMoveLegal(from, to)) throw new HantoException("Invalid movement of existing piece!");
 	}
 	
 
@@ -232,7 +232,7 @@ public abstract class BaseHantoGame implements HantoGame {
 		else if (isRedWinner) {
 			result = MoveResult.RED_WINS;
 		}
-		else if (!anyPiecesLeftToPlay()) { // check for draw
+		else if (!anyPiecesLeftToPlay() || turnCount >= turnLimit) { // check for draw
 			result = MoveResult.DRAW;
 		}
 		else {
