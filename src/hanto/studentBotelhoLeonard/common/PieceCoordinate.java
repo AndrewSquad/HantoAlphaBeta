@@ -3,6 +3,8 @@
  */
 package hanto.studentBotelhoLeonard.common;
 
+import java.util.ArrayList;
+
 import hanto.common.HantoCoordinate;
 
 /**
@@ -73,6 +75,22 @@ public class PieceCoordinate implements HantoCoordinate {
 		boolean yAdjacent = Math.abs(deltaY) < 2;
 
 		return (xAdjacent && yAdjacent); 
+	}
+	
+	
+	/**
+	 * Returns an ArrayList of the six adjacent PieceCoordinates to this PieceCoordinate object.
+	 * @return the ArrayList of six adjacent PieceCoordinates
+	 */
+	public ArrayList<PieceCoordinate> sixAdjacentCoordinates() {
+		ArrayList<PieceCoordinate> adjacentCoordinates = new ArrayList<PieceCoordinate>();
+		adjacentCoordinates.add(new PieceCoordinate(x, y + 1));
+		adjacentCoordinates.add(new PieceCoordinate(x + 1, y));
+		adjacentCoordinates.add(new PieceCoordinate(x + 1, y - 1));
+		adjacentCoordinates.add(new PieceCoordinate(x, y - 1));
+		adjacentCoordinates.add(new PieceCoordinate(x - 1, y));
+		adjacentCoordinates.add(new PieceCoordinate(x - 1, y + 1));
+		return adjacentCoordinates;
 	}
 
 

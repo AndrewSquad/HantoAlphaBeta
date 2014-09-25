@@ -52,8 +52,15 @@ public abstract class BaseHantoGame implements HantoGame {
 		PieceCoordinate newTo = (to == null? null : new PieceCoordinate(to));
 
 		validateMove(pieceType, newFrom, newTo, color);
-		decrementPieceTypeForPlayer(color, pieceType);
-		board.addPiece(newTo, piece);
+		
+		if (newFrom == null) {
+			decrementPieceTypeForPlayer(color, pieceType);
+			board.addPiece(newTo, piece);
+		}
+		else {
+			board.moveExistingPiece(newFrom, newTo, piece);
+		}
+		
 		result = determineGameResult();
 
 		turnCount++;
@@ -83,14 +90,21 @@ public abstract class BaseHantoGame implements HantoGame {
 			validateAddPiece(pieceType, from, to, color);
 		}
 
-		else { // if a piece is being moved
-
-			//			if (!board.isAdjacentToAnyPiece(to) || board.isTileAlreadyOccupied(to)) {
-			//				throw new HantoException("Invalid Move");
-			//			}
-
+		else { 
+			validateMoveExistingPiece(pieceType, from, to, color);
 		}
 
+	}
+	
+	
+	protected void validateMoveExistingPiece(HantoPieceType pieceType, PieceCoordinate from, PieceCoordinate to, HantoPlayerColor color) throws HantoException {
+
+		// player must place Butterfly before moving an existing piece
+		if(!hasPlayerPlacedButterfly(color)) throw new HantoException("Must place Butterfly before moving an existing piece!");
+
+		// if (!board.isAdjacentToAnyPiece(to) || board.isTileAlreadyOccupied(to)) {
+		// 		throw new HantoException("Invalid Move");
+		// }
 	}
 	
 

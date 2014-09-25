@@ -8,6 +8,7 @@ import hanto.common.HantoPiece;
 import hanto.common.HantoPieceType;
 import hanto.common.HantoPlayerColor;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -60,6 +61,18 @@ public class HantoBoard {
 	 */
 	public void addPiece(PieceCoordinate coordinate, HantoPiece piece) {
 		board.put(coordinate, piece);
+	}
+	
+	
+	/**
+	 * The method used for moving an existing piece to a different coordinate on the HantoBoard.
+	 * @param from the original coordinate of the piece
+	 * @param to the new coordinate of the piece
+	 * @param piece the piece we are moving
+	 */
+	public void moveExistingPiece(PieceCoordinate from, PieceCoordinate to, HantoPiece piece) {
+		board.remove(from);
+		board.put(to, piece);
 	}
 	
 	
@@ -155,6 +168,33 @@ public class HantoBoard {
 			// if there is already a piece in the coordinate we are trying to add one to
 			if(next.equals(coordinate)) return true;
 		}
+		return false;
+	}
+	
+	
+	/**
+	 * Determines if a given coordinate has a two-tile opening.  In other words, are there two adjacent unoccupied 
+	 * tiles that are both adjacent to the given coordinate?
+	 * @param coordinate the PieceCoordinate we are looking at
+	 * @return boolean indicating if there is a two tile opening adjacent to the given coordinate or not
+	 */
+	public boolean existsTwoTileOpening(PieceCoordinate coordinate) {
+		
+		ArrayList<PieceCoordinate> openTiles = new ArrayList<PieceCoordinate>();
+		
+		for (PieceCoordinate adjacentCoordinate : coordinate.sixAdjacentCoordinates()) { // for each of the six adjacent coordinates
+			if (!isTileAlreadyOccupied(adjacentCoordinate)) { // if the coordinate is unoccupied
+				openTiles.add(adjacentCoordinate); // add to openTiles list
+			}
+		}
+		
+		// if any of the tiles in openTiles are adjacent to each other then return true
+		for (PieceCoordinate x : openTiles) {
+			for (PieceCoordinate y : openTiles) {
+				if (x.isAdjacentTo(y)) return true;
+			}
+		}
+		
 		return false;
 	}
 	

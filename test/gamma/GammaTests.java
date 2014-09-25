@@ -1,6 +1,9 @@
 package gamma;
 
 import static org.junit.Assert.*;
+
+import java.util.ArrayList;
+
 import hanto.common.HantoException;
 import hanto.common.HantoGame;
 import hanto.common.HantoGameID;
@@ -10,6 +13,7 @@ import hanto.studentBotelhoLeonard.HantoGameFactory;
 import hanto.studentBotelhoLeonard.common.Butterfly;
 import hanto.studentBotelhoLeonard.common.HantoBoard;
 import hanto.studentBotelhoLeonard.common.PieceCoordinate;
+import hanto.studentBotelhoLeonard.common.Sparrow;
 import static hanto.common.HantoPieceType.*;
 import static hanto.common.HantoPlayerColor.*;
 import static hanto.common.MoveResult.*;
@@ -103,8 +107,52 @@ public class GammaTests {
 		game.makeMove(SPARROW, null, new PieceCoordinate(1, -1));
 		game.makeMove(SPARROW, null, new PieceCoordinate(1, 0));
 	}
-
 	
+	@Test
+	public void testSixAdjacentCoordinates() {
+		PieceCoordinate coordinate = new PieceCoordinate(0 , 0);
+		ArrayList<PieceCoordinate> six = coordinate.sixAdjacentCoordinates();
+		assertTrue(six.contains(new PieceCoordinate(1, 0)));
+		assertTrue(six.contains(new PieceCoordinate(0, -1)));
+		assertFalse(six.contains(new PieceCoordinate(0, -2)));
+	}
 	
+	@Test(expected=HantoException.class)
+	public void playerCantMovePieceBeforePlacingButterfly() throws HantoException {
+		game.makeMove(SPARROW, null, new PieceCoordinate(0, 0));
+		game.makeMove(BUTTERFLY, null, new PieceCoordinate(0, 1));
+		game.makeMove(SPARROW, new PieceCoordinate(0, 0), new PieceCoordinate(1, 0));
+	}
+	
+	@Test
+	public void testTwoUnoccupiedTiles() {
+		HantoBoard board = new HantoBoard();
+		board.addPiece(new PieceCoordinate(0, 0), new Sparrow(BLUE));
+		assertTrue(board.existsTwoTileOpening(new PieceCoordinate(0, 0)));
+		
+		board.addPiece(new PieceCoordinate(0, 1), new Sparrow(BLUE));
+		board.addPiece(new PieceCoordinate(1, 0), new Sparrow(BLUE));
+		assertTrue(board.existsTwoTileOpening(new PieceCoordinate(0, 0)));
+		
+		board.addPiece(new PieceCoordinate(1, -1), new Sparrow(BLUE));
+		board.addPiece(new PieceCoordinate(0, -1), new Sparrow(BLUE));
+		assertTrue(board.existsTwoTileOpening(new PieceCoordinate(0, 0)));
+		
+		board.addPiece(new PieceCoordinate(-1, 0), new Sparrow(BLUE));
+		assertFalse(board.existsTwoTileOpening(new PieceCoordinate(0, 0)));
+	}
+	
+	@Test
+	public void blueMovesButterfly() throws HantoException {
+		game.makeMove(BUTTERFLY, null, new PieceCoordinate(0, 0));
+		game.makeMove(BUTTERFLY, null, new PieceCoordinate(0, 1));
+		MoveResult mv = game.makeMove(BUTTERFLY, null, new PieceCoordinate(1, 0));
+		assertEquals(OK, mv);
+		assertEquals(null, game.getPieceAt(new PieceCoordinate(0, 0)));
+	
+		HantoPiece piece = game.getPieceAt(new PieceCoordinate(1, 0));
+		assertEquals(BLUE, piece.getColor());
+		assertEquals(BUTTERFLY, piece.getType());
+	}
 
 }
