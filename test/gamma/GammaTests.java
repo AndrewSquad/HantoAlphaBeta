@@ -127,33 +127,55 @@ public class GammaTests {
 	@Test
 	public void testTwoUnoccupiedTiles_1() {
 		HantoBoard board = new HantoBoard();
-		board.addPiece(new PieceCoordinate(0, 0), new Sparrow(BLUE));
-		assertNotNull(board.getTwoTileOpenings(new PieceCoordinate(0, 0)));
+		PieceCoordinate origin = new PieceCoordinate(0, 0);
+		ArrayList<PieceCoordinate> openings = new ArrayList<PieceCoordinate>();
+		board.addPiece(origin, new Sparrow(BLUE));
+		assertNotNull(board.getTwoTileOpenings(origin));
+		assertEquals(origin.getSixAdjacentCoordinates(), board.getTwoTileOpenings(origin));
 		
 		board.addPiece(new PieceCoordinate(0, 1), new Sparrow(BLUE));
 		board.addPiece(new PieceCoordinate(1, 0), new Sparrow(BLUE));
-		assertNotNull(board.getTwoTileOpenings(new PieceCoordinate(0, 0)));
+		openings = board.getTwoTileOpenings(origin);
+		assertFalse(openings.isEmpty());
+		assertTrue(openings.contains(new PieceCoordinate(1, -1)));
+		assertTrue(openings.contains(new PieceCoordinate(0, -1)));
+		assertTrue(openings.contains(new PieceCoordinate(-1, 0)));
+		assertTrue(openings.contains(new PieceCoordinate(-1, 1)));
+		assertEquals(4, openings.size());
 		
 		board.addPiece(new PieceCoordinate(1, -1), new Sparrow(BLUE));
 		board.addPiece(new PieceCoordinate(0, -1), new Sparrow(BLUE));
+		openings = board.getTwoTileOpenings(origin);
 		assertNotNull(board.getTwoTileOpenings(new PieceCoordinate(0, 0)));
+		assertTrue(openings.contains(new PieceCoordinate(-1, 0)));
+		assertTrue(openings.contains(new PieceCoordinate(-1, 1)));
+		assertEquals(2, openings.size());
 		
 		board.addPiece(new PieceCoordinate(-1, 0), new Sparrow(BLUE));
-		assertNull(board.getTwoTileOpenings(new PieceCoordinate(0, 0)));
+		openings = board.getTwoTileOpenings(origin);
+		assertNull(board.getTwoTileOpenings(origin));
+		assertNull(openings);
 	}
 	
 	@Test
 	public void testTwoUnoccupiedTiles_2() {
 		HantoBoard board = new HantoBoard();
-		board.addPiece(new PieceCoordinate(0, 0), new Sparrow(BLUE));
-		assertNotNull(board.getTwoTileOpenings(new PieceCoordinate(0, 0)));
+		PieceCoordinate origin = new PieceCoordinate(0, 0);
+		ArrayList<PieceCoordinate> openings = new ArrayList<PieceCoordinate>();
+		board.addPiece(origin, new Sparrow(BLUE));
+		assertNotNull(board.getTwoTileOpenings(origin));
 		
 		board.addPiece(new PieceCoordinate(0, 1), new Sparrow(BLUE));
 		board.addPiece(new PieceCoordinate(-1, 0), new Sparrow(BLUE));
-		assertNotNull(board.getTwoTileOpenings(new PieceCoordinate(0, 0)));
+		openings = board.getTwoTileOpenings(origin);
+		assertNotNull(board.getTwoTileOpenings(origin));
+		assertTrue(openings.contains(new PieceCoordinate(1, -1)));
+		assertTrue(openings.contains(new PieceCoordinate(0, -1)));
+		assertTrue(openings.contains(new PieceCoordinate(1, 0)));
+		assertEquals(3, openings.size());
 		
 		board.addPiece(new PieceCoordinate(1, -1), new Sparrow(BLUE));
-		assertNull(board.getTwoTileOpenings(new PieceCoordinate(0, 0)));
+		assertNull(board.getTwoTileOpenings(origin));
 	}
 	
 	@Test
