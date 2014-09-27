@@ -93,7 +93,7 @@ public abstract class BaseHantoGame implements HantoGame {
 			validateAddPiece(pieceType, from, to, color);
 		}
 
-		else { 
+		else { // if an existing piece is being moved
 			validateMoveExistingPiece(pieceType, from, to, color);
 		}
 	}

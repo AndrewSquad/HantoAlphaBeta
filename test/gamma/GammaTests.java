@@ -209,7 +209,7 @@ public class GammaTests {
 		game.makeMove(BUTTERFLY, null, new PieceCoordinate(0, 1));
 		MoveResult mv = game.makeMove(BUTTERFLY, new PieceCoordinate(0, 0), new PieceCoordinate(1, 0));
 		assertEquals(OK, mv);
-		assertEquals(null, game.getPieceAt(new PieceCoordinate(0, 0)));
+		assertNull(game.getPieceAt(new PieceCoordinate(0, 0)));
 	
 		HantoPiece piece = game.getPieceAt(new PieceCoordinate(1, 0));
 		assertEquals(BLUE, piece.getColor());
