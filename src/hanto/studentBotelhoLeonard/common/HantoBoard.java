@@ -173,8 +173,8 @@ public class HantoBoard {
 	
 	
 	/**
-	 * Returns a list of coordinates that the given coordinate can go through to begin moving.
-	 * A tile that a coordinate can begin its move through must be adjacent to another open tile.
+	 * Returns a list of coordinates that the given coordinate can move to.
+	 * A tile that a coordinate can move to must be adjacent to another open tile.
 	 * @param coordinate the coordinate we are trying to move from
 	 * @return the list of coordinates that the move can go through
 	 */

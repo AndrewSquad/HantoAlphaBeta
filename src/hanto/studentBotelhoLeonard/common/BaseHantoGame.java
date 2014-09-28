@@ -104,6 +104,8 @@ public abstract class BaseHantoGame implements HantoGame {
 		// player must place Butterfly before moving an existing piece
 		if(!hasPlayerPlacedButterfly(color)) throw new HantoException("Must place Butterfly before moving an existing piece!");
 
+		if(pieceType != board.getPieceAt(from).getType()) throw new HantoException("Piece type mismatch!");
+		
 		if(!pieceAbilities.get(pieceType).isMoveLegal(from, to)) throw new HantoException("Invalid movement of existing piece!");
 	}
 	

@@ -40,11 +40,13 @@ public class WalkValidator implements MoveValidator {
 			
 			if (pastMoves.size() > distanceLimit) continue;
 			
+			if (!isAdjacentToOccupiedTile(currentNode, pastMoves.get(pastMoves.size() - 1))) continue;
+			
 			if (currentNode.equals(to)) return true;
 			
 			for (PieceCoordinate adjacentNode : board.getTwoTileOpenings(currentNode)) {
 				tempList = new ArrayList<PieceCoordinate>(pastMoves);
-				pastMoves.add(currentNode);
+				tempList.add(currentNode);
 				fringe.put(adjacentNode, tempList);
 			}
 		}
@@ -67,6 +69,17 @@ public class WalkValidator implements MoveValidator {
 		}
 		
 		return bestNode;
+	}
+	
+	
+	private boolean isAdjacentToOccupiedTile(PieceCoordinate to, PieceCoordinate from) {
+		
+		for (PieceCoordinate adjacentCoordinate : to.getSixAdjacentCoordinates()) {
+			if (adjacentCoordinate.equals(from)) continue;
+			if (board.isTileAlreadyOccupied(adjacentCoordinate)) return true;
+		}
+		
+		return false;
 	}
 
 }

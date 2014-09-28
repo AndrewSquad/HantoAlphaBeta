@@ -13,6 +13,7 @@ package hanto.studentBotelhoLeonard;
 import hanto.common.*;
 import hanto.studentBotelhoLeonard.alpha.AlphaHantoGame;
 import hanto.studentBotelhoLeonard.beta.BetaHantoGame;
+import hanto.studentBotelhoLeonard.delta.DeltaHantoGame;
 import hanto.studentBotelhoLeonard.gamma.GammaHantoGame;
 
 /**
@@ -70,6 +71,10 @@ public class HantoGameFactory
 				break;
 			case GAMMA_HANTO:
 				game = new GammaHantoGame(movesFirst);
+				break;
+			case DELTA_HANTO:
+				game = new DeltaHantoGame(movesFirst);
+				break;
 			default:
 				break;
 		}
