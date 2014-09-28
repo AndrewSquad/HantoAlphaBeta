@@ -232,13 +232,29 @@ public class GammaTests {
 	}
 	
 	@Test
-	public void successfulMovements() throws HantoException {
+	public void partialGameOfLegalMovements() throws HantoException {
 		game.makeMove(BUTTERFLY, null, new PieceCoordinate(0, 0));
 		game.makeMove(BUTTERFLY, null, new PieceCoordinate(0, 1));
 		game.makeMove(SPARROW, null, new PieceCoordinate(0, -1));
 		game.makeMove(SPARROW, null, new PieceCoordinate(1, 1));
 		game.makeMove(BUTTERFLY, new PieceCoordinate(0, 0), new PieceCoordinate(-1, 1));
 		game.makeMove(SPARROW, new PieceCoordinate(1, 1), new PieceCoordinate(1, 0));
+	}
+	
+	@Test(expected=HantoException.class)
+	public void illegal4thMove() throws HantoException {
+		//First move
+		game.makeMove(BUTTERFLY, null, new PieceCoordinate(0, 0));
+		game.makeMove(BUTTERFLY, null, new PieceCoordinate(0, 1));
+		//Second
+		game.makeMove(SPARROW, null, new PieceCoordinate(0, -1));
+		game.makeMove(SPARROW, null, new PieceCoordinate(1, 1));
+		//Third
+		game.makeMove(SPARROW, null, new PieceCoordinate(0, -2));
+		game.makeMove(SPARROW, null,new PieceCoordinate(0, 2));
+		// Fourth
+		game.makeMove(BUTTERFLY, new PieceCoordinate(0, 0), new PieceCoordinate(-1, 1));
+		game.makeMove(SPARROW, new PieceCoordinate(1, 1), new PieceCoordinate(0, 1));//illegal
 	}
 	
 	@Test(expected=HantoException.class)
