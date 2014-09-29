@@ -11,6 +11,7 @@ import hanto.common.HantoPlayerColor;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -200,6 +201,39 @@ public class HantoBoard {
 		
 		return twoTileOpenings;
 	}
+	
+	
+	/**
+	 * Determines whether or not all pieces on the board are contiguous to each other.
+	 * @return boolean indicating whether or not the board is currently contiguous.
+	 */
+	public boolean isBoardContiguous() {
+		int pieceCount = board.size();
+		boolean isContiguous;
+		LinkedList<PieceCoordinate> visited = new LinkedList<PieceCoordinate>();
+		LinkedList<PieceCoordinate> toVisit = new LinkedList<PieceCoordinate>();
+		PieceCoordinate startingCoord = board.keySet().iterator().next(); // any coordinate on board
+		
+		toVisit.add(startingCoord);
+		
+		PieceCoordinate currentCoord;
+		while (toVisit.size() > 0) {
+			currentCoord = toVisit.pop();
+			// if any adjacent coordinate has piece on it, add the coordinate to the toVisit list
+			for (PieceCoordinate neighbor : currentCoord.getSixAdjacentCoordinates()) {
+				if (isTileAlreadyOccupied(neighbor) && !visited.contains(neighbor) && !toVisit.contains(neighbor)){
+					toVisit.add(neighbor);
+				}
+			}
+			// currentCoord can now go to the visited list
+			visited.add(currentCoord);
+		}
+		
+		isContiguous = (pieceCount == visited.size())? true : false;
+		
+		return isContiguous;
+	}
+	
 	
 	// determines if a particular PieceCoordinate is surrounded by 6 other occupied tiles/pieces
 	private boolean has6Neighbors(PieceCoordinate butterflyPos) {

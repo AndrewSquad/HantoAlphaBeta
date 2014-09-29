@@ -69,6 +69,8 @@ public abstract class BaseHantoGame implements HantoGame {
 			board.moveExistingPiece(newFrom, newTo, piece);
 		}
 		
+		validatePostMove();
+		
 		turnCount++;
 		result = determineGameResult();
 		
@@ -144,6 +146,14 @@ public abstract class BaseHantoGame implements HantoGame {
 
 		else { // second player move
 			if (!board.isAdjacentToAnyPiece(to)) throw new HantoException("Second move must be adjacent to (0, 0)");
+		}
+	}
+	
+	
+	// determines if the board is in a valid state after a move has been made
+	protected void validatePostMove() throws HantoException {
+		if (!board.isBoardContiguous()) {
+			throw new HantoException("Invalid Move: The board is no longer contiguous!");
 		}
 	}
 

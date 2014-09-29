@@ -231,14 +231,13 @@ public class GammaTests {
 		game.makeMove(BUTTERFLY, new PieceCoordinate(0, 0), new PieceCoordinate(0, -1));
 	}
 	
-	@Test
-	public void partialGameOfLegalMovements() throws HantoException {
+	@Test(expected=HantoException.class)
+	public void blueBreaksContiguous() throws HantoException {
 		game.makeMove(BUTTERFLY, null, new PieceCoordinate(0, 0));
 		game.makeMove(BUTTERFLY, null, new PieceCoordinate(0, 1));
 		game.makeMove(SPARROW, null, new PieceCoordinate(0, -1));
 		game.makeMove(SPARROW, null, new PieceCoordinate(1, 1));
 		game.makeMove(BUTTERFLY, new PieceCoordinate(0, 0), new PieceCoordinate(-1, 1));
-		game.makeMove(SPARROW, new PieceCoordinate(1, 1), new PieceCoordinate(1, 0));
 	}
 	
 	@Test(expected=HantoException.class)

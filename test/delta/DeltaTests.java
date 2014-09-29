@@ -7,6 +7,7 @@ import static hanto.common.HantoPlayerColor.*;
 import hanto.common.HantoException;
 import hanto.common.HantoGame;
 import hanto.common.HantoGameID;
+import hanto.common.HantoPiece;
 import hanto.common.MoveResult;
 import hanto.studentBotelhoLeonard.HantoGameFactory;
 import hanto.studentBotelhoLeonard.common.Butterfly;
@@ -76,11 +77,38 @@ public class DeltaTests {
 		game.makeMove(SPARROW, null, new PieceCoordinate(0, -1));
 		game.makeMove(CRAB, null, new PieceCoordinate(-1, 2));
 		game.makeMove(SPARROW, new PieceCoordinate(0, -1), new PieceCoordinate(0, 2));
+		HantoPiece piece = game.getPieceAt(new PieceCoordinate(0, -1));
+		assertNull(piece);
+		piece = game.getPieceAt(new PieceCoordinate(0, 2));
+		assertEquals(SPARROW, piece.getType());
+		assertEquals(BLUE, piece.getColor());
 	}
 	
 	@Test(expected=HantoException.class)
 	public void cantMakeHorse() throws HantoException {
 		game.makeMove(HORSE, null, new PieceCoordinate(0, 0));
+	}
+	
+	@Test
+	public void testIsBoardContiguous() {
+		HantoBoard board = new HantoBoard();
+		board.addPiece(new PieceCoordinate(0, 0), new Butterfly(BLUE));
+		assertTrue(board.isBoardContiguous());
+		board.addPiece(new PieceCoordinate(0, 1), new Butterfly(RED));
+		board.addPiece(new PieceCoordinate(-1, 0), new Sparrow(BLUE));
+		assertTrue(board.isBoardContiguous());
+		board.addPiece(new PieceCoordinate(0, 2), new Sparrow(RED));
+		board.moveExistingPiece(new PieceCoordinate(0, 0), new PieceCoordinate(0, 3), new Butterfly(BLUE));
+		assertFalse(board.isBoardContiguous());
+	}
+	
+	@Test(expected=HantoException.class)
+	public void blueButterflyBreaksContiguousBoard() throws HantoException {
+		game.makeMove(BUTTERFLY, null, new PieceCoordinate(0, 0));
+		game.makeMove(BUTTERFLY, null, new PieceCoordinate(0, 1));
+		game.makeMove(SPARROW, null, new PieceCoordinate(0, -1));
+		game.makeMove(CRAB, null, new PieceCoordinate(-1, 2));
+		game.makeMove(BUTTERFLY, new PieceCoordinate(0, 0), new PieceCoordinate(1, 0));
 	}
 
 }
