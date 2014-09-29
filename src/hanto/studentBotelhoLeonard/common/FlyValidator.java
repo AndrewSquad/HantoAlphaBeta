@@ -6,11 +6,6 @@ public class FlyValidator implements MoveValidator {
 	private HantoBoard board;
 	
 	
-	public FlyValidator(HantoBoard board) {
-		this.distanceLimit = Integer.MAX_VALUE;
-		this.board = board;
-	}
-	
 	public FlyValidator(int distanceLimit, HantoBoard board) {
 		this.distanceLimit = distanceLimit;
 		this.board = board;

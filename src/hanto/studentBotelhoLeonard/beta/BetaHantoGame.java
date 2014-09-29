@@ -10,14 +10,11 @@ import java.util.HashMap;
 import hanto.common.HantoCoordinate;
 import hanto.common.HantoException;
 import hanto.common.HantoGame;
-import hanto.common.HantoPiece;
 import hanto.common.HantoPieceType;
 import hanto.common.HantoPlayerColor;
 import hanto.common.MoveResult;
 import hanto.studentBotelhoLeonard.common.BaseHantoGame;
-import hanto.studentBotelhoLeonard.common.Butterfly;
 import hanto.studentBotelhoLeonard.common.PieceCoordinate;
-import hanto.studentBotelhoLeonard.common.Sparrow;
 
 /**
  * An implementation of the HantoGame interface for the Beta version of Hanto.
@@ -47,42 +44,10 @@ public class BetaHantoGame extends BaseHantoGame implements HantoGame {
 
 	public MoveResult makeMove(HantoPieceType pieceType, HantoCoordinate from,
 			HantoCoordinate to) throws HantoException {
-		HantoPlayerColor color;
-		HantoPiece piece;
-		MoveResult result;
-
-		color = whoseTurnIsIt();
-
-		switch(pieceType) {
-		case BUTTERFLY:
-			piece = new Butterfly(color);
-			break;
-		case SPARROW:
-			piece = new Sparrow(color);
-			break;
-		default:
-			throw new HantoException("Inavlid piece type specified. Cannot create piece of type " + pieceType.toString() + ".");		
-		}
-
-		// use copy constructor on given HantoCoordinates
-		PieceCoordinate newFrom = (from == null? null : new PieceCoordinate(from));
-		PieceCoordinate newTo = (to == null? null : new PieceCoordinate(to));
-
-		validateMove(pieceType, newFrom, newTo, color);
 		
-		if (newFrom == null) { // if we're placing a new piece
-			decrementPieceTypeForPlayer(color, pieceType);
-			board.addPiece(newTo, piece);
-		}
-		else { // if we're moving an existing piece
-			board.moveExistingPiece(newFrom, newTo, piece);
-		}
+		if (pieceType != HantoPieceType.BUTTERFLY && pieceType != HantoPieceType.SPARROW) throw new HantoException("Invalid piece type for Beta!");
 		
-		
-		turnCount++;
-		result = determineGameResult();
-		
-		return result;
+		return super.makeMove(pieceType, from, to);
 	}
 
 	

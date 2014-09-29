@@ -1,3 +1,10 @@
+/**
+ * @author Andy Botelho
+ * @author Andrew Botelho
+ * 
+ * A Factory class for making different Hanto Pieces.
+ */
+
 package hanto.studentBotelhoLeonard.common;
 
 import hanto.common.HantoException;

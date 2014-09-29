@@ -15,8 +15,9 @@ import hanto.common.HantoPieceType;
 import hanto.common.HantoPlayerColor;
 import hanto.common.MoveResult;
 import hanto.studentBotelhoLeonard.common.BaseHantoGame;
+import hanto.studentBotelhoLeonard.common.MoveType;
 import hanto.studentBotelhoLeonard.common.MoveValidator;
-import hanto.studentBotelhoLeonard.common.WalkValidator;
+import hanto.studentBotelhoLeonard.common.MoveValidatorFactory;
 
 
 public class GammaHantoGame extends BaseHantoGame implements HantoGame {
@@ -32,15 +33,15 @@ public class GammaHantoGame extends BaseHantoGame implements HantoGame {
 		redPiecesLeft = new HashMap<HantoPieceType, Integer>(bluePiecesLeft);
 		
 		pieceAbilities = new HashMap<HantoPieceType, MoveValidator>();
-		pieceAbilities.put(HantoPieceType.BUTTERFLY, new WalkValidator(1, board));
-		pieceAbilities.put(HantoPieceType.SPARROW, new WalkValidator(1, board));
+		pieceAbilities.put(HantoPieceType.BUTTERFLY, MoveValidatorFactory.makeMoveValidator(MoveType.WALK, 1, board));
+		pieceAbilities.put(HantoPieceType.SPARROW, MoveValidatorFactory.makeMoveValidator(MoveType.WALK, 1, board));
 		
 	}
 	
 	
 	public MoveResult makeMove(HantoPieceType pieceType, HantoCoordinate from,
 			HantoCoordinate to) throws HantoException {
-		if (turnCount >= 40) throw new HantoException("Gamma Hanto can only last 20 full turns!");
+		if(pieceType != HantoPieceType.BUTTERFLY && pieceType != HantoPieceType.SPARROW) throw new HantoException("Illegal piece type for Gamma!");
 		
 		return super.makeMove(pieceType, from, to);
 	}

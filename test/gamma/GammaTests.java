@@ -263,5 +263,34 @@ public class GammaTests {
 		game.makeMove(BUTTERFLY, null, new PieceCoordinate(0, 1));
 		game.makeMove(SPARROW, new PieceCoordinate(0, 0), new PieceCoordinate(1, 0));
 	}
+	
+	@Test(expected=HantoException.class)
+	public void blueSparrowMovesTooFar() throws HantoException {
+		game.makeMove(BUTTERFLY, null, new PieceCoordinate(0, 0));
+		game.makeMove(BUTTERFLY, null, new PieceCoordinate(0, 1));
+		game.makeMove(SPARROW, null, new PieceCoordinate(0, -1));
+		game.makeMove(SPARROW, null, new PieceCoordinate(-1, 2));
+		game.makeMove(SPARROW, new PieceCoordinate(0, -1), new PieceCoordinate(-1, 1));
+	}
+	
+	@Test
+	public void blueSparrowMovesSuccessfully() throws HantoException {
+		game.makeMove(BUTTERFLY, null, new PieceCoordinate(0, 0));
+		game.makeMove(BUTTERFLY, null, new PieceCoordinate(0, 1));
+		game.makeMove(SPARROW, null, new PieceCoordinate(0, -1));
+		game.makeMove(SPARROW, null, new PieceCoordinate(-1, 2));
+		MoveResult mv = game.makeMove(SPARROW, new PieceCoordinate(0, -1), new PieceCoordinate(-1, 0));
+		assertEquals(OK, mv);
+		HantoPiece piece = game.getPieceAt(new PieceCoordinate(0, -1));
+		assertNull(piece);
+		piece = game.getPieceAt(new PieceCoordinate(-1, 0));
+		assertEquals(BLUE, piece.getColor());
+		assertEquals(SPARROW, piece.getType());
+	}
+	
+	@Test(expected=HantoException.class)
+	public void cantMakeCrab() throws HantoException {
+		game.makeMove(CRAB, null, new PieceCoordinate(0, 0));
+	}
 
 }

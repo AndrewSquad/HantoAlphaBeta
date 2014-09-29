@@ -35,6 +35,8 @@ public abstract class BaseHantoGame implements HantoGame {
 			HantoCoordinate to) throws HantoException {
 		
 		if (gameHasEnded) throw new HantoException("The game has already ended!");
+		
+		if (turnCount >= turnLimit) throw new HantoException("Turn limit exceeded!");
 
 		HantoPlayerColor color;
 		HantoPiece piece;
@@ -42,6 +44,7 @@ public abstract class BaseHantoGame implements HantoGame {
 
 		color = whoseTurnIsIt();
 		
+		// if the player resigned
 		if (pieceType == null && from == null && to == null) {
 			gameHasEnded = true;
 			result = (color == HantoPlayerColor.RED) ? MoveResult.BLUE_WINS: MoveResult.RED_WINS;
@@ -65,7 +68,6 @@ public abstract class BaseHantoGame implements HantoGame {
 		else { // if we're moving an existing piece
 			board.moveExistingPiece(newFrom, newTo, piece);
 		}
-		
 		
 		turnCount++;
 		result = determineGameResult();
