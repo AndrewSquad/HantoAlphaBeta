@@ -100,7 +100,7 @@ public class AlphaHantoGame implements HantoGame {
 		}
 		
 		// First move must be at (0, 0)
-		if (board.getBoard().isEmpty()) {
+		if (board.getBoardMap().isEmpty()) {
 			if (to.getX() != 0 || to.getY() != 0) throw new HantoException("First move must be at (0, 0)!");
 		}
 		

@@ -21,33 +21,36 @@ public abstract class BaseHantoGame implements HantoGame {
 	protected Map<HantoPieceType, Integer> bluePiecesLeft;
 	protected Map<HantoPieceType, Integer> redPiecesLeft;
 	protected Map<HantoPieceType, MoveValidator> pieceAbilities;
+	protected boolean gameHasEnded;
 
 	public BaseHantoGame(HantoPlayerColor movesFirst) {
 		this.movesFirst = movesFirst;
 		turnCount = 0;
 		board = new HantoBoard();
+		gameHasEnded = false;
 	}
 	
 
 	public MoveResult makeMove(HantoPieceType pieceType, HantoCoordinate from,
 			HantoCoordinate to) throws HantoException {
+		
+		if (gameHasEnded) throw new HantoException("The game has already ended!");
+
 		HantoPlayerColor color;
 		HantoPiece piece;
 		MoveResult result;
 
 		color = whoseTurnIsIt();
-
-		// switch case for adding different types of game pieces
-		switch(pieceType) {
-		case BUTTERFLY:
-			piece = new Butterfly(color);
-			break;
-		case SPARROW:
-			piece = new Sparrow(color);
-			break;
-		default:
-			throw new HantoException("Unrecognized game piece type!");
+		
+		if (pieceType == null && from == null && to == null) {
+			gameHasEnded = true;
+			result = (color == HantoPlayerColor.RED) ? MoveResult.BLUE_WINS: MoveResult.RED_WINS;
+			return result;			
 		}
+		
+
+		//HantoPieceFactory.getInstance();
+		piece = HantoPieceFactory.makePiece(pieceType, color);
 
 		// use copy constructor on given HantoCoordinates
 		PieceCoordinate newFrom = (from == null? null : new PieceCoordinate(from));
@@ -133,7 +136,7 @@ public abstract class BaseHantoGame implements HantoGame {
 	// Validate first move
 	protected void validateFirstTurn(HantoPieceType pieceType, PieceCoordinate from, PieceCoordinate to, HantoPlayerColor color) throws HantoException {
 		// First move must be at (0, 0)
-		if (board.getBoard().isEmpty()) { // first player move
+		if (board.getBoardMap().isEmpty()) { // first player move
 			if (to.getX() != 0 || to.getY() != 0) throw new HantoException("First move must be at (0, 0)!");
 		}
 

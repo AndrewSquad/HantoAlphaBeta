@@ -1,8 +1,7 @@
 package delta;
 
-import static hanto.common.HantoPieceType.BUTTERFLY;
-import static hanto.common.HantoPieceType.CRAB;
-import static hanto.common.MoveResult.OK;
+import static hanto.common.HantoPieceType.*;
+import static hanto.common.MoveResult.*;
 import static org.junit.Assert.assertEquals;
 import hanto.common.HantoException;
 import hanto.common.HantoGame;
@@ -22,7 +21,7 @@ public class DeltaTests {
 	public void setup()
 	{
 		// By default, blue moves first.
-		game = HantoGameFactory.makeHantoGame(HantoGameID.GAMMA_HANTO);
+		game = HantoGameFactory.makeHantoGame(HantoGameID.DELTA_HANTO);
 	}
 
 
@@ -32,6 +31,25 @@ public class DeltaTests {
 		MoveResult mv = game.makeMove(CRAB, null, new PieceCoordinate(0, 0));
 		assertEquals(OK, mv);
 	}
+	
+	@Test
+	public void testBlueResign() throws HantoException {
+		MoveResult mv = game.makeMove(null, null, null);
+		assertEquals(RED_WINS, mv);
+	}
+	
+	@Test
+	public void testRedResign() throws HantoException {
+		game.makeMove(BUTTERFLY, null, new PieceCoordinate(0, 0));
+		MoveResult mv = game.makeMove(null, null, null);
+		assertEquals(BLUE_WINS, mv);
+	}
 
+	@Test(expected=HantoException.class)
+	public void moveAfterResignation() throws HantoException {
+		game.makeMove(BUTTERFLY, null, new PieceCoordinate(0, 0));
+		game.makeMove(null, null, null);
+		game.makeMove(SPARROW, null, new PieceCoordinate(0, 1));
+	}
 
 }

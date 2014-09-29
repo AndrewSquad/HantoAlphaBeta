@@ -36,11 +36,12 @@ public class HantoBoard {
 		board = new HashMap<PieceCoordinate, HantoPiece>();
 	}
 
+
 	
 	/** A getter for the HashMap that maps each HantoCoordinate to which HantoPiece is at that coordinate.
 	 * @return the board HashMap
 	 */
-	public Map<PieceCoordinate, HantoPiece> getBoard() {
+	public Map<PieceCoordinate, HantoPiece> getBoardMap() {
 		return board;
 	}
 	

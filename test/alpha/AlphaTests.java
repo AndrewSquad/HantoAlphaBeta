@@ -102,7 +102,7 @@ public class AlphaTests {
 	public void testAddPieceToBoard() throws HantoException {
 		HantoBoard hantoBoard = new HantoBoard();
 		hantoBoard.addPiece(new PieceCoordinate(0,0), new Butterfly(HantoPlayerColor.RED));
-		assertFalse(hantoBoard.getBoard().isEmpty());
+		assertFalse(hantoBoard.getBoardMap().isEmpty());
 	}
 
 	@Test

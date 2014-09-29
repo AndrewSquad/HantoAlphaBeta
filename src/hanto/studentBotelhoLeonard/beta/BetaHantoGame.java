@@ -7,12 +7,17 @@ package hanto.studentBotelhoLeonard.beta;
 
 import java.util.HashMap;
 
+import hanto.common.HantoCoordinate;
 import hanto.common.HantoException;
 import hanto.common.HantoGame;
+import hanto.common.HantoPiece;
 import hanto.common.HantoPieceType;
 import hanto.common.HantoPlayerColor;
+import hanto.common.MoveResult;
 import hanto.studentBotelhoLeonard.common.BaseHantoGame;
+import hanto.studentBotelhoLeonard.common.Butterfly;
 import hanto.studentBotelhoLeonard.common.PieceCoordinate;
+import hanto.studentBotelhoLeonard.common.Sparrow;
 
 /**
  * An implementation of the HantoGame interface for the Beta version of Hanto.
@@ -38,6 +43,47 @@ public class BetaHantoGame extends BaseHantoGame implements HantoGame {
 		bluePiecesLeft.put(HantoPieceType.SPARROW, 5);
 		redPiecesLeft = new HashMap<HantoPieceType, Integer>(bluePiecesLeft);
 	}
+	
+
+	public MoveResult makeMove(HantoPieceType pieceType, HantoCoordinate from,
+			HantoCoordinate to) throws HantoException {
+		HantoPlayerColor color;
+		HantoPiece piece;
+		MoveResult result;
+
+		color = whoseTurnIsIt();
+
+		switch(pieceType) {
+		case BUTTERFLY:
+			piece = new Butterfly(color);
+			break;
+		case SPARROW:
+			piece = new Sparrow(color);
+			break;
+		default:
+			throw new HantoException("Inavlid piece type specified. Cannot create piece of type " + pieceType.toString() + ".");		
+		}
+
+		// use copy constructor on given HantoCoordinates
+		PieceCoordinate newFrom = (from == null? null : new PieceCoordinate(from));
+		PieceCoordinate newTo = (to == null? null : new PieceCoordinate(to));
+
+		validateMove(pieceType, newFrom, newTo, color);
+		
+		if (newFrom == null) { // if we're placing a new piece
+			decrementPieceTypeForPlayer(color, pieceType);
+			board.addPiece(newTo, piece);
+		}
+		else { // if we're moving an existing piece
+			board.moveExistingPiece(newFrom, newTo, piece);
+		}
+		
+		
+		turnCount++;
+		result = determineGameResult();
+		
+		return result;
+	}
 
 	
 	// Validates potential moves
@@ -46,7 +92,7 @@ public class BetaHantoGame extends BaseHantoGame implements HantoGame {
 		if (from != null) throw new HantoException("Can't move pieces in Beta Hanto. Only place new pieces.");
 
 		// First move must be at (0, 0)
-		if (board.getBoard().isEmpty()) {
+		if (board.getBoardMap().isEmpty()) {
 			if (to.getX() != 0 || to.getY() != 0) throw new HantoException("First move must be at (0, 0)!");
 		}
 		else {

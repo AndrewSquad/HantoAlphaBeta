@@ -1,8 +1,0 @@
-/**
- * 
- */
-/**
- * @author Hemuro
- *
- */
-package delta;
