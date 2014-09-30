@@ -3,7 +3,11 @@
  */
 package common;
 
+import hanto.common.HantoException;
+import hanto.common.HantoPiece;
 import hanto.common.HantoPlayerColor;
+import hanto.studentBotelhoLeonard.common.HantoPieceFactory;
+import hanto.studentBotelhoLeonard.common.PieceCoordinate;
 import hanto.studentBotelhoLeonard.delta.DeltaHantoGame;
 
 /**
@@ -25,8 +29,20 @@ public class DeltaHantoTestGame extends DeltaHantoGame implements HantoTestGame 
 	 */
 	@Override
 	public void initializeBoard(PieceLocationPair[] initialPieces) {
-		// TODO Auto-generated method stub
-
+		board.getBoardMap().clear();
+		for (int i = 0; i < initialPieces.length; i++) {
+			PieceLocationPair givenPieceLoc = initialPieces[i];
+			PieceCoordinate tempCoord = new PieceCoordinate(givenPieceLoc.location);
+			HantoPiece tempPiece = null;
+			try {
+				tempPiece = HantoPieceFactory.makePiece(givenPieceLoc.pieceType, givenPieceLoc.player);
+			} catch (HantoException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			board.getBoardMap().put(tempCoord, tempPiece);
+			decrementPieceTypeForPlayer(givenPieceLoc.player, givenPieceLoc.pieceType);
+		}
 	}
 
 	/* (non-Javadoc)
@@ -34,8 +50,7 @@ public class DeltaHantoTestGame extends DeltaHantoGame implements HantoTestGame 
 	 */
 	@Override
 	public void setTurnNumber(int turnNumber) {
-		// TODO Auto-generated method stub
-
+		turnCount = (turnNumber*2) - 1; // our turn count counts the first players second turn as turn 2. (0->1->2)
 	}
 
 	/* (non-Javadoc)
@@ -43,8 +58,7 @@ public class DeltaHantoTestGame extends DeltaHantoGame implements HantoTestGame 
 	 */
 	@Override
 	public void setPlayerMoving(HantoPlayerColor player) {
-		// TODO Auto-generated method stub
-
+		if (movesFirst == player) turnCount--; // Since turns are 1 turn for both players, then setting movesFirst determines player moving.
 	}
 
 }

@@ -19,15 +19,20 @@ import hanto.studentBotelhoLeonard.common.Sparrow;
 import org.junit.Before;
 import org.junit.Test;
 
+import common.HantoTestGame;
+import common.HantoTestGameFactory;
+
 public class DeltaTests {
 
 	private HantoGame game;
+	private HantoTestGame testGame;
 
 	@Before
 	public void setup()
 	{
 		// By default, blue moves first.
-		game = HantoGameFactory.makeHantoGame(HantoGameID.DELTA_HANTO);
+		testGame = HantoTestGameFactory.getInstance().makeHantoTestGame(HantoGameID.DELTA_HANTO);
+		game = testGame;
 	}
 
 
@@ -72,6 +77,7 @@ public class DeltaTests {
 	
 	@Test
 	public void blueSparrowFlies() throws HantoException {
+		game = HantoGameFactory.makeHantoGame(HantoGameID.DELTA_HANTO);
 		game.makeMove(BUTTERFLY, null, new PieceCoordinate(0, 0));
 		game.makeMove(BUTTERFLY, null, new PieceCoordinate(0, 1));
 		game.makeMove(SPARROW, null, new PieceCoordinate(0, -1));
@@ -83,6 +89,27 @@ public class DeltaTests {
 		assertEquals(SPARROW, piece.getType());
 		assertEquals(BLUE, piece.getColor());
 	}
+	
+	@Test(expected=HantoException.class)
+	public void blueSparrowFliesOffBoard() throws HantoException {
+		game = HantoGameFactory.makeHantoGame(HantoGameID.DELTA_HANTO);
+		game.makeMove(BUTTERFLY, null, new PieceCoordinate(0, 0));
+		game.makeMove(BUTTERFLY, null, new PieceCoordinate(0, 1));
+		game.makeMove(SPARROW, null, new PieceCoordinate(0, -1));
+		game.makeMove(CRAB, null, new PieceCoordinate(-1, 2));
+		game.makeMove(SPARROW, new PieceCoordinate(0, -1), new PieceCoordinate(0, 5));
+	}
+	
+	@Test(expected=HantoException.class)
+	public void blueSparrowAttacksButterfly() throws HantoException {
+		game = HantoGameFactory.makeHantoGame(HantoGameID.DELTA_HANTO);
+		game.makeMove(BUTTERFLY, null, new PieceCoordinate(0, 0));
+		game.makeMove(BUTTERFLY, null, new PieceCoordinate(0, 1));
+		game.makeMove(SPARROW, null, new PieceCoordinate(0, -1));
+		game.makeMove(CRAB, null, new PieceCoordinate(-1, 2));
+		game.makeMove(SPARROW, new PieceCoordinate(0, -1), new PieceCoordinate(0, 0));
+	}
+	
 	
 	@Test(expected=HantoException.class)
 	public void cantMakeHorse() throws HantoException {
@@ -111,4 +138,6 @@ public class DeltaTests {
 		game.makeMove(BUTTERFLY, new PieceCoordinate(0, 0), new PieceCoordinate(1, 0));
 	}
 
+	
+	
 }

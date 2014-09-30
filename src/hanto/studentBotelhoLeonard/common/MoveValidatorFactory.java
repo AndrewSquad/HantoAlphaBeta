@@ -17,11 +17,8 @@ public class MoveValidatorFactory {
 
 
 	public static MoveValidator makeMoveValidator(MoveType moveType, int distanceLimit, HantoBoard board) {
-
 		MoveValidator validator = null;
-
 		switch(moveType) {
-
 		case WALK:
 			validator = new WalkValidator(distanceLimit, board);
 			break;
@@ -31,9 +28,6 @@ public class MoveValidatorFactory {
 		default:
 			break;
 		}
-
 		return validator;
 	}
-
-
 }

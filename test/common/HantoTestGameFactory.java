@@ -59,6 +59,9 @@ public class HantoTestGameFactory
 			case GAMMA_HANTO:
 				game = new GammaHantoTestGame(movesFirst);
 				break;
+			case DELTA_HANTO:
+				game = new DeltaHantoTestGame(movesFirst);
+				break;
 			default:
 				break;
 		}

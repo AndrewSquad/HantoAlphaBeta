@@ -242,15 +242,19 @@ public abstract class BaseHantoGame implements HantoGame {
 		boolean isRedWinner = board.checkIfPlayerLost(HantoPlayerColor.BLUE);
 		if (isBlueWinner && isRedWinner) {
 			result = MoveResult.DRAW;
+			gameHasEnded = true;
 		}
 		else if (isBlueWinner) {
 			result = MoveResult.BLUE_WINS;
+			gameHasEnded = true;
 		}
 		else if (isRedWinner) {
 			result = MoveResult.RED_WINS;
+			gameHasEnded = true;
 		}
 		else if (!anyPiecesLeftToPlay() || turnCount >= turnLimit) { // check for draw
 			result = MoveResult.DRAW;
+			gameHasEnded = true;
 		}
 		else {
 			result = MoveResult.OK;
