@@ -1,6 +1,12 @@
 package common;
 
+import common.HantoTestGame.PieceLocationPair;
+import hanto.common.HantoException;
+import hanto.common.HantoPiece;
+import hanto.common.HantoPieceType;
 import hanto.common.HantoPlayerColor;
+import hanto.studentBotelhoLeonard.common.HantoPieceFactory;
+import hanto.studentBotelhoLeonard.common.PieceCoordinate;
 import hanto.studentBotelhoLeonard.gamma.GammaHantoGame;
 
 public class GammaHantoTestGame extends GammaHantoGame implements HantoTestGame {
@@ -12,19 +18,29 @@ public class GammaHantoTestGame extends GammaHantoGame implements HantoTestGame 
 
 	@Override
 	public void initializeBoard(PieceLocationPair[] initialPieces) {
-		// TODO Auto-generated method stub
-
+		for (int i = 0; i < initialPieces.length; i++) {
+			PieceLocationPair givenPieceLoc = initialPieces[i];
+			PieceCoordinate tempCoord = new PieceCoordinate(givenPieceLoc.location);
+			HantoPiece tempPiece = null;
+			try {
+				tempPiece = HantoPieceFactory.makePiece(givenPieceLoc.pieceType, givenPieceLoc.player);
+			} catch (HantoException e) {
+				// TODO Auto-generated catch block
+				//e.printStackTrace();
+			}
+			board.getBoardMap().put(tempCoord, tempPiece);
+			
+		}
 	}
 
 	@Override
 	public void setTurnNumber(int turnNumber) {
-		// TODO Auto-generated method stub
-
+		turnCount = turnNumber*2; // our turn count counts the first players second turn as turn 2. (0->1->2)
 	}
 
 	@Override
 	public void setPlayerMoving(HantoPlayerColor player) {
-		// TODO Auto-generated method stub
+		movesFirst = player; // Since turns are 1 turn for both players, then setting movesFirst determines player moving.
 
 	}
 
