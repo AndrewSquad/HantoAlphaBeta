@@ -37,6 +37,15 @@ public class HantoBoard {
 		board = new HashMap<PieceCoordinate, HantoPiece>();
 	}
 
+	/**
+	 * Constructor for a HantoBoard.  Initializes Maps used to keep track of which pieces are on 
+	 * the board and how many pieces each player has placed.
+	 * @param pieceLimits a Map that indicates how many of each HantoPieceType 
+	 * a player can play throughout the game
+	 */
+	public HantoBoard(HantoBoard board) {
+		this.board = new HashMap<PieceCoordinate, HantoPiece>(board.getBoardMap());
+	}
 
 	
 	/** A getter for the HashMap that maps each HantoCoordinate to which HantoPiece is at that coordinate.

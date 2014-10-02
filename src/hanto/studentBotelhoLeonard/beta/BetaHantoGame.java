@@ -45,6 +45,7 @@ public class BetaHantoGame extends BaseHantoGame implements HantoGame {
 	public MoveResult makeMove(HantoPieceType pieceType, HantoCoordinate from,
 			HantoCoordinate to) throws HantoException {
 		
+		if (pieceType == null && from == null && to == null) throw new HantoException("Can't Resign in Beta Hanto!");
 		if (pieceType != HantoPieceType.BUTTERFLY && pieceType != HantoPieceType.SPARROW) throw new HantoException("Invalid piece type for Beta!");
 		
 		return super.makeMove(pieceType, from, to);

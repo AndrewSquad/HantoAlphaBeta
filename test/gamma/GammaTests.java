@@ -18,7 +18,6 @@ import static hanto.common.HantoPieceType.*;
 import static hanto.common.HantoPlayerColor.*;
 import static hanto.common.MoveResult.*;
 
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -340,6 +339,21 @@ public class GammaTests {
 		);
 		testGame.setPlayerMoving(BLUE);
 		game.makeMove(BUTTERFLY, null, new PieceCoordinate(-1, 0));
+	}
+	
+	@Test(expected=HantoException.class)
+	public void CantResign() throws HantoException {
+		game.makeMove(null, null, null);
+	}
+	
+	@Test(expected=HantoException.class)
+	public void needDestination() throws HantoException {
+		game.makeMove(BUTTERFLY, null, null);
+	}
+	
+	@Test(expected=HantoException.class)
+	public void needToSpecifyPiece() throws HantoException {
+		game.makeMove(null, null, new PieceCoordinate(0,0));
 	}
 }
 

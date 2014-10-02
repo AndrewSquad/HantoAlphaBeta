@@ -21,6 +21,7 @@ import org.junit.Test;
 
 import common.HantoTestGame;
 import common.HantoTestGameFactory;
+import common.HantoTestGame.PieceLocationPair;
 
 public class DeltaTests {
 
@@ -139,5 +140,50 @@ public class DeltaTests {
 	}
 
 	
+	@Test(expected=HantoException.class)
+	public void needDestination() throws HantoException {
+		game.makeMove(BUTTERFLY, null, null);
+	}
+	
+	@Test(expected=HantoException.class)
+	public void needToSpecifyPiece() throws HantoException {
+		game.makeMove(null, null, new PieceCoordinate(0,0));
+	}
+	
+	@Test(expected=HantoException.class)
+	public void canOnlyWalk1() throws HantoException {
+		testGame.setTurnNumber(10);
+		testGame.initializeBoard(
+				new PieceLocationPair[] {
+						new PieceLocationPair(BLUE, BUTTERFLY, new PieceCoordinate(0, 0)),
+						new PieceLocationPair(RED, BUTTERFLY, new PieceCoordinate(0, 1)),
+						new PieceLocationPair(RED, SPARROW, new PieceCoordinate(1, 0)),
+						new PieceLocationPair(RED, SPARROW, new PieceCoordinate(-1, 0)),
+						new PieceLocationPair(RED, SPARROW, new PieceCoordinate(-1, 1))
+				}
+		);
+		
+		testGame.setPlayerMoving(BLUE);
+		game.makeMove(BUTTERFLY, new PieceCoordinate(0, 0), new PieceCoordinate(2, -1));
+	}
+	
+	@Test
+	public void canOnlyWalk() throws HantoException {
+		testGame.setTurnNumber(10);
+		testGame.initializeBoard(
+				new PieceLocationPair[] {
+						new PieceLocationPair(BLUE, BUTTERFLY, new PieceCoordinate(0, 0)),
+						new PieceLocationPair(RED, BUTTERFLY, new PieceCoordinate(0, 1)),
+						new PieceLocationPair(RED, SPARROW, new PieceCoordinate(1, 0)),
+						new PieceLocationPair(RED, SPARROW, new PieceCoordinate(-1, 0)),
+						new PieceLocationPair(RED, SPARROW, new PieceCoordinate(-1, 1))
+				}
+		);
+		
+		testGame.setPlayerMoving(BLUE);
+		MoveResult mv =game.makeMove(BUTTERFLY, new PieceCoordinate(0, 0), new PieceCoordinate(0, -1));
+		assertEquals(OK, mv);
+		assertEquals(BUTTERFLY, game.getPieceAt(new PieceCoordinate(0, -1)).getType());
+	}
 	
 }

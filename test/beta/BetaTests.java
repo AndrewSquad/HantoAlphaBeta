@@ -397,6 +397,21 @@ public class BetaTests {
 		game.makeMove(HantoPieceType.SPARROW, null, new PieceCoordinate(0, 1));
 		game.makeMove(HantoPieceType.SPARROW, null, new PieceCoordinate(4, 1));
 	}
+	
+	@Test(expected=HantoException.class)
+	public void CantResign() throws HantoException {
+		game.makeMove(null, null, null);
+	}
+	
+	@Test(expected=HantoException.class)
+	public void needDestination() throws HantoException {
+		game.makeMove(BUTTERFLY, null, null);
+	}
+	
+	@Test(expected=HantoException.class)
+	public void needToSpecifyPiece() throws HantoException {
+		game.makeMove(null, null, new PieceCoordinate(0,0));
+	}
 
 
 }

@@ -15,6 +15,9 @@ import hanto.studentBotelhoLeonard.delta.DeltaHantoGame;
  *
  */
 public class DeltaHantoTestGame extends DeltaHantoGame implements HantoTestGame {
+	
+	HantoPlayerColor setMoving = null;
+	Boolean turnCountSet = false;
 
 	/**
 	 * @param movesFirst
@@ -30,6 +33,8 @@ public class DeltaHantoTestGame extends DeltaHantoGame implements HantoTestGame 
 	@Override
 	public void initializeBoard(PieceLocationPair[] initialPieces) {
 		board.getBoardMap().clear();
+		setMoving = null;
+		turnCountSet = false;
 		for (int i = 0; i < initialPieces.length; i++) {
 			PieceLocationPair givenPieceLoc = initialPieces[i];
 			PieceCoordinate tempCoord = new PieceCoordinate(givenPieceLoc.location);
@@ -45,20 +50,22 @@ public class DeltaHantoTestGame extends DeltaHantoGame implements HantoTestGame 
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see common.HantoTestGame#setTurnNumber(int)
-	 */
 	@Override
 	public void setTurnNumber(int turnNumber) {
-		turnCount = (turnNumber*2) - 1; // our turn count counts the first players second turn as turn 2. (0->1->2)
+		turnCount = (turnNumber*2) - 2; // our turn count counts the first players second turn as turn 2. (0->1->2)
+		turnCountSet = true;
+		if (setMoving != null) setPlayerMoving(setMoving);
 	}
 
-	/* (non-Javadoc)
-	 * @see common.HantoTestGame#setPlayerMoving(hanto.common.HantoPlayerColor)
-	 */
 	@Override
 	public void setPlayerMoving(HantoPlayerColor player) {
-		if (movesFirst == player) turnCount--; // Since turns are 1 turn for both players, then setting movesFirst determines player moving.
+		if (!turnCountSet) {
+			setMoving = player;
+			if (player != movesFirst) {
+				turnCount++;
+			}
+		}
+		else if (movesFirst != player) turnCount++; // Since turns are 1 turn for both players, then setting movesFirst determines player moving.
 	}
 
 }

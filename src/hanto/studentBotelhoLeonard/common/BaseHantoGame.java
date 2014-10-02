@@ -51,6 +51,8 @@ public abstract class BaseHantoGame implements HantoGame {
 			return result;			
 		}
 		
+		if (pieceType == null) throw new HantoException("Need to specify a piece");
+		if (to == null) throw new HantoException("Need Destination");
 
 		//HantoPieceFactory.getInstance();
 		piece = HantoPieceFactory.makePiece(pieceType, color);

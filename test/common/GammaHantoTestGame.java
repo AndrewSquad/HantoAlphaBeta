@@ -45,7 +45,12 @@ public class GammaHantoTestGame extends GammaHantoGame implements HantoTestGame 
 
 	@Override
 	public void setPlayerMoving(HantoPlayerColor player) {
-		if (!turnCountSet) setMoving = player;
+		if (!turnCountSet) {
+			setMoving = player;
+			if (player != movesFirst) {
+				turnCount++;
+			}
+		}
 		else if (movesFirst != player) turnCount++; // Since turns are 1 turn for both players, then setting movesFirst determines player moving.
 	}
 
