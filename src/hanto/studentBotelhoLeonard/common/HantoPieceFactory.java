@@ -12,6 +12,9 @@ import hanto.common.HantoPiece;
 import hanto.common.HantoPieceType;
 import hanto.common.HantoPlayerColor;
 
+/**
+ * A Factory class for making different Hanto Pieces.
+ */
 public class HantoPieceFactory {
 	
 	private static final HantoPieceFactory instance = new HantoPieceFactory();
@@ -22,6 +25,13 @@ public class HantoPieceFactory {
 		return instance;
 	}
 	
+	/**
+	 * Factory method for creating a new HantoPiece
+	 * @param type - the type of piece (Butterfly, Sparrow, etc.)
+	 * @param color - the color of the piece
+	 * @return the HantoPiece object that was created.
+	 * @throws HantoException when an unrecognizable piece type is given.
+	 */
 	public static HantoPiece makePiece(HantoPieceType type, HantoPlayerColor color) throws HantoException {
 		HantoPiece thePiece = null;
 		switch(type) {

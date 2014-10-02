@@ -1,3 +1,9 @@
+/**
+ * @author Andy Botelho
+ * @author Andrew Leonard
+ * Implementation of HantoGame for the Delta version of Hanto.
+ */
+
 package hanto.studentBotelhoLeonard.delta;
 
 import java.util.HashMap;
@@ -10,6 +16,9 @@ import hanto.studentBotelhoLeonard.common.MoveType;
 import hanto.studentBotelhoLeonard.common.MoveValidator;
 import hanto.studentBotelhoLeonard.common.MoveValidatorFactory;
 
+/**
+ * Implementation of HantoGame for the Delta version of Hanto.
+ */
 public class DeltaHantoGame extends BaseHantoGame implements HantoGame {
 
 	public DeltaHantoGame(HantoPlayerColor movesFirst) {

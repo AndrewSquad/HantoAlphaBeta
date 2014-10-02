@@ -3,6 +3,7 @@ package gamma;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import hanto.common.HantoException;
 import hanto.common.HantoGame;
@@ -115,7 +116,7 @@ public class GammaTests {
 	@Test
 	public void testSixAdjacentCoordinates() {
 		PieceCoordinate coordinate = new PieceCoordinate(0 , 0);
-		ArrayList<PieceCoordinate> six = coordinate.getSixAdjacentCoordinates();
+		List<PieceCoordinate> six = coordinate.getSixAdjacentCoordinates();
 		assertTrue(six.contains(new PieceCoordinate(1, 0)));
 		assertTrue(six.contains(new PieceCoordinate(0, -1)));
 		assertFalse(six.contains(new PieceCoordinate(0, -2)));
@@ -132,7 +133,7 @@ public class GammaTests {
 	public void testTwoUnoccupiedTiles_1() {
 		HantoBoard board = new HantoBoard();
 		PieceCoordinate origin = new PieceCoordinate(0, 0);
-		ArrayList<PieceCoordinate> openings = new ArrayList<PieceCoordinate>();
+		List<PieceCoordinate> openings = new ArrayList<PieceCoordinate>();
 		board.addPiece(origin, new Sparrow(BLUE));
 		assertNotNull(board.getTwoTileOpenings(origin));
 		assertEquals(origin.getSixAdjacentCoordinates(), board.getTwoTileOpenings(origin));
@@ -165,7 +166,7 @@ public class GammaTests {
 	public void testTwoUnoccupiedTiles_2() {
 		HantoBoard board = new HantoBoard();
 		PieceCoordinate origin = new PieceCoordinate(0, 0);
-		ArrayList<PieceCoordinate> openings = new ArrayList<PieceCoordinate>();
+		List<PieceCoordinate> openings = new ArrayList<PieceCoordinate>();
 		board.addPiece(origin, new Sparrow(BLUE));
 		assertNotNull(board.getTwoTileOpenings(origin));
 

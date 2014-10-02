@@ -4,6 +4,7 @@
 package hanto.studentBotelhoLeonard.common;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import hanto.common.HantoCoordinate;
 
@@ -82,8 +83,8 @@ public class PieceCoordinate implements HantoCoordinate {
 	 * Returns an ArrayList of the six adjacent PieceCoordinates to this PieceCoordinate object.
 	 * @return the ArrayList of six adjacent PieceCoordinates
 	 */
-	public ArrayList<PieceCoordinate> getSixAdjacentCoordinates() {
-		ArrayList<PieceCoordinate> adjacentCoordinates = new ArrayList<PieceCoordinate>();
+	public List<PieceCoordinate> getSixAdjacentCoordinates() {
+		List<PieceCoordinate> adjacentCoordinates = new ArrayList<PieceCoordinate>();
 		adjacentCoordinates.add(new PieceCoordinate(x, y + 1));
 		adjacentCoordinates.add(new PieceCoordinate(x + 1, y));
 		adjacentCoordinates.add(new PieceCoordinate(x + 1, y - 1));
@@ -93,6 +94,13 @@ public class PieceCoordinate implements HantoCoordinate {
 		return adjacentCoordinates;
 	}
 	
+	
+	/**
+	 * Calculates the distance between this PieceCoordinate and some other given PieceCoordinate.
+	 * Distance is definted as the number of moves it would take to travel between the two coordinates.
+	 * @param dest the other PieceCoordinate to calculate the distance between
+	 * @return int the number of moves between the two PieceCoordinates.
+	 */
 	public int distanceFrom(PieceCoordinate dest) {
 		int deltaX = dest.getX() - x;
 		int deltaY = dest.getY() - y;
@@ -102,8 +110,12 @@ public class PieceCoordinate implements HantoCoordinate {
 		
 		int distance = 0;
 		
-		if (slope < 0 && slope > -1) distance = deltaX;
-		else if (slope < -1) distance = deltaY;
+		if (slope < 0 && slope > -1) {
+			distance = deltaX;
+		}
+		else if (slope < -1) {
+			distance = deltaY;
+		}
 		else distance = Math.abs(deltaX) + Math.abs(deltaY);
 				
 		return Math.abs(distance);

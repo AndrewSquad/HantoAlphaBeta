@@ -1,3 +1,11 @@
+/**
+ * @author Andy Botelho
+ * @author Andrew Leonard
+ * 
+ * Abstract class BaseHantoGame that implements common functionality between Beta, Gamma,
+ * Delta, and Epsilon versions.
+ */
+
 package hanto.studentBotelhoLeonard.common;
 
 import java.util.Iterator;
@@ -12,6 +20,10 @@ import hanto.common.HantoPieceType;
 import hanto.common.HantoPlayerColor;
 import hanto.common.MoveResult;
 
+/**
+ * Abstract class BaseHantoGame that implements common functionality between Beta, Gamma,
+ * Delta, and Epsilon versions.
+ */
 public abstract class BaseHantoGame implements HantoGame {
 
 	protected HantoPlayerColor movesFirst;
@@ -23,7 +35,12 @@ public abstract class BaseHantoGame implements HantoGame {
 	protected Map<HantoPieceType, MoveValidator> pieceAbilities;
 	protected boolean gameHasEnded;
 
-	public BaseHantoGame(HantoPlayerColor movesFirst) {
+	
+	/**
+	 * Constructor for creating a new instance of a BaseHantoGame implementation.
+	 * @param movesFirst the player who is moving first in this game.
+	 */
+	protected BaseHantoGame(HantoPlayerColor movesFirst) {
 		this.movesFirst = movesFirst;
 		turnCount = 0;
 		board = new HantoBoard();
@@ -54,7 +71,6 @@ public abstract class BaseHantoGame implements HantoGame {
 		if (pieceType == null) throw new HantoException("Need to specify a piece");
 		if (to == null) throw new HantoException("Need Destination");
 
-		//HantoPieceFactory.getInstance();
 		piece = HantoPieceFactory.makePiece(pieceType, color);
 
 		// use copy constructor on given HantoCoordinates
@@ -68,7 +84,6 @@ public abstract class BaseHantoGame implements HantoGame {
 			board.addPiece(newTo, piece);
 		}
 		else { // if we're moving an existing piece
-			//board.moveExistingPiece(newFrom, newTo, piece);
 			board.moveExistingPiece(newFrom, newTo, board.getPieceAt(newFrom));
 		}
 		
@@ -92,7 +107,15 @@ public abstract class BaseHantoGame implements HantoGame {
 		return board.toString();
 	}
 
-	// Validates potential moves
+	/**
+	 * Highest layer helper method for validating a new move.
+	 * This method is called when a new piece is placed as well as when a piece is moved.
+	 * @param pieceType - the piece type of the HantoPiece being placed/moved.
+	 * @param from - where the piece is moving from (null when a piece is placed on board)
+	 * @param to - where the piece is going to be placed/moved to.
+	 * @param color - player color of the player moving/placing the piece.
+	 * @throws HantoException when the move is invalid for a number of possible reasons.
+	 */
 	protected void validateMove(HantoPieceType pieceType, PieceCoordinate from, PieceCoordinate to, HantoPlayerColor color) throws HantoException {
 
 		if (turnCount > 5 && !hasPlayerPlacedButterfly(color) && pieceType != HantoPieceType.BUTTERFLY) {
@@ -109,6 +132,15 @@ public abstract class BaseHantoGame implements HantoGame {
 	}
 	
 	
+	/**
+	 * Helper method called only when an existing piece is being moved to a new coordinate.
+	 * Method validates if the movement is possible given the current state of the board.
+	 * @param pieceType - the piece type of the HantoPiece being moved.
+	 * @param from - where the piece is moving from
+	 * @param to - where the piece is going to be moved to.
+	 * @param color - player color of the player moving the piece.
+	 * @throws HantoException when the move is invalid for a number of possible reasons.
+	 */
 	protected void validateMoveExistingPiece(HantoPieceType pieceType, PieceCoordinate from, PieceCoordinate to, HantoPlayerColor color) throws HantoException {
 
 		// player must place Butterfly before moving an existing piece
@@ -123,7 +155,14 @@ public abstract class BaseHantoGame implements HantoGame {
 	}
 	
 
-	// Validates adding pieces
+	/**
+	 * Helper method called for validating the action of placing a new piece on the board.
+	 * @param pieceType - the piece type of the HantoPiece being placed.
+	 * @param from - should be null
+	 * @param to - where the piece is going to be placed.
+	 * @param color - player color of the player placing the piece.
+	 * @throws HantoException when the move is invalid for a number of possible reasons
+	 */
 	protected void validateAddPiece(HantoPieceType pieceType, PieceCoordinate from, PieceCoordinate to, HantoPlayerColor color) throws HantoException {
 		
 		if (turnCount < 2) { // If it's either player's first move, rules are slightly different
@@ -143,7 +182,15 @@ public abstract class BaseHantoGame implements HantoGame {
 	}
 
 
-	// Validate first move
+	/**
+	 * Helper method used specifically for validating the action of adding a new piece 
+	 * during the first turn of the game.
+	 * @param pieceType - the piece type of the HantoPiece being placed.
+	 * @param from - should be null
+	 * @param to - where the piece is going to be placed.
+	 * @param color - player color of the player placing the piece.
+	 * @throws HantoException when the move is invalid for a number of possible reasons
+	 */
 	protected void validateFirstTurn(HantoPieceType pieceType, PieceCoordinate from, PieceCoordinate to, HantoPlayerColor color) throws HantoException {
 		// First move must be at (0, 0)
 		if (board.getBoardMap().isEmpty()) { // first player move
@@ -156,7 +203,11 @@ public abstract class BaseHantoGame implements HantoGame {
 	}
 	
 	
-	// determines if the board is in a valid state after a move has been made
+	/**
+	 * Helper method called for validating the state of the board after a move has completed.
+	 * Simply checks to see if the board is in a contiguous state or not.
+	 * @throws HantoException
+	 */
 	protected void validatePostMove() throws HantoException {
 		if (!board.isBoardContiguous()) {
 			throw new HantoException("Invalid Move: The board is no longer contiguous!");
@@ -165,7 +216,11 @@ public abstract class BaseHantoGame implements HantoGame {
 
 
 
-	// determines whose turn it is based on movesFirst and turnCount
+	/**
+	 * Determines which player is making the current move based on the turn count and 
+	 * who started the game.
+	 * @return HantoPlayerColor indicating whose turn it is.
+	 */
 	protected HantoPlayerColor whoseTurnIsIt() {
 		HantoPlayerColor color;
 		// determine which player is making a move
@@ -185,7 +240,11 @@ public abstract class BaseHantoGame implements HantoGame {
 	}
 
 
-	// given a player color, this method determines whether or not he/she has placed a butterfly yet
+	/**
+	 * Given a player color, this method determines whether or not he/she has placed a butterfly yet
+	 * @param player the player to check for
+	 * @return boolean indicating whether or not the player has placed their butterfly yet.
+	 */
 	protected boolean hasPlayerPlacedButterfly(HantoPlayerColor player) {
 		boolean hasPlacedButterfly = true;
 		if (player == HantoPlayerColor.BLUE) {
@@ -199,7 +258,12 @@ public abstract class BaseHantoGame implements HantoGame {
 		return hasPlacedButterfly;
 	}
 
-	// decrements how many of a certain piece type the given player has left to use
+
+	/**
+	 * Decrements how many of a certain piece type the given player has left to use.
+	 * @param player - the player to decrement the piece count for.
+	 * @param pieceType - the piece type to decrement
+	 */
 	protected void decrementPieceTypeForPlayer(HantoPlayerColor player, HantoPieceType pieceType) {
 		int piecesLeft = playerPieceTypeRemaining(player, pieceType);
 		if (player == HantoPlayerColor.BLUE) {
@@ -211,8 +275,13 @@ public abstract class BaseHantoGame implements HantoGame {
 	}
 
 
-
-	// determines how many of a particular piece type the given player has left to put on the board
+	/**
+	 * Determines how many of a particular piece type the given player has left to put on the board
+	 * @param player - the player to check for.
+	 * @param pieceType - the piece type to check for
+	 * @return int indicating how many of a particular piece type the given player has left 
+	 * to put on the board
+	 */
 	protected int playerPieceTypeRemaining(HantoPlayerColor player, HantoPieceType pieceType) {
 		if (player == HantoPlayerColor.BLUE) {
 			return bluePiecesLeft.get(pieceType);
@@ -222,7 +291,11 @@ public abstract class BaseHantoGame implements HantoGame {
 		}
 	}
 
-	// determines if either player has any pieces left to move with
+
+	/**
+	 * Determines if either player has any pieces left to place on the board
+	 * @return boolean indicating if either player has any pieces left to place on the board.
+	 */
 	protected boolean anyPiecesLeftToPlay() {
 		int totalPiecesLeft = 0;
 		Iterator<Entry<HantoPieceType, Integer>> bluePieceTotals = bluePiecesLeft.entrySet().iterator();
@@ -242,6 +315,10 @@ public abstract class BaseHantoGame implements HantoGame {
 
 
 	// determine the game result after this move.  makes calls to HantoBoard
+	/**
+	 * Determines the game result after the current move has ended.
+	 * @return MoveResult enum indicating the state of the game after the current move has ended.
+	 */
 	protected MoveResult determineGameResult() {
 		MoveResult result;
 		boolean isBlueWinner = board.checkIfPlayerLost(HantoPlayerColor.RED);

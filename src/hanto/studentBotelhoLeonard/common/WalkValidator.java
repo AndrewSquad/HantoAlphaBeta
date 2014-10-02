@@ -1,16 +1,33 @@
+/**
+ * @author Andy Botelho
+ * @author Andrew Leonard
+ * 
+ * MoveValidator class for validating Walk movements in the Hanto game.
+ */
+
 package hanto.studentBotelhoLeonard.common;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
+/**
+ * WalkValidator class is used to validate Walk movements for any HantoPiece.
+ */
 public class WalkValidator implements MoveValidator {
 	
 	private int distanceLimit;
 	private HantoBoard board;
 	private List<PieceCoordinate> nodesVisited;
 	
+	
+	/**
+	 * Constructor for a WalkValidator object
+	 * @param distanceLimit how far the piece is allowed to walk
+	 * @param board the board that the WalkValidator will be interacting with.
+	 */
 	public WalkValidator(int distanceLimit, HantoBoard board) {
 		this.distanceLimit = distanceLimit;
 		this.board = board;
@@ -21,10 +38,10 @@ public class WalkValidator implements MoveValidator {
 	public boolean isMoveLegal(PieceCoordinate from, PieceCoordinate to) {
 		
 		PieceCoordinate currentNode;
-		HashMap<PieceCoordinate, ArrayList<PieceCoordinate>> fringe = new HashMap<PieceCoordinate, ArrayList<PieceCoordinate>>();
-		ArrayList<PieceCoordinate> pastMoves, tempList;
+		Map<PieceCoordinate, List<PieceCoordinate>> fringe = new HashMap<PieceCoordinate, List<PieceCoordinate>>();
+		List<PieceCoordinate> pastMoves, tempList;
 		
-		ArrayList<PieceCoordinate> root = new ArrayList<PieceCoordinate>();
+		List<PieceCoordinate> root = new ArrayList<PieceCoordinate>();
 		root.add(from);
 		for (PieceCoordinate adjacentToRoot : board.getTwoTileOpenings(from)) {
 			fringe.put(adjacentToRoot, root);

@@ -12,8 +12,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Queue;
 
 
 /**
@@ -28,20 +30,16 @@ public class HantoBoard {
 	
 	
 	/**
-	 * Constructor for a HantoBoard.  Initializes Maps used to keep track of which pieces are on 
-	 * the board and how many pieces each player has placed.
-	 * @param pieceLimits a Map that indicates how many of each HantoPieceType 
-	 * a player can play throughout the game
+	 * Constructor for a HantoBoard.
 	 */
 	public HantoBoard() {
 		board = new HashMap<PieceCoordinate, HantoPiece>();
 	}
 
 	/**
-	 * Constructor for a HantoBoard.  Initializes Maps used to keep track of which pieces are on 
-	 * the board and how many pieces each player has placed.
-	 * @param pieceLimits a Map that indicates how many of each HantoPieceType 
-	 * a player can play throughout the game
+	 * Copy constructor for HantoBoard
+	 * @param board - the other instance of HantoBoard that will be copied to create 
+	 * a new instance of the HantoBoard.
 	 */
 	public HantoBoard(HantoBoard board) {
 		this.board = new HashMap<PieceCoordinate, HantoPiece>(board.getBoardMap());
@@ -128,7 +126,8 @@ public class HantoBoard {
 	/**
 	 * Determines if a given HantoCoordinate is adjacent to any already-placed HantoPieces of the same color
 	 * @param coordinate the HantoCoordinate we are checking for
-	 * @return a boolean indicating whether or not the given HantoCoordinate is adjacent to any pieces.
+	 * @param color - the color that the piece must be adjacent to for this method to return true
+	 * @return a boolean indicating whether or not the given HantoCoordinate is adjacent to any pieces of the same color.
 	 */
 	public boolean isAdjacentSameColorPiece(PieceCoordinate coordinate, HantoPlayerColor color) {
 		Iterator<Entry<PieceCoordinate, HantoPiece>> pieces = board.entrySet().iterator();
@@ -146,8 +145,9 @@ public class HantoBoard {
 	}
 	
 	/**
-	 * Determines if a given HantoCoordinate is not adjacent to any already-placed HantoPieces of the opposite color
+	 * Determines if a given HantoCoordinate is adjacent to any already-placed HantoPieces of the opposite color
 	 * @param coordinate the HantoCoordinate we are checking for
+	 * @param color - the color that given coordinate cannot be adjacent to
 	 * @return a boolean indicating whether or not the given HantoCoordinate is adjacent to any pieces.
 	 */
 	public boolean isAdjacentToOtherColorPiece(PieceCoordinate coordinate, HantoPlayerColor color) {
@@ -189,10 +189,10 @@ public class HantoBoard {
 	 * @param coordinate the coordinate we are trying to move from
 	 * @return the list of coordinates that the move can go through
 	 */
-	public ArrayList<PieceCoordinate> getTwoTileOpenings(PieceCoordinate coordinate) {
+	public List<PieceCoordinate> getTwoTileOpenings(PieceCoordinate coordinate) {
 		
-		ArrayList<PieceCoordinate> openTiles = new ArrayList<PieceCoordinate>();
-		ArrayList<PieceCoordinate> twoTileOpenings = new ArrayList<PieceCoordinate>();
+		List<PieceCoordinate> openTiles = new ArrayList<PieceCoordinate>();
+		List<PieceCoordinate> twoTileOpenings = new ArrayList<PieceCoordinate>();
 		
 		for (PieceCoordinate adjacentCoordinate : coordinate.getSixAdjacentCoordinates()) { // for each of the six adjacent coordinates
 			if (!isTileAlreadyOccupied(adjacentCoordinate)) { // if the coordinate is unoccupied
@@ -219,7 +219,7 @@ public class HantoBoard {
 	public boolean isBoardContiguous() {
 		int pieceCount = board.size();
 		boolean isContiguous;
-		LinkedList<PieceCoordinate> visited = new LinkedList<PieceCoordinate>();
+		Queue<PieceCoordinate> visited = new LinkedList<PieceCoordinate>();
 		LinkedList<PieceCoordinate> toVisit = new LinkedList<PieceCoordinate>();
 		PieceCoordinate startingCoord = board.keySet().iterator().next(); // any coordinate on board
 		

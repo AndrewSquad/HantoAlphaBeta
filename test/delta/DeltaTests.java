@@ -186,4 +186,23 @@ public class DeltaTests {
 		assertEquals(BUTTERFLY, game.getPieceAt(new PieceCoordinate(0, -1)).getType());
 	}
 	
+	@Test(expected=HantoException.class)
+	public void cantMoveToStartingCoordinate_Fly() throws HantoException {
+		game.makeMove(BUTTERFLY, null, new PieceCoordinate(0, 0));
+		game.makeMove(BUTTERFLY, null, new PieceCoordinate(0, 1));
+		game.makeMove(SPARROW, null, new PieceCoordinate(0, -1));
+		game.makeMove(CRAB, null, new PieceCoordinate(-1, 2));
+		game.makeMove(SPARROW, new PieceCoordinate(0, -1), new PieceCoordinate(0, -1));
+	}
+	
+	@Test(expected=HantoException.class)
+	public void cantMoveToStartingCoordinate_Walk() throws HantoException {
+		game.makeMove(BUTTERFLY, null, new PieceCoordinate(0, 0));
+		game.makeMove(BUTTERFLY, null, new PieceCoordinate(0, 1));
+		game.makeMove(SPARROW, null, new PieceCoordinate(0, -1));
+		game.makeMove(CRAB, null, new PieceCoordinate(-1, 2));
+		game.makeMove(SPARROW, new PieceCoordinate(0, -1), new PieceCoordinate(0, 2));
+		game.makeMove(CRAB, new PieceCoordinate(-1, 2), new PieceCoordinate(-1, 2));
+	}
+	
 }
