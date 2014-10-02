@@ -66,7 +66,8 @@ public abstract class BaseHantoGame implements HantoGame {
 			board.addPiece(newTo, piece);
 		}
 		else { // if we're moving an existing piece
-			board.moveExistingPiece(newFrom, newTo, piece);
+			//board.moveExistingPiece(newFrom, newTo, piece);
+			board.moveExistingPiece(newFrom, newTo, board.getPieceAt(newFrom));
 		}
 		
 		validatePostMove();

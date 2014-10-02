@@ -8,6 +8,9 @@ import hanto.studentBotelhoLeonard.common.PieceCoordinate;
 import hanto.studentBotelhoLeonard.gamma.GammaHantoGame;
 
 public class GammaHantoTestGame extends GammaHantoGame implements HantoTestGame {
+	
+	HantoPlayerColor setMoving = null;
+	Boolean turnCountSet = false;
 
 	public GammaHantoTestGame(HantoPlayerColor movesFirst) {
 		super(movesFirst);
@@ -16,6 +19,8 @@ public class GammaHantoTestGame extends GammaHantoGame implements HantoTestGame 
 	@Override
 	public void initializeBoard(PieceLocationPair[] initialPieces) {
 		board.getBoardMap().clear();
+		setMoving = null;
+		turnCountSet = false;
 		for (int i = 0; i < initialPieces.length; i++) {
 			PieceLocationPair givenPieceLoc = initialPieces[i];
 			PieceCoordinate tempCoord = new PieceCoordinate(givenPieceLoc.location);
@@ -33,12 +38,15 @@ public class GammaHantoTestGame extends GammaHantoGame implements HantoTestGame 
 
 	@Override
 	public void setTurnNumber(int turnNumber) {
-		turnCount = (turnNumber*2) - 1; // our turn count counts the first players second turn as turn 2. (0->1->2)
+		turnCount = (turnNumber*2) - 2; // our turn count counts the first players second turn as turn 2. (0->1->2)
+		turnCountSet = true;
+		if (setMoving != null) setPlayerMoving(setMoving);
 	}
 
 	@Override
 	public void setPlayerMoving(HantoPlayerColor player) {
-		if (movesFirst == player) turnCount--; // Since turns are 1 turn for both players, then setting movesFirst determines player moving.
+		if (!turnCountSet) setMoving = player;
+		else if (movesFirst != player) turnCount++; // Since turns are 1 turn for both players, then setting movesFirst determines player moving.
 	}
 
 }
