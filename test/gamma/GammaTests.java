@@ -356,5 +356,28 @@ public class GammaTests {
 	public void needToSpecifyPiece() throws HantoException {
 		game.makeMove(null, null, new PieceCoordinate(0,0));
 	}
+	
+	@Test
+	public void playersRunOutOfPieces() throws HantoException {
+		testGame.setTurnNumber(15);
+		testGame.initializeBoard(
+				new PieceLocationPair[] {
+						new PieceLocationPair(BLUE, BUTTERFLY, new PieceCoordinate(0, 0)),
+						new PieceLocationPair(RED, BUTTERFLY, new PieceCoordinate(0, 1)),
+						new PieceLocationPair(BLUE, SPARROW, new PieceCoordinate(0, -1)),
+						new PieceLocationPair(RED, SPARROW, new PieceCoordinate(0, 2)),
+						new PieceLocationPair(BLUE, SPARROW, new PieceCoordinate(0, -2)),
+						new PieceLocationPair(RED, SPARROW, new PieceCoordinate(0, 3)),
+						new PieceLocationPair(BLUE, SPARROW, new PieceCoordinate(0, -3)),
+						new PieceLocationPair(RED, SPARROW, new PieceCoordinate(0, 4)),
+						new PieceLocationPair(BLUE, SPARROW, new PieceCoordinate(0, -4)),
+						new PieceLocationPair(RED, SPARROW, new PieceCoordinate(0, 5)),
+						new PieceLocationPair(BLUE, SPARROW, new PieceCoordinate(0, -5)),
+				}
+		);
+		testGame.setPlayerMoving(RED);
+		MoveResult mv = game.makeMove(SPARROW, null, new PieceCoordinate(0, 6));
+		assertEquals(mv, DRAW);
+	}
 }
 

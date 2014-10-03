@@ -34,8 +34,8 @@ public abstract class BaseHantoGame implements HantoGame {
 	protected Map<HantoPieceType, Integer> redPiecesLeft;
 	protected Map<HantoPieceType, MoveValidator> pieceAbilities;
 	protected boolean gameHasEnded;
-	protected static MoveValidatorFactory moveValidatorFactory;
-	protected static HantoPieceFactory pieceFactory;
+	protected static MoveValidatorFactory moveValidatorFactory = MoveValidatorFactory.getInstance();
+	protected static HantoPieceFactory pieceFactory = HantoPieceFactory.getInstance();
 
 	
 	/**
@@ -47,8 +47,6 @@ public abstract class BaseHantoGame implements HantoGame {
 		turnCount = 0;
 		board = new HantoBoard();
 		gameHasEnded = false;
-		moveValidatorFactory = MoveValidatorFactory.getInstance();
-		pieceFactory = HantoPieceFactory.getInstance();
 	}
 	
 
