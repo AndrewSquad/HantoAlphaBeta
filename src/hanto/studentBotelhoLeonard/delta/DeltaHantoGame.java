@@ -14,7 +14,6 @@ import hanto.common.HantoPlayerColor;
 import hanto.studentBotelhoLeonard.common.BaseHantoGame;
 import hanto.studentBotelhoLeonard.common.MoveType;
 import hanto.studentBotelhoLeonard.common.MoveValidator;
-import hanto.studentBotelhoLeonard.common.MoveValidatorFactory;
 
 /**
  * Implementation of HantoGame for the Delta version of Hanto.
@@ -31,9 +30,9 @@ public class DeltaHantoGame extends BaseHantoGame implements HantoGame {
 		redPiecesLeft = new HashMap<HantoPieceType, Integer>(bluePiecesLeft);
 				
 		pieceAbilities = new HashMap<HantoPieceType, MoveValidator>();
-		pieceAbilities.put(HantoPieceType.BUTTERFLY, MoveValidatorFactory.makeMoveValidator(MoveType.WALK, 1, board));
-		pieceAbilities.put(HantoPieceType.CRAB, MoveValidatorFactory.makeMoveValidator(MoveType.WALK, 1, board));
-		pieceAbilities.put(HantoPieceType.SPARROW, MoveValidatorFactory.makeMoveValidator(MoveType.FLY, board));
+		pieceAbilities.put(HantoPieceType.BUTTERFLY, moveValidatorFactory.makeMoveValidator(MoveType.WALK, 1, board));
+		pieceAbilities.put(HantoPieceType.CRAB, moveValidatorFactory.makeMoveValidator(MoveType.WALK, 1, board));
+		pieceAbilities.put(HantoPieceType.SPARROW, moveValidatorFactory.makeMoveValidator(MoveType.FLY, board));
 		
 		turnLimit = Integer.MAX_VALUE;
 	}

@@ -3,7 +3,6 @@ package common;
 import hanto.common.HantoException;
 import hanto.common.HantoPiece;
 import hanto.common.HantoPlayerColor;
-import hanto.studentBotelhoLeonard.common.HantoPieceFactory;
 import hanto.studentBotelhoLeonard.common.PieceCoordinate;
 import hanto.studentBotelhoLeonard.gamma.GammaHantoGame;
 
@@ -26,7 +25,7 @@ public class GammaHantoTestGame extends GammaHantoGame implements HantoTestGame 
 			PieceCoordinate tempCoord = new PieceCoordinate(givenPieceLoc.location);
 			HantoPiece tempPiece = null;
 			try {
-				tempPiece = HantoPieceFactory.makePiece(givenPieceLoc.pieceType, givenPieceLoc.player);
+				tempPiece = pieceFactory.makePiece(givenPieceLoc.pieceType, givenPieceLoc.player);
 			} catch (HantoException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

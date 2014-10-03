@@ -205,4 +205,61 @@ public class DeltaTests {
 		game.makeMove(CRAB, new PieceCoordinate(-1, 2), new PieceCoordinate(-1, 2));
 	}
 	
+	@Test(expected=HantoException.class)
+	public void butterflyBreaksContiguous() throws HantoException {
+		game.makeMove(BUTTERFLY, null, new PieceCoordinate(0, 0));
+		game.makeMove(BUTTERFLY, null, new PieceCoordinate(0, 1));
+		game.makeMove(BUTTERFLY, new PieceCoordinate(0, 0), new PieceCoordinate(0, -1));
+	}
+	
+	@Test(expected=HantoException.class)
+	public void sparrowFlyBreaksContiguous() throws HantoException {
+		testGame.setTurnNumber(10);
+		testGame.initializeBoard(
+				new PieceLocationPair[] {
+						new PieceLocationPair(BLUE, SPARROW, new PieceCoordinate(0, 0)),
+						new PieceLocationPair(RED, BUTTERFLY, new PieceCoordinate(0, 1)),
+						new PieceLocationPair(BLUE, BUTTERFLY, new PieceCoordinate(0, -1)),
+						new PieceLocationPair(RED, SPARROW, new PieceCoordinate(0, -2))
+				}
+		);
+		testGame.setPlayerMoving(BLUE);
+		game.makeMove(SPARROW, new PieceCoordinate(0, 0), new PieceCoordinate(-1, 0));
+	}
+	
+	@Test(expected=HantoException.class)
+	public void blueTriesToMoveRedPiece() throws HantoException {
+		testGame.setTurnNumber(10);
+		testGame.initializeBoard(
+				new PieceLocationPair[] {
+						new PieceLocationPair(BLUE, SPARROW, new PieceCoordinate(0, 0)),
+						new PieceLocationPair(RED, BUTTERFLY, new PieceCoordinate(0, 1)),
+						new PieceLocationPair(BLUE, BUTTERFLY, new PieceCoordinate(0, -1)),
+						new PieceLocationPair(RED, SPARROW, new PieceCoordinate(0, -2))
+				}
+		);
+		testGame.setPlayerMoving(BLUE);
+		game.makeMove(SPARROW, new PieceCoordinate(0, -2), new PieceCoordinate(0, 2));
+	}
+	
+	@Test
+	public void redWinsGame() throws HantoException {
+		testGame.setTurnNumber(10);
+		testGame.initializeBoard(
+				new PieceLocationPair[] {
+						new PieceLocationPair(BLUE, BUTTERFLY, new PieceCoordinate(0, 0)),
+						new PieceLocationPair(RED, BUTTERFLY, new PieceCoordinate(0, 1)),
+						new PieceLocationPair(BLUE, SPARROW, new PieceCoordinate(0, -1)),
+						new PieceLocationPair(RED, SPARROW, new PieceCoordinate(1, 0)),
+						new PieceLocationPair(RED, SPARROW, new PieceCoordinate(1, -1)),
+						new PieceLocationPair(RED, SPARROW, new PieceCoordinate(-1, 0))
+				}
+		);
+		testGame.setPlayerMoving(RED);
+		game.makeMove(SPARROW, null, new PieceCoordinate(0, 2));
+		game.makeMove(SPARROW, null, new PieceCoordinate(0, -2));
+		MoveResult mv = game.makeMove(SPARROW, new PieceCoordinate(0, 2), new PieceCoordinate(-1, 1));
+		assertEquals(mv, RED_WINS);
+	}
+	
 }

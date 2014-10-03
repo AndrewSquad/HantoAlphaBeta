@@ -30,7 +30,7 @@ public class MoveValidatorFactory {
 	 * @param board the HantoBoard that will be interacting with the MoveValidator
 	 * @return a MoveValidator
 	 */
-	public static MoveValidator makeMoveValidator(MoveType moveType, HantoBoard board) {
+	public MoveValidator makeMoveValidator(MoveType moveType, HantoBoard board) {
 		// call the other makeMoveValidator but give max int for distance limit
 		return makeMoveValidator(moveType, Integer.MAX_VALUE, board);
 	}
@@ -43,7 +43,7 @@ public class MoveValidatorFactory {
 	 * @param board the board that the validator will be interacting with.
 	 * @return the right type of MoveValidator
 	 */
-	public static MoveValidator makeMoveValidator(MoveType moveType, int distanceLimit, HantoBoard board) {
+	public MoveValidator makeMoveValidator(MoveType moveType, int distanceLimit, HantoBoard board) {
 		MoveValidator validator = null;
 		switch(moveType) {
 		case WALK:

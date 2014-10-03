@@ -32,7 +32,7 @@ public class HantoPieceFactory {
 	 * @return the HantoPiece object that was created.
 	 * @throws HantoException when an unrecognizable piece type is given.
 	 */
-	public static HantoPiece makePiece(HantoPieceType type, HantoPlayerColor color) throws HantoException {
+	public HantoPiece makePiece(HantoPieceType type, HantoPlayerColor color) throws HantoException {
 		HantoPiece thePiece = null;
 		switch(type) {
 		case BUTTERFLY:

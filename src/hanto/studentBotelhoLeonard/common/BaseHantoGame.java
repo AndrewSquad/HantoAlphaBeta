@@ -34,6 +34,8 @@ public abstract class BaseHantoGame implements HantoGame {
 	protected Map<HantoPieceType, Integer> redPiecesLeft;
 	protected Map<HantoPieceType, MoveValidator> pieceAbilities;
 	protected boolean gameHasEnded;
+	protected static MoveValidatorFactory moveValidatorFactory;
+	protected static HantoPieceFactory pieceFactory;
 
 	
 	/**
@@ -45,6 +47,8 @@ public abstract class BaseHantoGame implements HantoGame {
 		turnCount = 0;
 		board = new HantoBoard();
 		gameHasEnded = false;
+		moveValidatorFactory = MoveValidatorFactory.getInstance();
+		pieceFactory = HantoPieceFactory.getInstance();
 	}
 	
 
@@ -71,7 +75,7 @@ public abstract class BaseHantoGame implements HantoGame {
 		if (pieceType == null) throw new HantoException("Need to specify a piece");
 		if (to == null) throw new HantoException("Need Destination");
 
-		piece = HantoPieceFactory.makePiece(pieceType, color);
+		piece = pieceFactory.makePiece(pieceType, color);
 
 		// use copy constructor on given HantoCoordinates
 		PieceCoordinate newFrom = (from == null? null : new PieceCoordinate(from));
@@ -150,6 +154,9 @@ public abstract class BaseHantoGame implements HantoGame {
 		
 		// piece type at from coordinate must match the given piece type
 		if(pieceType != board.getPieceAt(from).getType()) throw new HantoException("Piece type mismatch!");
+		
+		// piece color at from coordinate must match the given player color
+		if(color != board.getPieceAt(from).getColor()) throw new HantoException("Player color mismatch!");
 		
 		if(!pieceAbilities.get(pieceType).isMoveLegal(from, to)) throw new HantoException("Invalid movement of existing piece!");
 	}

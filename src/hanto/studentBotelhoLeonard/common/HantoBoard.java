@@ -36,15 +36,6 @@ public class HantoBoard {
 		board = new HashMap<PieceCoordinate, HantoPiece>();
 	}
 
-	/**
-	 * Copy constructor for HantoBoard
-	 * @param board - the other instance of HantoBoard that will be copied to create 
-	 * a new instance of the HantoBoard.
-	 */
-	public HantoBoard(HantoBoard board) {
-		this.board = new HashMap<PieceCoordinate, HantoPiece>(board.getBoardMap());
-	}
-
 	
 	/** A getter for the HashMap that maps each HantoCoordinate to which HantoPiece is at that coordinate.
 	 * @return the board HashMap

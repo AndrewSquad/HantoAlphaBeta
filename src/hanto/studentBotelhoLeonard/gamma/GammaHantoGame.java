@@ -17,7 +17,6 @@ import hanto.common.MoveResult;
 import hanto.studentBotelhoLeonard.common.BaseHantoGame;
 import hanto.studentBotelhoLeonard.common.MoveType;
 import hanto.studentBotelhoLeonard.common.MoveValidator;
-import hanto.studentBotelhoLeonard.common.MoveValidatorFactory;
 
 /**
  * HantoGame class for the Gamma version implementation of Hanto.
@@ -36,8 +35,8 @@ public class GammaHantoGame extends BaseHantoGame implements HantoGame {
 		redPiecesLeft = new HashMap<HantoPieceType, Integer>(bluePiecesLeft);
 		
 		pieceAbilities = new HashMap<HantoPieceType, MoveValidator>();
-		pieceAbilities.put(HantoPieceType.BUTTERFLY, MoveValidatorFactory.makeMoveValidator(MoveType.WALK, 1, board));
-		pieceAbilities.put(HantoPieceType.SPARROW, MoveValidatorFactory.makeMoveValidator(MoveType.WALK, 1, board));
+		pieceAbilities.put(HantoPieceType.BUTTERFLY, moveValidatorFactory.makeMoveValidator(MoveType.WALK, 1, board));
+		pieceAbilities.put(HantoPieceType.SPARROW, moveValidatorFactory.makeMoveValidator(MoveType.WALK, 1, board));
 		
 	}
 	
