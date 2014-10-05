@@ -194,10 +194,11 @@ public class HantoBoard {
 		// create a list of all the open tiles that are adjacent to another open tile
 		for (PieceCoordinate i : openTiles) {
 			for (PieceCoordinate j : openTiles) {
-				if (i.isAdjacentTo(j) && !twoTileOpenings.contains(i)) twoTileOpenings.add(i);
+				if (i.isAdjacentTo(j) && !twoTileOpenings.contains(i)) {
+					twoTileOpenings.add(i);
+				}
 			}
 		}
-		if (twoTileOpenings.isEmpty()) return null;
 		
 		return twoTileOpenings;
 	}

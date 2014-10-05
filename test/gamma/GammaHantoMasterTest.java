@@ -12,6 +12,8 @@ package gamma;
 
 import static org.junit.Assert.*;
 import hanto.common.*;
+import hanto.studentBotelhoLeonard.HantoGameFactory;
+
 import org.junit.*;
 import common.*;
 import static hanto.common.HantoPieceType.*;
@@ -173,6 +175,68 @@ public class GammaHantoMasterTest
 		game.makeMove(BUTTERFLY, null, makeCoordinate(0, 0));
 		game.makeMove(BUTTERFLY, null, makeCoordinate(0, 1));
 		game.makeMove(SPARROW, makeCoordinate(0, 0), makeCoordinate(1, 0));
+	}
+	
+	@Test(expected=HantoException.class)
+	public void attemptToPlacePieceNextToOpponentPiece() throws HantoException
+	{
+		game.makeMove(BUTTERFLY, null, makeCoordinate(0, 0));
+		game.makeMove(BUTTERFLY, null, makeCoordinate(0, 1));
+		game.makeMove(SPARROW, null, makeCoordinate(0, 2));
+	}
+	
+	@Test(expected=HantoException.class)
+	public void attemptToMoveWhenNotEnoughRoom() throws HantoException
+	{
+		final PieceLocationPair[] board = new PieceLocationPair[] {
+			    plPair(BLUE, BUTTERFLY, 0, 0), plPair(RED, BUTTERFLY, 0, 1),
+			    plPair(BLUE, SPARROW, -1, 0), plPair(RED, SPARROW, 1, -1),
+			    plPair(BLUE, SPARROW, -1, 1), plPair(RED, SPARROW, 0, -1)
+			    
+		};
+		testGame.initializeBoard(board);
+		testGame.setPlayerMoving(BLUE);
+		testGame.setTurnNumber(3);
+		game.makeMove(BUTTERFLY, makeCoordinate(0, 0), makeCoordinate(1, 0));
+	}
+	
+	@Test(expected=HantoException.class)
+	public void attemptToMoveMoreThanOneHex() throws HantoException
+	{
+		game.makeMove(BUTTERFLY, null, makeCoordinate(0, 0));
+		game.makeMove(BUTTERFLY, null, makeCoordinate(0, 1));
+		game.makeMove(BUTTERFLY, makeCoordinate(0, 0), makeCoordinate(0, 2));
+	}
+	
+	@Test
+	public void winOnTheFinalMove() throws HantoException
+	{
+		final PieceLocationPair[] board = new PieceLocationPair[] {
+			    plPair(BLUE, BUTTERFLY, 0, 0), plPair(RED, BUTTERFLY, 0, 1),
+			    plPair(BLUE, SPARROW, -1, 0), plPair(RED, SPARROW, 1, -1),
+			    plPair(BLUE, SPARROW, -1, 1), plPair(RED, SPARROW, 0, -1),
+			    plPair(RED, SPARROW, 1, 1)
+			    
+		};
+		testGame.initializeBoard(board);
+		testGame.setPlayerMoving(RED);
+		testGame.setTurnNumber(20);
+		assertEquals(RED_WINS, game.makeMove(SPARROW, makeCoordinate(1, 1), makeCoordinate(1, 0)));
+	}
+	
+	@SuppressWarnings("static-access")
+	@Test
+	public void testGameFactory() throws HantoException
+	{
+		game = HantoGameFactory.getInstance().makeHantoGame(HantoGameID.GAMMA_HANTO, RED);
+		assertEquals(OK, game.makeMove(BUTTERFLY, null, makeCoordinate(0, 0)));
+		assertEquals(BUTTERFLY, game.getPieceAt(makeCoordinate(0, 0)).getType());
+	}
+	
+	@Test(expected=Exception.class)
+	public void blueResignsImmediately() throws HantoException
+	{
+		assertEquals(RED_WINS, game.makeMove(null, null, null));
 	}
 	
 	// Helper methods

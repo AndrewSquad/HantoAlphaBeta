@@ -158,8 +158,7 @@ public class GammaTests {
 
 		board.addPiece(new PieceCoordinate(-1, 0), new Sparrow(BLUE));
 		openings = board.getTwoTileOpenings(origin);
-		assertNull(board.getTwoTileOpenings(origin));
-		assertNull(openings);
+		assertEquals(0, openings.size());
 	}
 
 	@Test
@@ -180,7 +179,7 @@ public class GammaTests {
 		assertEquals(3, openings.size());
 
 		board.addPiece(new PieceCoordinate(1, -1), new Sparrow(BLUE));
-		assertNull(board.getTwoTileOpenings(origin));
+		assertEquals(0, board.getTwoTileOpenings(origin).size());
 	}
 
 	@Test
