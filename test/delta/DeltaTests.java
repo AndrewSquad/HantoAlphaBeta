@@ -10,11 +10,11 @@ import hanto.common.HantoGameID;
 import hanto.common.HantoPiece;
 import hanto.common.MoveResult;
 import hanto.studentBotelhoLeonard.HantoGameFactory;
-import hanto.studentBotelhoLeonard.common.Butterfly;
 import hanto.studentBotelhoLeonard.common.FlyValidator;
 import hanto.studentBotelhoLeonard.common.HantoBoard;
 import hanto.studentBotelhoLeonard.common.PieceCoordinate;
-import hanto.studentBotelhoLeonard.common.Sparrow;
+import hanto.studentBotelhoLeonard.common.pieces.Butterfly;
+import hanto.studentBotelhoLeonard.common.pieces.Sparrow;
 
 import org.junit.Before;
 import org.junit.Test;

@@ -13,6 +13,6 @@ package hanto.studentBotelhoLeonard.common;
  */
 public enum MoveType {
 
-	WALK, RUN, FLY
+	WALK, RUN, FLY, JUMP
 	
 }

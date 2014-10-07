@@ -5,7 +5,6 @@
 package alpha;
 
 import static org.junit.Assert.*;
-
 import hanto.common.HantoException;
 import hanto.common.HantoGame;
 import hanto.common.HantoGameID;
@@ -15,9 +14,9 @@ import hanto.common.HantoPlayerColor;
 import hanto.common.MoveResult;
 import hanto.studentBotelhoLeonard.HantoGameFactory;
 import hanto.studentBotelhoLeonard.alpha.AlphaHantoGame;
-import hanto.studentBotelhoLeonard.common.Butterfly;
 import hanto.studentBotelhoLeonard.common.HantoBoard;
 import hanto.studentBotelhoLeonard.common.PieceCoordinate;
+import hanto.studentBotelhoLeonard.common.pieces.Butterfly;
 
 import org.junit.Before;
 import org.junit.Test;

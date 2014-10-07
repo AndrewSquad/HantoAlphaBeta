@@ -11,6 +11,10 @@ import hanto.common.HantoException;
 import hanto.common.HantoPiece;
 import hanto.common.HantoPieceType;
 import hanto.common.HantoPlayerColor;
+import hanto.studentBotelhoLeonard.common.pieces.Butterfly;
+import hanto.studentBotelhoLeonard.common.pieces.Crab;
+import hanto.studentBotelhoLeonard.common.pieces.Horse;
+import hanto.studentBotelhoLeonard.common.pieces.Sparrow;
 
 /**
  * A Factory class for making different Hanto Pieces.
@@ -43,6 +47,9 @@ public class HantoPieceFactory {
 			break;
 		case CRAB:
 			thePiece = new Crab(color);
+			break;
+		case HORSE:
+			thePiece = new Horse(color);
 			break;
 		default:
 			throw new HantoException("Inavlid piece type specified. Cannot create piece of type " + type.toString() + ".");		

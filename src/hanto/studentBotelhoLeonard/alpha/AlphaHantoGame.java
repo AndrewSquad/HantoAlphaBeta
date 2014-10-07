@@ -13,9 +13,9 @@ import hanto.common.HantoPiece;
 import hanto.common.HantoPieceType;
 import hanto.common.HantoPlayerColor;
 import hanto.common.MoveResult;
-import hanto.studentBotelhoLeonard.common.Butterfly;
 import hanto.studentBotelhoLeonard.common.HantoBoard;
 import hanto.studentBotelhoLeonard.common.PieceCoordinate;
+import hanto.studentBotelhoLeonard.common.pieces.Butterfly;
 
 /**
  * An implementation of the HantoGame interface for the Alpha version of Hanto.

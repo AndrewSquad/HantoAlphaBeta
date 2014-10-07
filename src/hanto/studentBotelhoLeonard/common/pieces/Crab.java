@@ -4,7 +4,7 @@
  * Class for a Crab piece in Hanto.
  */
 
-package hanto.studentBotelhoLeonard.common;
+package hanto.studentBotelhoLeonard.common.pieces;
 
 import hanto.common.HantoPieceType;
 import hanto.common.HantoPlayerColor;

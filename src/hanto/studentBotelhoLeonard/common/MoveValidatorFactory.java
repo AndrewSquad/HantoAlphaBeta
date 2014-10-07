@@ -52,6 +52,8 @@ public class MoveValidatorFactory {
 		case FLY:
 			validator = new FlyValidator(distanceLimit, board);
 			break;
+		case JUMP:
+			validator = new JumpValidator(distanceLimit, board);
 		default:
 			break;
 		}

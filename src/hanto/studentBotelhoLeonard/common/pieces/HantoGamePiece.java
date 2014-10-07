@@ -1,7 +1,7 @@
 /**
  * 
  */
-package hanto.studentBotelhoLeonard.common;
+package hanto.studentBotelhoLeonard.common.pieces;
 
 import hanto.common.HantoPiece;
 import hanto.common.HantoPieceType;
