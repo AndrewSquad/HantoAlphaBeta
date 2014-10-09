@@ -18,8 +18,9 @@ public class Sparrow extends HantoGamePiece {
 	 * @param color the color of the player who owns to piece.
 	 */
 	public Sparrow(HantoPlayerColor color) {
+		super(color);
 		type = HantoPieceType.SPARROW;
-		this.color = color;
 	}
+
 
 }

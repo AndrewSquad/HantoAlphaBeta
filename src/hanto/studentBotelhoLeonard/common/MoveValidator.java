@@ -6,6 +6,7 @@
  */
 package hanto.studentBotelhoLeonard.common;
 
+
 /**
  * Interface for different MoveValidator implementations (Walk, Fly, etc).
  * The main functionality of a MoveValidator is to determine if a given move is legal for a certain
@@ -21,5 +22,7 @@ public interface MoveValidator {
 	 * @return boolean indicating whether or not the proposed move is valid
 	 */
 	boolean isMoveLegal(PieceCoordinate from, PieceCoordinate to);
+
+	boolean existsLegalMove(PieceCoordinate coord);
 
 }

@@ -35,6 +35,10 @@ public class HantoBoard {
 	public HantoBoard() {
 		board = new HashMap<PieceCoordinate, HantoPiece>();
 	}
+	
+	public HantoBoard(HantoBoard otherBoard) {
+		board = new HashMap<PieceCoordinate, HantoPiece>(otherBoard.getBoardMap());
+	}
 
 	
 	/** A getter for the HashMap that maps each HantoCoordinate to which HantoPiece is at that coordinate.
@@ -233,8 +237,7 @@ public class HantoBoard {
 		isContiguous = (pieceCount == visited.size())? true : false;
 		
 		return isContiguous;
-	}
-	
+	}	
 	
 	// determines if a particular PieceCoordinate is surrounded by 6 other occupied tiles/pieces
 	private boolean has6Neighbors(PieceCoordinate butterflyPos) {

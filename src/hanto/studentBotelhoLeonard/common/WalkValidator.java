@@ -78,6 +78,11 @@ public class WalkValidator implements MoveValidator {
 	}
 	
 	
+	@Override
+	public boolean existsLegalMove(PieceCoordinate coord) {
+		return (!board.getTwoTileOpenings(coord).isEmpty());
+	}
+	
 	// given a set of PieceCoordinate, determines which one is closest to the destination
 	private PieceCoordinate closestToDest(Set<PieceCoordinate> nodes, PieceCoordinate dest) {
 		int minDistance = Integer.MAX_VALUE;

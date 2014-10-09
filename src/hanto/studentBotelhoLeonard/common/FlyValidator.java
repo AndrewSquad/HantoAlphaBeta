@@ -44,4 +44,12 @@ public class FlyValidator implements MoveValidator {
 		return moveLegal;
 	}
 
+	@Override
+	public boolean existsLegalMove(PieceCoordinate coord) {
+		HantoBoard boardCopy = new HantoBoard(board);
+		
+		boardCopy.getBoardMap().remove(coord);
+		return boardCopy.isBoardContiguous();
+	}
+
 }

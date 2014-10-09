@@ -65,6 +65,7 @@ public abstract class BaseHantoGame implements HantoGame {
 		
 		// if the player resigned
 		if (pieceType == null && from == null && to == null) {
+			//if (playerHasLegalMove(color)) throw new HantoPrematureResignationException();
 			gameHasEnded = true;
 			result = (color == HantoPlayerColor.RED) ? MoveResult.BLUE_WINS: MoveResult.RED_WINS;
 			return result;			
@@ -74,7 +75,7 @@ public abstract class BaseHantoGame implements HantoGame {
 		if (to == null) throw new HantoException("Need Destination");
 
 		piece = pieceFactory.makePiece(pieceType, color);
-
+		
 		// use copy constructor on given HantoCoordinates
 		PieceCoordinate newFrom = (from == null? null : new PieceCoordinate(from));
 		PieceCoordinate newTo = (to == null? null : new PieceCoordinate(to));
@@ -350,5 +351,29 @@ public abstract class BaseHantoGame implements HantoGame {
 
 		return result;
 	}
+	
+	
+//	protected boolean playerHasLegalMove(HantoPlayerColor color) {
+//		
+//		Iterator<Entry<PieceCoordinate, HantoPiece>> pieces = board.getBoardMap().entrySet().iterator();
+//		PieceCoordinate next;
+//		HantoPiece piece;
+//		while(pieces.hasNext()) {
+//			Entry<PieceCoordinate, HantoPiece> entry = pieces.next();
+//			piece = entry.getValue();
+//			if (piece.getColor() != color) continue;
+//			next = entry.getKey();
+//			HantoGamePiece gamePiece = new HantoGamePiece(piece, pieceAbilities.get(piece.getType()));
+//			if (gamePiece.getValidator().existsLegalMove(next)) return true;
+//		}
+//		return false;
+//	}
+//	
+//	private boolean pieceCanLegallyMove(HantoPiece piece) {
+//		
+//		//MoveValidator validator = pieceAbilities.get(piece.getType());		
+//		
+//		return false;
+//	}
 
 }

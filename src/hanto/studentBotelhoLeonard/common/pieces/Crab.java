@@ -19,7 +19,7 @@ public class Crab extends HantoGamePiece {
 	 * @param color the color of the Player using the Crab.
 	 */
 	public Crab(HantoPlayerColor color) {
-		this.color = color; 
+		super(color); 
 		type = HantoPieceType.CRAB;
 	}
 

@@ -17,6 +17,10 @@ public abstract class HantoGamePiece implements HantoPiece {
 	
 	protected HantoPieceType type;
 	protected HantoPlayerColor color;
+		
+	protected HantoGamePiece(HantoPlayerColor color) {
+		this.color = color;
+	}
 
 	@Override
 	public HantoPlayerColor getColor() {
@@ -27,5 +31,6 @@ public abstract class HantoGamePiece implements HantoPiece {
 	public HantoPieceType getType() {
 		return type;
 	}
+	
 
 }

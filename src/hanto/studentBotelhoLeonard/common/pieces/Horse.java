@@ -18,8 +18,7 @@ public class Horse extends HantoGamePiece {
 	 * @param color the color of the player who owns to piece.
 	 */
 	public Horse(HantoPlayerColor color) {
+		super(color);
 		type = HantoPieceType.HORSE;
-		this.color = color;
 	}
-
 }

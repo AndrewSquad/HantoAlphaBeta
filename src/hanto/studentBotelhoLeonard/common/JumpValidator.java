@@ -35,6 +35,18 @@ public class JumpValidator implements MoveValidator {
 		return false;
 	}
 	
+	
+	@Override
+	public boolean existsLegalMove(PieceCoordinate coord) {
+		// If it has any neighbor it can jump. If the board is contiguous after jump, move is legal
+		if (board.isAdjacentToAnyPiece(coord)) {
+			HantoBoard boardCopy = new HantoBoard(board);
+			boardCopy.getBoardMap().remove(coord);
+			return boardCopy.isBoardContiguous();
+		}
+		return false;
+	}
+	
 	private boolean piecesInWholePath(PieceCoordinate from, PieceCoordinate to) {
 		int deltaX = to.getX() - from.getX();
 		if (deltaX != 0 ) deltaX = deltaX > 1 ? 1 : -1;
@@ -65,6 +77,5 @@ public class JumpValidator implements MoveValidator {
 		
 		
 		return false;
-	}
-	
+	}	
 }
