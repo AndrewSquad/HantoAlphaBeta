@@ -42,7 +42,15 @@ public class DeltaHantoGame extends BaseHantoGame implements HantoGame {
 	
 	
 	public MoveResult makeMove(HantoPieceType pieceType, HantoCoordinate from,
-			HantoCoordinate to) throws HantoException {		
+			HantoCoordinate to) throws HantoException {
+		
+		HantoPlayerColor color = whoseTurnIsIt();
+		if (pieceType == null && from == null && to == null) {
+			gameHasEnded = true;
+			MoveResult result = (color == HantoPlayerColor.RED) ? MoveResult.BLUE_WINS: MoveResult.RED_WINS;
+			return result;
+		}
+		
 		if(pieceType != null && pieceType != HantoPieceType.BUTTERFLY && pieceType != HantoPieceType.SPARROW && pieceType != HantoPieceType.CRAB) throw new HantoException("Illegal piece type for Delta!");
 		
 		return super.makeMove(pieceType, from, to);

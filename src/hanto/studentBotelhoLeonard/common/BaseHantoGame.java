@@ -18,6 +18,7 @@ import hanto.common.HantoGame;
 import hanto.common.HantoPiece;
 import hanto.common.HantoPieceType;
 import hanto.common.HantoPlayerColor;
+import hanto.common.HantoPrematureResignationException;
 import hanto.common.MoveResult;
 
 /**
@@ -65,7 +66,7 @@ public abstract class BaseHantoGame implements HantoGame {
 		
 		// if the player resigned
 		if (pieceType == null && from == null && to == null) {
-			//if (playerHasLegalMove(color)) throw new HantoPrematureResignationException();
+			if (playerHasLegalMove(color)) throw new HantoPrematureResignationException();
 			gameHasEnded = true;
 			result = (color == HantoPlayerColor.RED) ? MoveResult.BLUE_WINS: MoveResult.RED_WINS;
 			return result;			
@@ -303,19 +304,33 @@ public abstract class BaseHantoGame implements HantoGame {
 	 * @return boolean indicating if either player has any pieces left to place on the board.
 	 */
 	protected boolean anyPiecesLeftToPlay() {
+		return redHasPiecesToPlay() || blueHasPiecesToPlay();
+		
+	}
+	
+	
+	private boolean redHasPiecesToPlay() {
+		int totalPiecesLeft = 0;
+		Iterator<Entry<HantoPieceType, Integer>> redPieceTotals = redPiecesLeft.entrySet().iterator();
+
+		while(redPieceTotals.hasNext()) {
+			Entry<HantoPieceType, Integer> entry = redPieceTotals.next();
+			totalPiecesLeft += entry.getValue();
+		}
+		
+		return totalPiecesLeft > 0;
+	}
+	
+	
+	private boolean blueHasPiecesToPlay() {
 		int totalPiecesLeft = 0;
 		Iterator<Entry<HantoPieceType, Integer>> bluePieceTotals = bluePiecesLeft.entrySet().iterator();
-		Iterator<Entry<HantoPieceType, Integer>> redPieceTotals = redPiecesLeft.entrySet().iterator();
 
 		while(bluePieceTotals.hasNext()) {
 			Entry<HantoPieceType, Integer> entry = bluePieceTotals.next();
 			totalPiecesLeft += entry.getValue();
 		}
-		while(redPieceTotals.hasNext()) {
-			Entry<HantoPieceType, Integer> entry = redPieceTotals.next();
-			totalPiecesLeft += entry.getValue();
-		}
-
+		
 		return totalPiecesLeft > 0;
 	}
 
@@ -353,27 +368,33 @@ public abstract class BaseHantoGame implements HantoGame {
 	}
 	
 	
-//	protected boolean playerHasLegalMove(HantoPlayerColor color) {
-//		
-//		Iterator<Entry<PieceCoordinate, HantoPiece>> pieces = board.getBoardMap().entrySet().iterator();
-//		PieceCoordinate next;
-//		HantoPiece piece;
-//		while(pieces.hasNext()) {
-//			Entry<PieceCoordinate, HantoPiece> entry = pieces.next();
-//			piece = entry.getValue();
-//			if (piece.getColor() != color) continue;
-//			next = entry.getKey();
-//			HantoGamePiece gamePiece = new HantoGamePiece(piece, pieceAbilities.get(piece.getType()));
-//			if (gamePiece.getValidator().existsLegalMove(next)) return true;
-//		}
-//		return false;
-//	}
-//	
-//	private boolean pieceCanLegallyMove(HantoPiece piece) {
-//		
-//		//MoveValidator validator = pieceAbilities.get(piece.getType());		
-//		
-//		return false;
-//	}
+	protected boolean playerHasLegalMove(HantoPlayerColor color) {
+		
+		if (turnCount < 2) return true;
+		
+		boolean playerHasAPiece = (color == HantoPlayerColor.RED) ? redHasPiecesToPlay() : blueHasPiecesToPlay(); 
+		// check if a piece can be placed
+		if (playerHasAPiece && board.canPlayerPlacePiece(color)) return true;
+		
+		// check if an existing piece can be moved
+		if (canPieceBeMoved(color)) return true;
+		
+		return false;
+	}
+	
+	private boolean canPieceBeMoved(HantoPlayerColor color) {
+		Iterator<Entry<PieceCoordinate, HantoPiece>> pieces = board.getBoardMap().entrySet().iterator();
+		PieceCoordinate next;
+		HantoPiece piece;
+		while(pieces.hasNext()) {
+			Entry<PieceCoordinate, HantoPiece> entry = pieces.next();
+			piece = entry.getValue();
+			if (piece.getColor() != color) continue;
+			next = entry.getKey();
+			if (pieceAbilities.get(piece.getType()).existsLegalMove(next)) return true;
+		}
+		return false;
+	}
+	
 
 }

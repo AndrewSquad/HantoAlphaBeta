@@ -208,6 +208,18 @@ public class HantoBoard {
 	}
 	
 	
+	private List<PieceCoordinate> getOpenTiles(PieceCoordinate coordinate) {
+		List<PieceCoordinate> openTiles = new ArrayList<PieceCoordinate>();
+		for (PieceCoordinate adjacentCoordinate : coordinate.getSixAdjacentCoordinates()) { // for each of the six adjacent coordinates
+			if (!isTileAlreadyOccupied(adjacentCoordinate)) { // if the coordinate is unoccupied
+				openTiles.add(adjacentCoordinate); // add to openTiles list
+			}
+		}
+		
+		return openTiles;
+	}
+	
+	
 	/**
 	 * Determines whether or not all pieces on the board are contiguous to each other.
 	 * @return boolean indicating whether or not the board is currently contiguous.
@@ -252,6 +264,33 @@ public class HantoBoard {
 		}
 		
 		return neighbors == 6;
+	}
+	
+	
+	public boolean canPlayerPlacePiece(HantoPlayerColor color) {
+		Iterator<Entry<PieceCoordinate, HantoPiece>> pieces = board.entrySet().iterator();
+		PieceCoordinate next;
+		HantoPiece piece;
+		while(pieces.hasNext()) {
+			Entry<PieceCoordinate, HantoPiece> entry = pieces.next();
+			piece = entry.getValue();
+			if (piece.getColor() != color) continue;
+			next = entry.getKey();
+			if (pieceCanBePlacedNextTo(next, color)) return true;
+		}
+		return false;
+	}
+	
+
+	private boolean pieceCanBePlacedNextTo(PieceCoordinate coord, HantoPlayerColor color) {
+		List<PieceCoordinate> adjCoordinates = getOpenTiles(coord);
+		if (adjCoordinates.size() == 0) return false;
+		
+		for (PieceCoordinate adjCoordinate : adjCoordinates) {
+			if (!isAdjacentToOtherColorPiece(adjCoordinate, color)) return true;
+		}
+		
+		return false;
 	}
 	
 	/**

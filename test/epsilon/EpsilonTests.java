@@ -11,6 +11,7 @@ import static hanto.studentBotelhoLeonard.common.MoveType.*;
 import hanto.common.HantoException;
 import hanto.common.HantoGame;
 import hanto.common.HantoGameID;
+import hanto.common.HantoPrematureResignationException;
 import hanto.common.MoveResult;
 import hanto.studentBotelhoLeonard.common.HantoBoard;
 import hanto.studentBotelhoLeonard.common.MoveValidator;
@@ -40,13 +41,15 @@ public class EpsilonTests {
 
 	private HantoGame game;
 	private HantoTestGame testGame;
-
+	private PieceCoordinate origin;
+	
 	@Before
 	public void setup()
 	{
 		// By default, blue moves first.
 		testGame = HantoTestGameFactory.getInstance().makeHantoTestGame(HantoGameID.EPSILON_HANTO);
 		game = testGame;
+		origin = new PieceCoordinate(0, 0);
 	}
 
 	
@@ -55,7 +58,7 @@ public class EpsilonTests {
 		testGame.setTurnNumber(10);
 		testGame.initializeBoard(
 				new PieceLocationPair[] {
-						new PieceLocationPair(BLUE, BUTTERFLY, new PieceCoordinate(0, 0)),
+						new PieceLocationPair(BLUE, BUTTERFLY, origin),
 						new PieceLocationPair(RED, BUTTERFLY, new PieceCoordinate(0, 1)),
 						new PieceLocationPair(RED, SPARROW, new PieceCoordinate(1, 0)),
 						new PieceLocationPair(RED, SPARROW, new PieceCoordinate(-1, 0)),
@@ -75,7 +78,7 @@ public class EpsilonTests {
 		testGame.setTurnNumber(10);
 		testGame.initializeBoard(
 				new PieceLocationPair[] {
-						new PieceLocationPair(BLUE, BUTTERFLY, new PieceCoordinate(0, 0)),
+						new PieceLocationPair(BLUE, BUTTERFLY, origin),
 						new PieceLocationPair(RED, BUTTERFLY, new PieceCoordinate(0, 1)),
 						new PieceLocationPair(RED, SPARROW, new PieceCoordinate(1, 0)),
 						new PieceLocationPair(RED, SPARROW, new PieceCoordinate(-1, 0)),
@@ -95,7 +98,7 @@ public class EpsilonTests {
 	public void legalMovesAvailable() throws HantoException {
 		HantoBoard board = new HantoBoard();
 		MoveValidatorFactory validatorFactory = MoveValidatorFactory.getInstance();
-		board.addPiece(new PieceCoordinate(0, 0), new Butterfly(BLUE));
+		board.addPiece(origin, new Butterfly(BLUE));
 		board.addPiece(new PieceCoordinate(0, 1), new Butterfly(RED));
 		board.addPiece(new PieceCoordinate(1, 0), new Sparrow(RED));
 		board.addPiece(new PieceCoordinate(-1, 0), new Sparrow(RED));
@@ -112,26 +115,113 @@ public class EpsilonTests {
 		assertTrue(validator.existsLegalMove(new PieceCoordinate(0, -1)));
 	}
 	
+	@Test(expected=HantoPrematureResignationException.class)
+	public void cantGiveupImmediately() throws HantoException {
+		game.makeMove(null, null, null);
+	}
 	
-	@Test(expected=HantoException.class)
-	public void illegalJumpest() throws HantoException {
+//	@Test(expected=HantoException.class)
+//	public void cantPlacePiece() throws HantoException {
+//		testGame.setTurnNumber(10);
+//		testGame.initializeBoard(
+//				new PieceLocationPair[] {
+//						new PieceLocationPair(BLUE, SPARROW, origin),
+//						new PieceLocationPair(RED, BUTTERFLY, new PieceCoordinate(0, 1)),
+//						new PieceLocationPair(RED, SPARROW, new PieceCoordinate(-1, 0)),
+//						new PieceLocationPair(RED, SPARROW, new PieceCoordinate(1, -1)),
+//						new PieceLocationPair(RED, CRAB, new PieceCoordinate(0, -1)),
+//						new PieceLocationPair(RED, CRAB, new PieceCoordinate(-1, 0)),
+//						new PieceLocationPair(RED, CRAB, new PieceCoordinate(-1, 1)),
+//						
+//						new PieceLocationPair(RED, CRAB, new PieceCoordinate(1, 1)),
+//						new PieceLocationPair(RED, CRAB, new PieceCoordinate(2, 0)),
+//						new PieceLocationPair(RED, CRAB, new PieceCoordinate(-1, 2)),
+//						
+//						new PieceLocationPair(RED, HORSE, new PieceCoordinate(-2, 2)),
+//						new PieceLocationPair(RED, HORSE, new PieceCoordinate(-2, 1)),
+//						new PieceLocationPair(RED, HORSE, new PieceCoordinate(2, -1)),
+//						new PieceLocationPair(RED, HORSE, new PieceCoordinate(3, 0)),
+//						
+//						
+//						new PieceLocationPair(BLUE, BUTTERFLY, new PieceCoordinate(-3, 0)),
+//						new PieceLocationPair(BLUE, SPARROW, new PieceCoordinate(-3, -1)),
+//						new PieceLocationPair(BLUE, CRAB, new PieceCoordinate(-3, -2)),
+//						new PieceLocationPair(BLUE, CRAB, new PieceCoordinate(-3, -3)),
+//						new PieceLocationPair(BLUE, CRAB, new PieceCoordinate(-3, -4)),
+//						
+//						new PieceLocationPair(BLUE, CRAB, new PieceCoordinate(3, -1)),
+//						new PieceLocationPair(BLUE, CRAB, new PieceCoordinate(3, -2)),
+//						new PieceLocationPair(BLUE, CRAB, new PieceCoordinate(3, -3)),
+//						
+//						new PieceLocationPair(BLUE, HORSE, new PieceCoordinate(3, -4)),
+//						new PieceLocationPair(BLUE, HORSE, new PieceCoordinate(3, 1)),
+//						new PieceLocationPair(BLUE, HORSE, new PieceCoordinate(3, 2)),
+//						new PieceLocationPair(BLUE, HORSE, new PieceCoordinate(3, 3))
+//				}
+//				);
+//
+//		testGame.setPlayerMoving(BLUE);
+//		game.makeMove(HORSE, new PieceCoordinate(0, -1), new PieceCoordinate(-2, 2));
+//	}
+	
+	@Test
+	public void testCanPlayerPlacePiece() {
+		HantoBoard board = new HantoBoard();
+		board.addPiece(origin, new Butterfly(BLUE));
+		board.addPiece(new PieceCoordinate(0, 1), new Butterfly(RED));
+		board.addPiece(new PieceCoordinate(1, 0), new Sparrow(BLUE));
+		assertTrue(board.canPlayerPlacePiece(RED));		
+	}
+	
+	@Test
+	public void blueCantPlacePiece() {
+		HantoBoard board = new HantoBoard();
+		board.addPiece(origin, new Butterfly(BLUE));
+		board.addPiece(new PieceCoordinate(0, 1), new Butterfly(RED));
+		board.addPiece(new PieceCoordinate(1, 0), new Sparrow(RED));
+		board.addPiece(new PieceCoordinate(1, -1), new Crab(RED));
+		board.addPiece(new PieceCoordinate(0, -1), new Crab(RED));
+		board.addPiece(new PieceCoordinate(-1, 0), new Crab(RED));
+		board.addPiece(new PieceCoordinate(-1, 1), new Crab(RED));
+		assertFalse(board.canPlayerPlacePiece(BLUE));
+	}
+
+	@Test(expected=HantoPrematureResignationException.class)
+	public void redCantResign() throws HantoException {
 		testGame.setTurnNumber(10);
 		testGame.initializeBoard(
 				new PieceLocationPair[] {
-						new PieceLocationPair(BLUE, BUTTERFLY, new PieceCoordinate(0, 0)),
+						new PieceLocationPair(BLUE, BUTTERFLY, origin),
 						new PieceLocationPair(RED, BUTTERFLY, new PieceCoordinate(0, 1)),
-						new PieceLocationPair(RED, SPARROW, new PieceCoordinate(1, 0)),
-						new PieceLocationPair(RED, SPARROW, new PieceCoordinate(-1, 0)),
-						new PieceLocationPair(RED, CRAB, new PieceCoordinate(-1, 1)),
-						new PieceLocationPair(BLUE, HORSE, new PieceCoordinate(0,-1))
+						new PieceLocationPair(BLUE, CRAB, new PieceCoordinate(0, -1))
 				}
 				);
-
-		testGame.setPlayerMoving(BLUE);
-
-		MoveResult mv = game.makeMove(HORSE, new PieceCoordinate(0, -1), new PieceCoordinate(-2, 2));
-		assertEquals(OK, mv);
+		testGame.setPlayerMoving(RED);
+		game.makeMove(null, null, null);
 	}
-
+	
+	@Test
+	public void blueCanResign() throws HantoException {
+		testGame.setTurnNumber(10);
+		testGame.initializeBoard(
+				new PieceLocationPair[] {
+						new PieceLocationPair(BLUE, BUTTERFLY, origin),
+						new PieceLocationPair(RED, BUTTERFLY, new PieceCoordinate(0, 1)),
+						new PieceLocationPair(RED, CRAB, new PieceCoordinate(1, 0)),
+						new PieceLocationPair(RED, CRAB, new PieceCoordinate(1, -1)),
+						new PieceLocationPair(RED, CRAB, new PieceCoordinate(0, -1)),
+						new PieceLocationPair(RED, CRAB, new PieceCoordinate(-1, 0)),
+						new PieceLocationPair(RED, CRAB, new PieceCoordinate(1, -1))
+				}
+				);
+		testGame.setPlayerMoving(BLUE);
+		MoveResult mv = game.makeMove(null, null, null);
+		assertEquals(mv, RED_WINS);
+	}
+	
+	@Test(expected=HantoException.class)
+	public void cantMakeCrane() throws HantoException {
+		game.makeMove(CRANE, null, origin);
+	}
 
 }

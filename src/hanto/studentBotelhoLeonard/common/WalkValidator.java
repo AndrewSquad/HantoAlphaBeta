@@ -80,7 +80,15 @@ public class WalkValidator implements MoveValidator {
 	
 	@Override
 	public boolean existsLegalMove(PieceCoordinate coord) {
-		return (!board.getTwoTileOpenings(coord).isEmpty());
+		HantoBoard boardCopy = new HantoBoard(board);
+		List<PieceCoordinate> potentialMoves = board.getTwoTileOpenings(coord);
+		if (potentialMoves.size() == 0) return false;
+		
+		for (PieceCoordinate potentialMove : potentialMoves) {
+			boardCopy.moveExistingPiece(coord, potentialMove, board.getPieceAt(coord));
+			if(boardCopy.isBoardContiguous()) return true;
+		}
+		return false;
 	}
 	
 	// given a set of PieceCoordinate, determines which one is closest to the destination
