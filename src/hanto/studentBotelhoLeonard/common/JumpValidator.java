@@ -26,13 +26,16 @@ public class JumpValidator implements MoveValidator {
 	@Override
 	public boolean isMoveLegal(PieceCoordinate from, PieceCoordinate to) {
 		
-		if (board.getPieceAt(to) != null) return false;
+		if (board.getPieceAt(to) != null) {
+			return false;
+		}
+		else if (!isStraightLine(from, to)) {
+			return false;
+		}
+		else {
+			return piecesInWholePath(from, to);
+		}
 		
-		if (!isStraightLine(from, to)) return false;
-		
-		if (piecesInWholePath(from, to)) return true;
-		
-		return false;
 	}
 	
 	

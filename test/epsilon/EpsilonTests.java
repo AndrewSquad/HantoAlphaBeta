@@ -93,6 +93,99 @@ public class EpsilonTests {
 		assertEquals(OK, mv);
 	}
 	
+	@Test
+	public void validJumps() throws HantoException {
+		testGame.setTurnNumber(10);
+		testGame.initializeBoard(
+				new PieceLocationPair[] {
+						new PieceLocationPair(BLUE, BUTTERFLY, origin),
+						new PieceLocationPair(RED, BUTTERFLY, new PieceCoordinate(0, 1)),
+						new PieceLocationPair(BLUE, HORSE, new PieceCoordinate(1, 0)),
+						new PieceLocationPair(RED, CRAB, new PieceCoordinate(1, -1)),
+						new PieceLocationPair(RED, CRAB, new PieceCoordinate(0, -1)),
+						new PieceLocationPair(RED, HORSE, new PieceCoordinate(-1, 0)),
+				}
+				);
+		testGame.setPlayerMoving(BLUE);
+		MoveResult mv = game.makeMove(HORSE, new PieceCoordinate(1, 0), new PieceCoordinate(-2, 0));
+		assertEquals(OK, mv);
+		assertEquals(HORSE, game.getPieceAt(new PieceCoordinate(-2, 0)).getType());
+		game.makeMove(CRAB, new PieceCoordinate(0, -1), new PieceCoordinate(-1, -1));
+		mv = game.makeMove(HORSE, new PieceCoordinate(-2, 0), new PieceCoordinate(0, -2));
+		assertEquals(OK, mv);
+		assertEquals(HORSE, game.getPieceAt(new PieceCoordinate(0, -2)).getType());
+	}
+	
+	@Test(expected=HantoException.class)
+	public void invalidJump1() throws HantoException {
+		testGame.setTurnNumber(10);
+		testGame.initializeBoard(
+				new PieceLocationPair[] {
+						new PieceLocationPair(BLUE, BUTTERFLY, origin),
+						new PieceLocationPair(RED, BUTTERFLY, new PieceCoordinate(0, 1)),
+						new PieceLocationPair(BLUE, HORSE, new PieceCoordinate(1, 0)),
+						new PieceLocationPair(RED, CRAB, new PieceCoordinate(1, -1)),
+						new PieceLocationPair(RED, CRAB, new PieceCoordinate(0, -1)),
+						new PieceLocationPair(RED, HORSE, new PieceCoordinate(-1, 0)),
+				}
+				);
+		testGame.setPlayerMoving(BLUE);
+		game.makeMove(HORSE, new PieceCoordinate(1, 0), new PieceCoordinate(-3, 0));
+	}
+	
+	@Test(expected=HantoException.class)
+	public void invalidJump2() throws HantoException {
+		testGame.setTurnNumber(10);
+		testGame.initializeBoard(
+				new PieceLocationPair[] {
+						new PieceLocationPair(BLUE, BUTTERFLY, origin),
+						new PieceLocationPair(RED, BUTTERFLY, new PieceCoordinate(0, 1)),
+						new PieceLocationPair(BLUE, HORSE, new PieceCoordinate(1, 0)),
+						new PieceLocationPair(RED, CRAB, new PieceCoordinate(-1, 0))
+				}
+				);
+		testGame.setPlayerMoving(BLUE);
+		game.makeMove(HORSE, new PieceCoordinate(1, 0), new PieceCoordinate(-1, 0));
+	}
+	
+	@Test(expected=HantoException.class)
+	public void invalidJump3() throws HantoException {
+		testGame.setTurnNumber(10);
+		testGame.initializeBoard(
+				new PieceLocationPair[] {
+						new PieceLocationPair(BLUE, BUTTERFLY, origin),
+						new PieceLocationPair(RED, BUTTERFLY, new PieceCoordinate(0, 1)),
+						new PieceLocationPair(RED, HORSE, new PieceCoordinate(1, 0)),
+						new PieceLocationPair(RED, CRAB, new PieceCoordinate(-1, 0))
+				}
+				);
+		testGame.setPlayerMoving(BLUE);
+		game.makeMove(BUTTERFLY, origin, new PieceCoordinate(-1, 1));
+		game.makeMove(HORSE, new PieceCoordinate(1, 0), new PieceCoordinate(-2, 0));
+	}	
+	
+	@Test
+	public void horseCantJump() throws HantoException {
+		HantoBoard board = new HantoBoard();
+		MoveValidatorFactory validatorFactory = MoveValidatorFactory.getInstance();
+		board.addPiece(origin, new Butterfly(BLUE));
+		board.addPiece(new PieceCoordinate(0, 1), new Horse(RED));
+		board.addPiece(new PieceCoordinate(0, 2), new Sparrow(BLUE));
+		
+		MoveValidator validator = validatorFactory.makeMoveValidator(JUMP, board);
+		assertFalse(validator.existsLegalMove(new PieceCoordinate(0, 1)));
+	}
+	
+	@Test
+	public void loneHorseCantJump() throws HantoException {
+		HantoBoard board = new HantoBoard();
+		MoveValidatorFactory validatorFactory = MoveValidatorFactory.getInstance();
+		board.addPiece(origin, new Horse(BLUE));
+		
+		MoveValidator validator = validatorFactory.makeMoveValidator(JUMP, board);
+		assertFalse(validator.existsLegalMove(origin));
+	}
+	
 	
 	@Test
 	public void legalMovesAvailable() throws HantoException {
@@ -223,5 +316,5 @@ public class EpsilonTests {
 	public void cantMakeCrane() throws HantoException {
 		game.makeMove(CRANE, null, origin);
 	}
-
+	
 }
