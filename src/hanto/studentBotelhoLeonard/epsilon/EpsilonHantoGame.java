@@ -33,7 +33,7 @@ public class EpsilonHantoGame extends BaseHantoGame implements HantoGame {
 		pieceAbilities = new HashMap<HantoPieceType, MoveValidator>();
 		pieceAbilities.put(HantoPieceType.BUTTERFLY, moveValidatorFactory.makeMoveValidator(MoveType.WALK, 1, board));
 		pieceAbilities.put(HantoPieceType.CRAB, moveValidatorFactory.makeMoveValidator(MoveType.WALK, 1, board));
-		pieceAbilities.put(HantoPieceType.SPARROW, moveValidatorFactory.makeMoveValidator(MoveType.FLY, 5, board));
+		pieceAbilities.put(HantoPieceType.SPARROW, moveValidatorFactory.makeMoveValidator(MoveType.FLY, 4, board));
 		pieceAbilities.put(HantoPieceType.HORSE, moveValidatorFactory.makeMoveValidator(MoveType.JUMP, board));
 		
 		turnLimit = Integer.MAX_VALUE;
