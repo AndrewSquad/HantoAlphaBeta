@@ -110,6 +110,15 @@ public abstract class BaseHantoGame implements HantoGame {
 	public String getPrintableBoard() {
 		return board.toString();
 	}
+	
+	
+	public int getTurnCount() {
+		return turnCount;
+	}
+	
+	public HantoBoard getHantoBoard() {
+		return board;
+	}
 
 	/**
 	 * Highest layer helper method for validating a new move.
@@ -252,7 +261,7 @@ public abstract class BaseHantoGame implements HantoGame {
 	 * @param player the player to check for
 	 * @return boolean indicating whether or not the player has placed their butterfly yet.
 	 */
-	protected boolean hasPlayerPlacedButterfly(HantoPlayerColor player) {
+	public boolean hasPlayerPlacedButterfly(HantoPlayerColor player) {
 		boolean hasPlacedButterfly = true;
 		if (player == HantoPlayerColor.BLUE) {
 			if (bluePiecesLeft.get(HantoPieceType.BUTTERFLY) > 0) hasPlacedButterfly = false;

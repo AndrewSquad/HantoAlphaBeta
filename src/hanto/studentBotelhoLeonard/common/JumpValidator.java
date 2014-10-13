@@ -51,6 +51,11 @@ public class JumpValidator implements MoveValidator {
 	}
 	
 	private boolean piecesInWholePath(PieceCoordinate from, PieceCoordinate to) {
+		// Slope
+		// 3 Possibilities
+		// deltaX = 0 and deltaY != 0
+		// deltaY = 0 and deltaX != 0
+		// deltaY = -deltaX
 		int deltaX = to.getX() - from.getX();
 		if (deltaX != 0 ) deltaX = deltaX > 1 ? 1 : -1;
 		int deltaY = to.getY() - from.getY();
@@ -60,11 +65,18 @@ public class JumpValidator implements MoveValidator {
 		
 		boolean piecesInPath = true;
 		
+		// In 2/3 cases, using deltaY will get a number of iterations
+		// In the case where Y remains constant, only X changes and therefore can be used.
 		int i = (deltaY != 0) ? from.getY() : from.getX();
-		while (i != ((deltaY != 0) ? from.getY() : from.getX())) {
+		
+		// When x doesn't change, subtract delta y, when it does, add delta y to y.
+		int multY = (deltaX == 0 && deltaY == -1) ? -1 : 1;
+		
+		// Stop looping when from + i = destination
+		while (i != ((deltaY != 0) ? to.getY() - multY*deltaY : to.getX() - deltaX)) { // i != destination
 			tempCoord = new PieceCoordinate(tempCoord.getX() + deltaX, tempCoord.getY() + deltaY);
 			if (null == board.getPieceAt(tempCoord)) return false;
-			i += (deltaY != 0) ? deltaY : deltaX;
+			i += (deltaY != 0) ? deltaY : deltaX; // i++ or i--
 		}
 		
 		return piecesInPath;
