@@ -6,6 +6,10 @@
  */
 package hanto.studentBotelhoLeonard.common;
 
+import java.util.List;
+
+
+
 
 /**
  * Interface for different MoveValidator implementations (Walk, Fly, etc).
@@ -24,5 +28,9 @@ public interface MoveValidator {
 	boolean isMoveLegal(PieceCoordinate from, PieceCoordinate to);
 
 	boolean existsLegalMove(PieceCoordinate coord);
+	
+	PieceCoordinate optimalMove(PieceCoordinate from, PieceCoordinate target);
+	
+	List<PieceCoordinate> allMoves(PieceCoordinate from);
 
 }

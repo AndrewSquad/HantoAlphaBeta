@@ -119,6 +119,28 @@ public abstract class BaseHantoGame implements HantoGame {
 	public HantoBoard getHantoBoard() {
 		return board;
 	}
+	
+	public MoveValidator getValidator(HantoPieceType pieceType) {
+		return pieceAbilities.get(pieceType);
+	}
+	
+	/**
+	 * Given a player color, this method determines whether or not he/she has placed a butterfly yet
+	 * @param player the player to check for
+	 * @return boolean indicating whether or not the player has placed their butterfly yet.
+	 */
+	public boolean hasPlayerPlacedButterfly(HantoPlayerColor player) {
+		boolean hasPlacedButterfly = true;
+		if (player == HantoPlayerColor.BLUE) {
+			if (bluePiecesLeft.get(HantoPieceType.BUTTERFLY) > 0) hasPlacedButterfly = false;
+		}
+
+		else {
+			if (redPiecesLeft.get(HantoPieceType.BUTTERFLY) > 0) hasPlacedButterfly = false;
+		}
+
+		return hasPlacedButterfly;
+	}
 
 	/**
 	 * Highest layer helper method for validating a new move.
@@ -256,24 +278,6 @@ public abstract class BaseHantoGame implements HantoGame {
 	}
 
 
-	/**
-	 * Given a player color, this method determines whether or not he/she has placed a butterfly yet
-	 * @param player the player to check for
-	 * @return boolean indicating whether or not the player has placed their butterfly yet.
-	 */
-	public boolean hasPlayerPlacedButterfly(HantoPlayerColor player) {
-		boolean hasPlacedButterfly = true;
-		if (player == HantoPlayerColor.BLUE) {
-			if (bluePiecesLeft.get(HantoPieceType.BUTTERFLY) > 0) hasPlacedButterfly = false;
-		}
-
-		else {
-			if (redPiecesLeft.get(HantoPieceType.BUTTERFLY) > 0) hasPlacedButterfly = false;
-		}
-
-		return hasPlacedButterfly;
-	}
-
 
 	/**
 	 * Decrements how many of a certain piece type the given player has left to use.
@@ -298,7 +302,7 @@ public abstract class BaseHantoGame implements HantoGame {
 	 * @return int indicating how many of a particular piece type the given player has left 
 	 * to put on the board
 	 */
-	protected int playerPieceTypeRemaining(HantoPlayerColor player, HantoPieceType pieceType) {
+	public int playerPieceTypeRemaining(HantoPlayerColor player, HantoPieceType pieceType) {
 		if (player == HantoPlayerColor.BLUE) {
 			return bluePiecesLeft.get(pieceType);
 		}
@@ -377,7 +381,7 @@ public abstract class BaseHantoGame implements HantoGame {
 	}
 	
 	
-	protected boolean playerHasLegalMove(HantoPlayerColor color) {
+	public boolean playerHasLegalMove(HantoPlayerColor color) {
 		
 		if (turnCount < 2) return true;
 		

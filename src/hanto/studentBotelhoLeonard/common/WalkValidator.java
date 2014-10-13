@@ -9,6 +9,7 @@ package hanto.studentBotelhoLeonard.common;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -109,6 +110,8 @@ public class WalkValidator implements MoveValidator {
 	}
 	
 	
+	
+	
 	// determines if the given coordinate is adjacent to an occupied tile
 	// does not look at the most recent tile in the path leading up to this current node
 	private boolean isAdjacentToOccupiedTile(PieceCoordinate to, PieceCoordinate from) {
@@ -119,6 +122,17 @@ public class WalkValidator implements MoveValidator {
 		}
 		
 		return false;
+	}
+
+	@Override
+	public PieceCoordinate optimalMove(PieceCoordinate from, PieceCoordinate target) {
+		Set<PieceCoordinate> moves = new HashSet<PieceCoordinate>(board.getTwoTileOpenings(from));
+		return closestToDest(moves, target);
+	}
+
+	@Override
+	public List<PieceCoordinate> allMoves(PieceCoordinate from) {
+		return board.getTwoTileOpenings(from);
 	}
 
 }
