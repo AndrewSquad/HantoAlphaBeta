@@ -79,6 +79,10 @@ public class JumpValidator implements MoveValidator {
 		PieceCoordinate tempCoord = new PieceCoordinate(from.getX(), from.getY());
 
 		// Stop looping when from + i = destination
+		// This moves to the neighbor
+		tempCoord = new PieceCoordinate(tempCoord.getX() + deltaX, tempCoord.getY() + deltaY);
+		// This moves 1 past the neighbor, so destination can begin to be evaluated
+		tempCoord = new PieceCoordinate(tempCoord.getX() + deltaX, tempCoord.getY() + deltaY);
 		while (board.getPieceAt(tempCoord) != null) { // i is not equal to the destination
 			tempCoord = new PieceCoordinate(tempCoord.getX() + deltaX, tempCoord.getY() + deltaY);
 		}
@@ -144,11 +148,12 @@ public class JumpValidator implements MoveValidator {
 
 		for (PieceCoordinate c : neighbors) {
 			PieceCoordinate move = returnJump(from, c);
-			if (move.distanceFrom(target) < minDist) {
+			if (move.distanceFrom(target) < minDist && isMoveLegal(from, move)) {
 				minDist = move.distanceFrom(target);
 				minDistCoord = move;
 			}
 		}
+		
 
 		return minDistCoord;
 	}
@@ -165,7 +170,7 @@ public class JumpValidator implements MoveValidator {
 
 		for (PieceCoordinate c : neighbors) {
 			PieceCoordinate move = returnJump(from, c);
-			possMoves.add(move);
+			if (isMoveLegal(from, move)) possMoves.add(move);
 		}
 
 		return possMoves;

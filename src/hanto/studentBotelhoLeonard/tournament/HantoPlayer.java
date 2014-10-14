@@ -45,6 +45,11 @@ public class HantoPlayer implements HantoGamePlayer {
 	private PieceCoordinate opponentButterflyLoc = null;
 
 
+	public HantoPlayer() {
+
+	}
+
+
 	/**
 	 * Constructor for a HantoPlayer object.
 	 * Determines what the player's color is, as well as what the opponent's color is.
@@ -60,6 +65,9 @@ public class HantoPlayer implements HantoGamePlayer {
 	@Override
 	public void startGame(HantoGameID version, HantoPlayerColor myColor,
 			boolean doIMoveFirst) {
+
+		this.myColor = myColor;
+		opponentColor = (myColor == HantoPlayerColor.RED) ? HantoPlayerColor.BLUE : HantoPlayerColor.RED;
 
 		HantoPlayerColor movesFirst = (doIMoveFirst) ? myColor : opponentColor;
 		game = new EpsilonHantoGame(movesFirst);
@@ -98,6 +106,11 @@ public class HantoPlayer implements HantoGamePlayer {
 			//Mid Game 
 			else if (!endNear) {
 				myMove = midGame();
+				System.out.println("Mid Game Move:");
+				System.out.println(myMove.getPiece().toString());
+				if (myMove.getFrom() != null) System.out.println(myMove.getFrom().toString());
+				System.out.println(myMove.getTo().toString());
+
 			}
 
 			// End Game
@@ -113,6 +126,7 @@ public class HantoPlayer implements HantoGamePlayer {
 		try {
 			if ((myMove == null) || (myMove.getPiece() == null && myMove.getFrom() == null && myMove.getTo() == null)) {
 				if (!game.playerHasLegalMove(myColor)) {
+					System.out.println("BotelhoLeonard doesn't have a legal move -> Resign");
 					return new HantoMoveRecord(null, null, null);
 				}
 				else {
@@ -122,9 +136,11 @@ public class HantoPlayer implements HantoGamePlayer {
 			game.makeMove(myMove.getPiece(), myMove.getFrom(), myMove.getTo());
 		}
 		catch (HantoException e) {
+			System.out.println("BotelhoLeonard AI returned a HantoException when determining move -> Resign");
+			System.out.println(e);
 			return new HantoMoveRecord(null, null, null);
 		}
-		
+
 		if (myMove.getPiece() == HantoPieceType.BUTTERFLY) myButterflyLoc = new PieceCoordinate(myMove.getTo());
 
 		return myMove;
@@ -163,9 +179,11 @@ public class HantoPlayer implements HantoGamePlayer {
 		if (turnCount == 1) {
 			to = new PieceCoordinate(0, 1);
 		}
+
 		else if  (turnCount == 4 || turnCount == 5) {
 			to = getWorstAddLocation();
 		}
+
 		else to = getOptimalAddLocation();
 
 		return new HantoMoveRecord(piece, null, to);
@@ -194,40 +212,44 @@ public class HantoPlayer implements HantoGamePlayer {
 		if (sparrows > 0) {
 			if (getWorstAddLocation() != null) {
 				to = getWorstAddLocation();
+				piece = HantoPieceType.SPARROW;
 				return new HantoMoveRecord(piece, from, to);
 			}
 		}
-		
+
 		List<HantoMoveRecord> optimalMoves = new ArrayList<HantoMoveRecord>();
 		Iterator<Map.Entry<PieceCoordinate, HantoPiece>> pieceIter = game.getHantoBoard().getBoardMap().entrySet().iterator();
 		PieceCoordinate current;
 		while (pieceIter.hasNext()) {
 			current = pieceIter.next().getKey();
-			HantoMoveRecord record = findOptimalPieceMove(current);
-			if (record != null) optimalMoves.add(record);
+			HantoPiece aPiece = game.getPieceAt(current);
+			if (aPiece.getColor() == myColor) {
+				HantoMoveRecord record = findOptimalPieceMove(current);
+				if (record != null) optimalMoves.add(record);
+			}
 		}
-		
+
 		int crabs = game.playerPieceTypeRemaining(myColor, HantoPieceType.CRAB);
 		if (crabs > 0) {
 			PieceCoordinate optimalAddLoc = getOptimalAddLocation();
 			if (optimalAddLoc != null) optimalMoves.add(new HantoMoveRecord(HantoPieceType.CRAB, null, optimalAddLoc));
 		}
-	
+
 		return calculateMostOptimal(optimalMoves);
 
 	}
-	
+
 	private HantoMoveRecord calculateMostOptimal(List<HantoMoveRecord> possMoves) {
 		HantoBoard boardCopy = new HantoBoard(game.getHantoBoard());
-		
+
 		double maxUtil = 0;
 		HantoMoveRecord bestMove = null;
-		
+
 		for (HantoMoveRecord possMove : possMoves) {
 			PieceCoordinate tempTo = new PieceCoordinate(possMove.getTo());
 			PieceCoordinate tempFrom = null;
 			if (possMove.getFrom() != null) tempFrom = new PieceCoordinate(possMove.getFrom());
-			
+
 			if (tempFrom != null) {
 				boardCopy.getBoardMap().remove(tempFrom);
 				boardCopy.getBoardMap().put(tempTo, game.getHantoBoard().getPieceAt(tempFrom));
@@ -239,7 +261,7 @@ public class HantoPlayer implements HantoGamePlayer {
 				boardCopy.getBoardMap().remove(tempTo);
 				boardCopy.getBoardMap().put(tempFrom, game.getHantoBoard().getPieceAt(tempFrom));
 			}
-			
+
 			else {
 				boardCopy.getBoardMap().put(tempTo, game.getHantoBoard().getPieceAt(tempFrom));
 				double tempUtil = calculateUtility(boardCopy);
@@ -249,9 +271,9 @@ public class HantoPlayer implements HantoGamePlayer {
 				}
 				boardCopy.getBoardMap().remove(tempTo);
 			}
-				
+
 		}
-		
+
 		return bestMove;
 	}
 
@@ -276,7 +298,7 @@ public class HantoPlayer implements HantoGamePlayer {
 		for (PieceCoordinate pieceCoord : piecesAdjToButterfly) {
 			List<PieceCoordinate> possMoves = findAllMoves(pieceCoord);
 			for (PieceCoordinate move : possMoves) {
-				if (!to.isAdjacentTo(myButterflyLoc)) {
+				if (!to.isAdjacentTo(myButterflyLoc) && game.getValidator(HantoPieceType.BUTTERFLY).isMoveLegal(from, move)) {
 					to = move;
 					break;
 				}
@@ -298,6 +320,8 @@ public class HantoPlayer implements HantoGamePlayer {
 		if (piece == null) return null;
 
 		to = game.getValidator(game.getPieceAt(coord).getType()).optimalMove(coord, opponentButterflyLoc);
+		
+		if (to == null) return null;
 
 		return new HantoMoveRecord(piece, from, to);		
 	}
@@ -306,7 +330,6 @@ public class HantoPlayer implements HantoGamePlayer {
 		PieceCoordinate from = myButterflyLoc;
 		PieceCoordinate to = null;
 		HantoPieceType piece = HantoPieceType.BUTTERFLY;
-
 
 		List<PieceCoordinate> moveLocs;
 		PieceCoordinate minNeighborsLoc = null;
@@ -321,7 +344,7 @@ public class HantoPlayer implements HantoGamePlayer {
 				for (PieceCoordinate coord : move.getSixAdjacentCoordinates()) {
 					if (tempBoard.getPieceAt(coord) != null) occupiedNeighbors++;
 				}
-				if (occupiedNeighbors < minNeighbors) {
+				if (occupiedNeighbors < minNeighbors && game.getValidator(HantoPieceType.BUTTERFLY).isMoveLegal(from, move)) {
 					minNeighbors = occupiedNeighbors;
 					minNeighborsLoc = move;
 				}
@@ -332,6 +355,8 @@ public class HantoPlayer implements HantoGamePlayer {
 
 		to = minNeighborsLoc;
 
+		if (to == null) return null;
+
 		return new HantoMoveRecord(piece, from, to);
 	}
 
@@ -339,10 +364,10 @@ public class HantoPlayer implements HantoGamePlayer {
 		// Win, if possible move flying pieces next to butterfly
 		// Otherwise optimal jumps or walks
 		// Still check if optimal piece add > jump or walk
-		
+
 		int sparrows = game.playerPieceTypeRemaining(myColor, HantoPieceType.SPARROW);
 		if (sparrows != 0) return midGame();
-		
+
 		Iterator<Map.Entry<PieceCoordinate, HantoPiece>> pieceIter = game.getHantoBoard().getBoardMap().entrySet().iterator();
 		PieceCoordinate current;
 
@@ -356,9 +381,9 @@ public class HantoPlayer implements HantoGamePlayer {
 					if (aMove != null) return aMove;
 				}
 			}
-			
+
 		}
-			
+
 		return midGame();
 
 	}
@@ -394,7 +419,7 @@ public class HantoPlayer implements HantoGamePlayer {
 			pieceColor = entry.getValue().getColor();
 			if (myColor == pieceColor) {
 				for (PieceCoordinate coord : next.getSixAdjacentCoordinates()) {
-					if (!game.getHantoBoard().isAdjacentToOtherColorPiece(coord, myColor)) {
+					if (!game.getHantoBoard().isAdjacentToOtherColorPiece(coord, myColor) && game.getHantoBoard().getPieceAt(coord) == null) {
 						int distance = coord.distanceFrom(opponentButterflyLoc);
 						if (distance < minDist) {
 							minDist = distance;
@@ -443,7 +468,7 @@ public class HantoPlayer implements HantoGamePlayer {
 			pieceColor = entry.getValue().getColor();
 			if (myColor == pieceColor) {
 				for (PieceCoordinate coord : next.getSixAdjacentCoordinates()) {
-					if (!game.getHantoBoard().isAdjacentToOtherColorPiece(coord, myColor)) return coord;
+					if (!game.getHantoBoard().isAdjacentToOtherColorPiece(coord, myColor) && game.getHantoBoard().getPieceAt(coord) == null) return coord;
 				}
 			}
 		}
@@ -455,8 +480,8 @@ public class HantoPlayer implements HantoGamePlayer {
 		int occupiedNeighbors = 0;
 
 		PieceCoordinate butterflyPos = (color == myColor) ? myButterflyLoc : opponentButterflyLoc;
-
-		for (PieceCoordinate coord : butterflyPos.getSixAdjacentCoordinates()) {
+		List<PieceCoordinate> coords = butterflyPos.getSixAdjacentCoordinates();
+		for (PieceCoordinate coord : coords) {
 			if (isCoordinateOccupied(coord)) occupiedNeighbors++;
 		}
 
@@ -465,21 +490,21 @@ public class HantoPlayer implements HantoGamePlayer {
 
 
 	private void setButterflyDanger() {
-		endNear = butterflyInDanger(opponentColor);
-		moveButterfly = butterflyInDanger(myColor);
+		if (opponentButterflyLoc != null) endNear = butterflyInDanger(opponentColor);
+		if (myButterflyLoc != null) moveButterfly = butterflyInDanger(myColor);
 	}
-	
+
 
 	private boolean isCoordinateOccupied(PieceCoordinate coord) {
 		return game.getHantoBoard().getPieceAt(coord) != null;
 	}
-	
-	
+
+
 	// finds any random legal move - last ditch effort to make a legal move if AI fails us :(
 	private HantoMoveRecord randomLegalMove() {
 		HantoMoveRecord legalMove = null;
 		boolean canIPlacePiece = game.getHantoBoard().canPlayerPlacePiece(myColor);
-		
+
 		// place a piece somewhere
 		if (canIPlacePiece) {
 			PieceCoordinate dest = getRandomAddLocation();
@@ -494,10 +519,10 @@ public class HantoPlayer implements HantoGamePlayer {
 				pieceType = HantoPieceType.SPARROW;
 			}
 			else pieceType = null; // better not reach here!
-			
+
 			legalMove = new HantoMoveRecord(pieceType, null, dest);
 		}
-		
+
 		else { // move an existing piece
 			Iterator<Entry<PieceCoordinate, HantoPiece>> pieces = game.getHantoBoard().getBoardMap().entrySet().iterator();
 			PieceCoordinate coord;
@@ -519,7 +544,7 @@ public class HantoPlayer implements HantoGamePlayer {
 				}
 			}
 		}
-		
+
 		return legalMove;
 	}
 

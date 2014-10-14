@@ -75,7 +75,7 @@ public class FlyValidator implements MoveValidator {
 			Entry<PieceCoordinate, HantoPiece> entry = pieces.next();
 			next = entry.getKey();
 			for (PieceCoordinate coord : next.getSixAdjacentCoordinates()) {
-				if (board.getPieceAt(coord) != null) {
+				if (board.getPieceAt(coord) == null) {
 					if (!possibleMoves.contains(coord)) possibleMoves.add(coord);
 				}
 			}
@@ -85,7 +85,12 @@ public class FlyValidator implements MoveValidator {
 	}
 
 	public PieceCoordinate optimalMove(PieceCoordinate currentPos, PieceCoordinate target) {
-		List<PieceCoordinate> possibleMoves = getAllFlyLocations();
+		List<PieceCoordinate> allPossibleMoves = getAllFlyLocations();
+		List<PieceCoordinate> possibleMoves = new ArrayList<PieceCoordinate>();
+		for (PieceCoordinate temp : allPossibleMoves) {
+			if (isMoveLegal(currentPos, temp)) possibleMoves.add(temp);
+		}
+		
 		int minDist = Integer.MAX_VALUE;
 		PieceCoordinate minDistCoord = null;
 
@@ -94,7 +99,7 @@ public class FlyValidator implements MoveValidator {
 		}
 		
 		for (PieceCoordinate move : possibleMoves) {
-			if (move.distanceFrom(target) < minDist) {
+			if (move.distanceFrom(target) < minDist && isMoveLegal(currentPos, move)) {
 				minDist = move.distanceFrom(target);
 				minDistCoord = move;
 			}
