@@ -18,6 +18,10 @@ public abstract class HantoGamePiece implements HantoPiece {
 	protected HantoPieceType type;
 	protected HantoPlayerColor color;
 		
+	/**
+	 * Abstract constructor.  Used by all subclasses to set the color of the piece.
+	 * @param color - the HantoPlayerColor of the piece.
+	 */
 	protected HantoGamePiece(HantoPlayerColor color) {
 		this.color = color;
 	}

@@ -57,7 +57,7 @@ public class FlyValidator implements MoveValidator {
 
 		boardCopy.getBoardMap().remove(coord);
 		if (!boardCopy.isBoardContiguous()) {
-			ArrayList<PieceCoordinate> possibleMoves = getAllFlyLocations();
+			List<PieceCoordinate> possibleMoves = getAllFlyLocations();
 			for (PieceCoordinate move : possibleMoves) {
 				boardCopy.getBoardMap().put(move, board.getPieceAt(coord));
 				if (boardCopy.isBoardContiguous()) return true;
@@ -67,9 +67,9 @@ public class FlyValidator implements MoveValidator {
 		return true;
 	}
 
-	private ArrayList<PieceCoordinate> getAllFlyLocations() {
+	private List<PieceCoordinate> getAllFlyLocations() {
 		Iterator<Entry<PieceCoordinate, HantoPiece>> pieces = board.getBoardMap().entrySet().iterator();
-		ArrayList<PieceCoordinate> possibleMoves = new ArrayList<PieceCoordinate>();
+		List<PieceCoordinate> possibleMoves = new ArrayList<PieceCoordinate>();
 		PieceCoordinate next; 
 		while(pieces.hasNext()) {
 			Entry<PieceCoordinate, HantoPiece> entry = pieces.next();
@@ -85,7 +85,7 @@ public class FlyValidator implements MoveValidator {
 	}
 
 	public PieceCoordinate optimalMove(PieceCoordinate currentPos, PieceCoordinate target) {
-		ArrayList<PieceCoordinate> possibleMoves = getAllFlyLocations();
+		List<PieceCoordinate> possibleMoves = getAllFlyLocations();
 		int minDist = Integer.MAX_VALUE;
 		PieceCoordinate minDistCoord = null;
 

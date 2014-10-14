@@ -48,9 +48,11 @@ public class JumpValidator implements MoveValidator {
 		if (board.isAdjacentToAnyPiece(coord)) {
 			HantoBoard boardCopy = new HantoBoard(board);
 			boardCopy.getBoardMap().remove(coord);
-			if (boardCopy.isBoardContiguous()) return true;
+			if (boardCopy.isBoardContiguous()) {
+				return true;
+			}
 			else {
-				ArrayList<PieceCoordinate> neighbors = new ArrayList<PieceCoordinate>();
+				List<PieceCoordinate> neighbors = new ArrayList<PieceCoordinate>();
 				for (PieceCoordinate c : coord.getSixAdjacentCoordinates()) {
 					if (board.getPieceAt(coord) != null) neighbors.add(c);	
 				}
@@ -77,7 +79,7 @@ public class JumpValidator implements MoveValidator {
 		PieceCoordinate tempCoord = new PieceCoordinate(from.getX(), from.getY());
 
 		// Stop looping when from + i = destination
-		while (null != board.getPieceAt(tempCoord)) { // i != destination
+		while (board.getPieceAt(tempCoord) != null) { // i is not equal to the destination
 			tempCoord = new PieceCoordinate(tempCoord.getX() + deltaX, tempCoord.getY() + deltaY);
 		}
 
@@ -90,7 +92,7 @@ public class JumpValidator implements MoveValidator {
 		// 3 Possibilities
 		// deltaX = 0 and deltaY != 0
 		// deltaY = 0 and deltaX != 0
-		// deltaY = -deltaX
+		// deltaY equals -deltaX
 		int deltaX = to.getX() - from.getX();
 		if (deltaX != 0 ) deltaX = deltaX > 1 ? 1 : -1;
 		int deltaY = to.getY() - from.getY();
@@ -108,9 +110,9 @@ public class JumpValidator implements MoveValidator {
 		int multY = (deltaX == 0 && deltaY == -1) ? -1 : 1;
 
 		// Stop looping when from + i = destination
-		while (i != ((deltaY != 0) ? to.getY() - multY*deltaY : to.getX() - deltaX)) { // i != destination
+		while (i != ((deltaY != 0) ? to.getY() - multY*deltaY : to.getX() - deltaX)) { // i is not equal to destination
 			tempCoord = new PieceCoordinate(tempCoord.getX() + deltaX, tempCoord.getY() + deltaY);
-			if (null == board.getPieceAt(tempCoord)) return false;
+			if (board.getPieceAt(tempCoord) == null) return false;
 			i += (deltaY != 0) ? deltaY : deltaX; // i++ or i--
 		}
 
@@ -132,7 +134,7 @@ public class JumpValidator implements MoveValidator {
 	@Override
 	public PieceCoordinate optimalMove(PieceCoordinate from, PieceCoordinate target) {
 
-		ArrayList<PieceCoordinate> neighbors = new ArrayList<PieceCoordinate>();
+		List<PieceCoordinate> neighbors = new ArrayList<PieceCoordinate>();
 		for (PieceCoordinate c : from.getSixAdjacentCoordinates()) {
 			if (board.getPieceAt(from) != null) neighbors.add(c);	
 		}
@@ -153,13 +155,13 @@ public class JumpValidator implements MoveValidator {
 
 	@Override
 	public List<PieceCoordinate> allMoves(PieceCoordinate from) {
-		ArrayList<PieceCoordinate> neighbors = new ArrayList<PieceCoordinate>();
+		List<PieceCoordinate> neighbors = new ArrayList<PieceCoordinate>();
 		
 		for (PieceCoordinate c : from.getSixAdjacentCoordinates()) {
 			if (board.getPieceAt(from) != null) neighbors.add(c);	
 		}
 
-		ArrayList<PieceCoordinate> possMoves = new ArrayList<PieceCoordinate>();
+		List<PieceCoordinate> possMoves = new ArrayList<PieceCoordinate>();
 
 		for (PieceCoordinate c : neighbors) {
 			PieceCoordinate move = returnJump(from, c);

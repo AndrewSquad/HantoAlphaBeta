@@ -120,6 +120,13 @@ public abstract class BaseHantoGame implements HantoGame {
 		return board;
 	}
 	
+	
+	/**
+	 * Given a HantoPieceType, this method will give you the corresponding MoveValidator for this game 
+	 * (Walk, Jump, Fly, etc.).
+	 * @param pieceType the piece type
+	 * @return the MoveValidator for the given piece type
+	 */
 	public MoveValidator getValidator(HantoPieceType pieceType) {
 		return pieceAbilities.get(pieceType);
 	}
@@ -322,6 +329,10 @@ public abstract class BaseHantoGame implements HantoGame {
 	}
 	
 	
+	/**
+	 * Determines whether or not the red player has any more pieces to place on the board.
+	 * @return boolean indicating if red can place new pieces.
+	 */
 	private boolean redHasPiecesToPlay() {
 		int totalPiecesLeft = 0;
 		Iterator<Entry<HantoPieceType, Integer>> redPieceTotals = redPiecesLeft.entrySet().iterator();
@@ -335,6 +346,10 @@ public abstract class BaseHantoGame implements HantoGame {
 	}
 	
 	
+	/**
+	 * Determines whether or not the blue player has any more pieces to place on the board.
+	 * @return boolean indicating if blue can place new pieces.
+	 */
 	private boolean blueHasPiecesToPlay() {
 		int totalPiecesLeft = 0;
 		Iterator<Entry<HantoPieceType, Integer>> bluePieceTotals = bluePiecesLeft.entrySet().iterator();
@@ -381,6 +396,11 @@ public abstract class BaseHantoGame implements HantoGame {
 	}
 	
 	
+	/**
+	 * Given a player color, this method determines if that color has any more legal moves to make in the game.
+	 * @param color the player color to determine this for
+	 * @return boolean indicating whether or not the player can make a legal move
+	 */
 	public boolean playerHasLegalMove(HantoPlayerColor color) {
 		
 		if (turnCount < 2) return true;

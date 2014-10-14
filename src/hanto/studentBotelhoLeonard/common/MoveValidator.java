@@ -27,10 +27,29 @@ public interface MoveValidator {
 	 */
 	boolean isMoveLegal(PieceCoordinate from, PieceCoordinate to);
 
+	/**
+	 * Determines if a legal move can be made from the given coordinate 
+	 * based on the implementation rules of the MoveValidator.
+	 * @param coord PieceCoordinate to determine if there is a legal move from
+	 * @return boolean indicating whether or not a legal move exists
+	 */
 	boolean existsLegalMove(PieceCoordinate coord);
 	
+	/**
+	 * (Used by AI) Determines the optimal move from a given coordinate where the target is the 
+	 * given target coordinate.
+	 * @param from PieceCoordinate start point
+	 * @param target PieceCoordinate target
+	 * @return Optimal destination PieceCoordinate
+	 */
 	PieceCoordinate optimalMove(PieceCoordinate from, PieceCoordinate target);
 	
+	/**
+	 * (Used by AI) Determines all legal moves that can be made from a given PieceCoordinate based on 
+	 * the implementation rules of the MoveValidator.
+	 * @param from PieceCoordinate start point
+	 * @return List of all legal moves from the given start coordinate
+	 */
 	List<PieceCoordinate> allMoves(PieceCoordinate from);
 
 }

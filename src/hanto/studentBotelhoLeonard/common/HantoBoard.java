@@ -36,6 +36,10 @@ public class HantoBoard {
 		board = new HashMap<PieceCoordinate, HantoPiece>();
 	}
 	
+	/**
+	 * Copy constructor for a HantoBoard that takes another HantoBoard to make a copy of.
+	 * @param otherBoard the other HantoBoard to copy.
+	 */
 	public HantoBoard(HantoBoard otherBoard) {
 		board = new HashMap<PieceCoordinate, HantoPiece>(otherBoard.getBoardMap());
 	}
@@ -267,6 +271,11 @@ public class HantoBoard {
 	}
 	
 	
+	/**
+	 * Given a player color, this method determines if the player can place a new piece on the board.
+	 * @param color the player to determine this for
+	 * @return boolean indicating if the player can place a new piece
+	 */
 	public boolean canPlayerPlacePiece(HantoPlayerColor color) {
 		Iterator<Entry<PieceCoordinate, HantoPiece>> pieces = board.entrySet().iterator();
 		PieceCoordinate next;
