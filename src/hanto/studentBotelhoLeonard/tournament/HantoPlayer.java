@@ -107,7 +107,7 @@ public class HantoPlayer implements HantoGamePlayer {
 			else if (!endNear) {
 				myMove = midGame();
 				System.out.println("Mid Game Move:");
-				System.out.println(myMove.getPiece().toString());
+				if (myMove != null)System.out.println(myMove.getPiece().toString());
 				if (myMove.getFrom() != null) System.out.println(myMove.getFrom().toString());
 				System.out.println(myMove.getTo().toString());
 
@@ -289,13 +289,15 @@ public class HantoPlayer implements HantoGamePlayer {
 				PieceCoordinate poss = new PieceCoordinate(findOptimalPieceMove(coord).getTo());
 				if (!poss.isAdjacentTo(myButterflyLoc)) {
 					to = poss;
+					piecesAdjToButterfly.add(poss);
 					break;
-				}
-				piecesAdjToButterfly.add(poss);
+				
+				}				
 			}
 		}
 
 		for (PieceCoordinate pieceCoord : piecesAdjToButterfly) {
+			if (game.getPieceAt(pieceCoord) == null) continue;
 			List<PieceCoordinate> possMoves = findAllMoves(pieceCoord);
 			for (PieceCoordinate move : possMoves) {
 				if (!to.isAdjacentTo(myButterflyLoc) && game.getValidator(HantoPieceType.BUTTERFLY).isMoveLegal(from, move)) {
@@ -310,7 +312,14 @@ public class HantoPlayer implements HantoGamePlayer {
 
 
 	private List<PieceCoordinate> findAllMoves(PieceCoordinate pieceCoord) {
-		return game.getValidator(game.getPieceAt(pieceCoord).getType()).allMoves(pieceCoord);
+		HantoPiece piece = game.getPieceAt(pieceCoord);
+		// Concern
+		if (piece == null) return null;
+		HantoPlayerColor color = piece.getColor();
+		piece.getClass();
+		HantoPieceType type = piece.getType();
+		MoveValidator validator = game.getValidator(type);
+		return validator.allMoves(pieceCoord);
 	}
 
 	private HantoMoveRecord findOptimalPieceMove(PieceCoordinate coord) {

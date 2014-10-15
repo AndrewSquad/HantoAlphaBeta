@@ -95,7 +95,7 @@ public class FlyValidator implements MoveValidator {
 		PieceCoordinate minDistCoord = null;
 
 		for (PieceCoordinate coord : target.getSixAdjacentCoordinates()) {
-			if (board.getPieceAt(coord) == null) return coord;
+			if (board.getPieceAt(coord) == null && isMoveLegal(currentPos, coord)) return coord;
 		}
 		
 		for (PieceCoordinate move : possibleMoves) {

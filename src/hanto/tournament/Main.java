@@ -21,7 +21,9 @@ public class Main {
 		boolean running = true;
 		previousMove = player1.makeMove(null);
 		while (running) {
+			System.out.println("Blue");
 			previousMove = player2.makeMove(previousMove);
+			System.out.println("Red");
 			previousMove = player1.makeMove(previousMove);
 		}
 		
