@@ -109,10 +109,6 @@ public class JumpValidator implements MoveValidator {
 		// In the case where Y remains constant, only X changes and therefore can be used.
 		int i = (deltaY != 0) ? from.getY() : from.getX();
 
-		// When x doesn't change, subtract delta y, when it does, add delta y to y.
-		int multY = (deltaX == 0 && deltaY == -1) ? -1 : 1;
-		
-		
 		if (deltaX == 0) {
 			while (i != to.getY() - deltaY) {
 				tempCoord = new PieceCoordinate(tempCoord.getX() + deltaX, tempCoord.getY() + deltaY);

@@ -289,4 +289,11 @@ public class EpsilonTests {
 		game.makeMove(HORSE, new PieceCoordinate(-1, 2), new PieceCoordinate(-1, -1));
 	}
 	
+	@Test
+	public void longDistance() {
+		PieceCoordinate coord1 = new PieceCoordinate(-8, 10);
+		PieceCoordinate coord2 = new PieceCoordinate(-4, 6);
+		
+		assertEquals(4, coord1.distanceFrom(coord2));
+	}
 }
