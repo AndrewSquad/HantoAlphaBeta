@@ -303,8 +303,9 @@ public class HantoPlayer implements HantoGamePlayer {
 		if (moveSize == 0) return null;
 		if (moveSize == 1) return bestMoves.get(0);
 
-		int randIndex = rand.nextInt(moveSize - 1);
-		return bestMoves.get(randIndex);
+		int randIndex = rand.nextInt(Integer.MAX_VALUE);
+		int randNum = randIndex % (moveSize-1);
+		return bestMoves.get(randNum);
 	}
 
 	private HantoMoveRecord freeButterfly() {

@@ -28,18 +28,19 @@ public class Main {
 		boolean running = true;
 		previousMove = player1.makeMove(null);
 		theGame.makeMove(previousMove.getPiece(), previousMove.getFrom(), previousMove.getTo());
+		System.out.println("Blue made move: Piece=" + previousMove.getPiece() + " From=" + previousMove.getFrom() + " To=" + previousMove.getTo());
 		while (running) {	
-			System.out.println("Blue");
 			previousMove = player2.makeMove(previousMove);
 			mv = theGame.makeMove(previousMove.getPiece(), previousMove.getFrom(), previousMove.getTo());
+			System.out.println("Red made move: Piece=" + previousMove.getPiece() + " From=" + previousMove.getFrom() + " To=" + previousMove.getTo());
 			if (mv != MoveResult.OK) {
 				System.out.println(mv);
 				running = false;
 				continue;
 			}
-			System.out.println("Red");
 			previousMove = player1.makeMove(previousMove);
 			mv = theGame.makeMove(previousMove.getPiece(), previousMove.getFrom(), previousMove.getTo());
+			System.out.println("Blue made move: Piece=" + previousMove.getPiece() + " From=" + previousMove.getFrom() + " To=" + previousMove.getTo());
 			if (mv != MoveResult.OK) {
 				System.out.println(mv);
 				running = false;
