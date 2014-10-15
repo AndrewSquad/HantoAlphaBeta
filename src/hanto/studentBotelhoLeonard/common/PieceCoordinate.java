@@ -102,23 +102,16 @@ public class PieceCoordinate implements HantoCoordinate {
 	 * @return int the number of moves between the two PieceCoordinates.
 	 */
 	public int distanceFrom(PieceCoordinate dest) {
-		int deltaX = dest.getX() - x;
-		int deltaY = dest.getY() - y;
-		if (deltaX == 0) return Math.abs(deltaY);
 		
-		double slope = (double)deltaY/(double)deltaX;
+		int yDist = Math.abs(y - dest.y);
+		int xDist = Math.abs(x - dest.x);
+		int slopeDistance = Math.abs((x + y) - (dest.x + dest.y));
 		
-		int distance = 0;
-		
-		if (slope < 0 && slope > -1) {
-			distance = deltaX;
-		}
-		else if (slope < -1) {
-			distance = deltaY;
-		}
-		else distance = Math.abs(deltaX) + Math.abs(deltaY);
+		int maxDist = yDist;
+		if (xDist > maxDist) maxDist = xDist;
+		if (slopeDistance > maxDist) maxDist = slopeDistance;
 				
-		return Math.abs(distance);
+		return maxDist;
 	}
 
 
