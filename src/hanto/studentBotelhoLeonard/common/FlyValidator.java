@@ -39,6 +39,10 @@ public class FlyValidator implements MoveValidator {
 
 		boolean moveLegal = true;
 		int distance = from.distanceFrom(to);
+		
+		HantoBoard boardCopy = new HantoBoard(board);
+		boardCopy.moveExistingPiece(from, to, board.getPieceAt(from));
+		if(!boardCopy.isBoardContiguous()) return false;
 
 		// destination can't be farther away than the distanceLimit
 		if (distance > distanceLimit) {
@@ -61,6 +65,7 @@ public class FlyValidator implements MoveValidator {
 			for (PieceCoordinate move : possibleMoves) {
 				boardCopy.getBoardMap().put(move, board.getPieceAt(coord));
 				if (boardCopy.isBoardContiguous()) return true;
+				boardCopy.getBoardMap().remove(move);
 			}
 			return false;
 		}
@@ -110,7 +115,14 @@ public class FlyValidator implements MoveValidator {
 
 	@Override
 	public List<PieceCoordinate> allMoves(PieceCoordinate from) {
-		return getAllFlyLocations();
+		List<PieceCoordinate> allPossibleMoves = getAllFlyLocations();
+		List<PieceCoordinate> possibleMoves = new ArrayList<PieceCoordinate>();
+		for (PieceCoordinate temp : allPossibleMoves) {
+			if (isMoveLegal(from, temp)) possibleMoves.add(temp);
+		}
+		
+		return possibleMoves;
+		
 	}
 
 }

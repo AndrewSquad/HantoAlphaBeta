@@ -259,12 +259,8 @@ public class HantoBoard {
 	private boolean has6Neighbors(PieceCoordinate butterflyPos) {
 		int neighbors = 0;
 		
-		Iterator<Entry<PieceCoordinate, HantoPiece>> pieces = board.entrySet().iterator();
-		PieceCoordinate next;
-		while(pieces.hasNext()) {
-			Entry<PieceCoordinate, HantoPiece> entry = pieces.next();
-			next = entry.getKey();
-			if (next.isAdjacentTo(butterflyPos)) neighbors++;
+		for (PieceCoordinate coord : butterflyPos.getSixAdjacentCoordinates()) {
+			if (getPieceAt(coord) != null) neighbors++;
 		}
 		
 		return neighbors == 6;

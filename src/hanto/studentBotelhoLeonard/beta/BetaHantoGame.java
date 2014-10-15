@@ -77,5 +77,36 @@ public class BetaHantoGame extends BaseHantoGame implements HantoGame {
 		}
 				
 	}
+	
+	/**
+	 * Determines the game result after the current move has ended.
+	 * @return MoveResult enum indicating the state of the game after the current move has ended.
+	 */
+	protected MoveResult determineGameResult() {
+		MoveResult result;
+		boolean isBlueWinner = board.checkIfPlayerLost(HantoPlayerColor.RED);
+		boolean isRedWinner = board.checkIfPlayerLost(HantoPlayerColor.BLUE);
+		if (isBlueWinner && isRedWinner) {
+			result = MoveResult.DRAW;
+			gameHasEnded = true;
+		}
+		else if (isBlueWinner) {
+			result = MoveResult.BLUE_WINS;
+			gameHasEnded = true;
+		}
+		else if (isRedWinner) {
+			result = MoveResult.RED_WINS;
+			gameHasEnded = true;
+		}
+		else if (!anyPiecesLeftToPlay() || turnCount >= turnLimit) { // check for draw
+			result = MoveResult.DRAW;
+			gameHasEnded = true;
+		}
+		else {
+			result = MoveResult.OK;
+		}
+
+		return result;
+	}
 
 }

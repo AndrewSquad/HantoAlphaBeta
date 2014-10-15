@@ -384,7 +384,7 @@ public abstract class BaseHantoGame implements HantoGame {
 			result = MoveResult.RED_WINS;
 			gameHasEnded = true;
 		}
-		else if (!anyPiecesLeftToPlay() || turnCount >= turnLimit) { // check for draw
+		else if ((!playerHasLegalMove(HantoPlayerColor.BLUE) && !playerHasLegalMove(HantoPlayerColor.RED)) || turnCount >= turnLimit) { // check for draw
 			result = MoveResult.DRAW;
 			gameHasEnded = true;
 		}

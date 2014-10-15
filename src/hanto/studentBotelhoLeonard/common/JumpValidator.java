@@ -29,6 +29,10 @@ public class JumpValidator implements MoveValidator {
 	@Override
 	public boolean isMoveLegal(PieceCoordinate from, PieceCoordinate to) {
 
+		HantoBoard boardCopy = new HantoBoard(board);
+		boardCopy.moveExistingPiece(from, to, board.getPieceAt(from));
+		if(!boardCopy.isBoardContiguous()) return false;
+		
 		if (board.getPieceAt(to) != null) {
 			return false;
 		}
@@ -52,12 +56,7 @@ public class JumpValidator implements MoveValidator {
 				return true;
 			}
 			else {
-				List<PieceCoordinate> neighbors = new ArrayList<PieceCoordinate>();
-				for (PieceCoordinate c : coord.getSixAdjacentCoordinates()) {
-					if (board.getPieceAt(coord) != null) neighbors.add(c);	
-				}
-				for (PieceCoordinate c : neighbors) {
-					PieceCoordinate move = returnJump(coord, c);
+				for (PieceCoordinate move : allMoves(coord)) {
 					boardCopy.getBoardMap().put(move, board.getPieceAt(coord));
 					if (boardCopy.isBoardContiguous()) return true;
 					boardCopy.getBoardMap().remove(move);

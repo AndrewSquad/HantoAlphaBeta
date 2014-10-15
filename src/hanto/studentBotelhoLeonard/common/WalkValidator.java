@@ -32,11 +32,11 @@ public class WalkValidator implements MoveValidator {
 	public WalkValidator(int distanceLimit, HantoBoard board) {
 		this.distanceLimit = distanceLimit;
 		this.board = board;
-		nodesVisited = new ArrayList<PieceCoordinate>();
 	}
 
 	@Override
 	public boolean isMoveLegal(PieceCoordinate from, PieceCoordinate to) {
+		nodesVisited = new ArrayList<PieceCoordinate>();
 
 		// the fringe will act as a queue of all tiles we need to explore
 		// the fringe will be a hashmap mapping a tile to the list of tiles needed to move there
@@ -86,15 +86,10 @@ public class WalkValidator implements MoveValidator {
 
 	@Override
 	public boolean existsLegalMove(PieceCoordinate coord) {
-		HantoBoard boardCopy = new HantoBoard(board);
-		List<PieceCoordinate> potentialMoves = board.getTwoTileOpenings(coord);
+		List<PieceCoordinate> potentialMoves = allMoves(coord);
 		if (potentialMoves.size() == 0) return false;
-
-		for (PieceCoordinate potentialMove : potentialMoves) {
-			boardCopy.moveExistingPiece(coord, potentialMove, board.getPieceAt(coord));
-			if(boardCopy.isBoardContiguous()) return true;
-		}
-		return false;
+		
+		return true;
 	}
 
 	// given a set of PieceCoordinate, determines which one is closest to the destination
@@ -131,25 +126,29 @@ public class WalkValidator implements MoveValidator {
 
 	@Override
 	public PieceCoordinate optimalMove(PieceCoordinate from, PieceCoordinate target) {
-		Set<PieceCoordinate> moves = new HashSet<PieceCoordinate>(board.getTwoTileOpenings(from));
+		Set<PieceCoordinate> moves = new HashSet<PieceCoordinate>(allMoves(from));
 
 		PieceCoordinate closest = null; 
+		int minDist = Integer.MAX_VALUE;
 		
-		while (moves.size() > 0) {
-			closest = closestToDest(moves, target);
-			if (!isMoveLegal(from, closest)) moves.remove(closest);
+		for (PieceCoordinate coord : moves) {
+			int distance = coord.distanceFrom(target);
+			if (isMoveLegal(from, coord) && distance < minDist) {
+				minDist = distance;
+				closest = coord;
+			}
 		}
-		closest = closestToDest(moves, target);
 
 		return closest;
 	}
 
 	@Override
 	public List<PieceCoordinate> allMoves(PieceCoordinate from) {
-		List<PieceCoordinate> possMoves = board.getTwoTileOpenings(from);
+		List<PieceCoordinate> allPossMoves = board.getTwoTileOpenings(from);
+		List<PieceCoordinate> possMoves = new ArrayList<PieceCoordinate>();
 		
-		for (PieceCoordinate move : possMoves) {
-			if (!isMoveLegal(from, move)) possMoves.remove(move);
+		for (PieceCoordinate move : allPossMoves) {
+			if (isMoveLegal(from, move)) possMoves.add(move);
 		}
 		
 		return possMoves;

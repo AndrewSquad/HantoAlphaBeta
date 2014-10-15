@@ -212,50 +212,7 @@ public class EpsilonTests {
 	public void cantGiveupImmediately() throws HantoException {
 		game.makeMove(null, null, null);
 	}
-	
-//	@Test(expected=HantoException.class)
-//	public void cantPlacePiece() throws HantoException {
-//		testGame.setTurnNumber(10);
-//		testGame.initializeBoard(
-//				new PieceLocationPair[] {
-//						new PieceLocationPair(BLUE, SPARROW, origin),
-//						new PieceLocationPair(RED, BUTTERFLY, new PieceCoordinate(0, 1)),
-//						new PieceLocationPair(RED, SPARROW, new PieceCoordinate(-1, 0)),
-//						new PieceLocationPair(RED, SPARROW, new PieceCoordinate(1, -1)),
-//						new PieceLocationPair(RED, CRAB, new PieceCoordinate(0, -1)),
-//						new PieceLocationPair(RED, CRAB, new PieceCoordinate(-1, 0)),
-//						new PieceLocationPair(RED, CRAB, new PieceCoordinate(-1, 1)),
-//						
-//						new PieceLocationPair(RED, CRAB, new PieceCoordinate(1, 1)),
-//						new PieceLocationPair(RED, CRAB, new PieceCoordinate(2, 0)),
-//						new PieceLocationPair(RED, CRAB, new PieceCoordinate(-1, 2)),
-//						
-//						new PieceLocationPair(RED, HORSE, new PieceCoordinate(-2, 2)),
-//						new PieceLocationPair(RED, HORSE, new PieceCoordinate(-2, 1)),
-//						new PieceLocationPair(RED, HORSE, new PieceCoordinate(2, -1)),
-//						new PieceLocationPair(RED, HORSE, new PieceCoordinate(3, 0)),
-//						
-//						
-//						new PieceLocationPair(BLUE, BUTTERFLY, new PieceCoordinate(-3, 0)),
-//						new PieceLocationPair(BLUE, SPARROW, new PieceCoordinate(-3, -1)),
-//						new PieceLocationPair(BLUE, CRAB, new PieceCoordinate(-3, -2)),
-//						new PieceLocationPair(BLUE, CRAB, new PieceCoordinate(-3, -3)),
-//						new PieceLocationPair(BLUE, CRAB, new PieceCoordinate(-3, -4)),
-//						
-//						new PieceLocationPair(BLUE, CRAB, new PieceCoordinate(3, -1)),
-//						new PieceLocationPair(BLUE, CRAB, new PieceCoordinate(3, -2)),
-//						new PieceLocationPair(BLUE, CRAB, new PieceCoordinate(3, -3)),
-//						
-//						new PieceLocationPair(BLUE, HORSE, new PieceCoordinate(3, -4)),
-//						new PieceLocationPair(BLUE, HORSE, new PieceCoordinate(3, 1)),
-//						new PieceLocationPair(BLUE, HORSE, new PieceCoordinate(3, 2)),
-//						new PieceLocationPair(BLUE, HORSE, new PieceCoordinate(3, 3))
-//				}
-//				);
-//
-//		testGame.setPlayerMoving(BLUE);
-//		game.makeMove(HORSE, new PieceCoordinate(0, -1), new PieceCoordinate(-2, 2));
-//	}
+
 	
 	@Test
 	public void testCanPlayerPlacePiece() {
