@@ -9,11 +9,13 @@
 package hanto.studentBotelhoLeonard.tournament;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
+import java.util.Set;
 
 import hanto.common.HantoException;
 import hanto.common.HantoGameID;
@@ -43,6 +45,8 @@ public class HantoPlayer implements HantoGamePlayer {
 
 	private PieceCoordinate myButterflyLoc = null;
 	private PieceCoordinate opponentButterflyLoc = null;
+	
+	private HantoMoveRecord previousMove = null;
 
 
 	public HantoPlayer() {
@@ -134,6 +138,10 @@ public class HantoPlayer implements HantoGamePlayer {
 				PieceCoordinate theFrom = null;
 				if (myMove.getFrom() != null) theFrom = new PieceCoordinate(myMove.getFrom());
 				PieceCoordinate theTo = new PieceCoordinate(myMove.getTo());
+				// If you're about to undo your previous move, do a random move
+				if (previousMove != null){
+					if (myMove.getTo() == previousMove.getFrom()) myMove = randomLegalMove(); 
+				}
 				game.makeMove(thePieceType, theFrom, theTo);
 			}
 		}
@@ -153,7 +161,7 @@ public class HantoPlayer implements HantoGamePlayer {
 
 		if (myMove == null || myMove.getPiece() == null || myMove.getTo() == null) return new HantoMoveRecord(null, null, null);
 		if (myMove.getPiece() == HantoPieceType.BUTTERFLY) myButterflyLoc = new PieceCoordinate(myMove.getTo());
-
+		previousMove = new HantoMoveRecord(myMove.getPiece(), myMove.getFrom(), myMove.getTo());
 		return myMove;
 	}
 
@@ -582,6 +590,7 @@ public class HantoPlayer implements HantoGamePlayer {
 		PieceCoordinate coord;
 		HantoPiece piece;
 		HantoPlayerColor pieceColor;
+		List<HantoMoveRecord> allLegalMoves = new ArrayList<HantoMoveRecord>();
 		while(pieces.hasNext()) {
 			Entry<PieceCoordinate, HantoPiece> entry = pieces.next();
 			coord = entry.getKey();
@@ -590,17 +599,27 @@ public class HantoPlayer implements HantoGamePlayer {
 			if (myColor == pieceColor) {
 				MoveValidator validator = game.getValidator(piece.getType());
 				if (validator.existsLegalMove(coord)) { // we can move a piece!
-					Random rand = new Random();
 					List<PieceCoordinate> possMoves = validator.allMoves(coord);
+					Random rand = new Random();
 					int moveSize = possMoves.size();
 					if (moveSize == 0) continue;
 					int randomIndex = rand.nextInt(moveSize - 1);
-					if (moveSize == 1) legalMove = new HantoMoveRecord(piece.getType(), coord, possMoves.get(0));
-					else legalMove = new HantoMoveRecord(piece.getType(), coord, possMoves.get(randomIndex));												
+					// Grab a random move this piece can do, not necessarily an optimal one.
+					if (moveSize == 1) {
+						//legalMove = new HantoMoveRecord(piece.getType(), coord, possMoves.get(0));
+						allLegalMoves.add(new HantoMoveRecord(piece.getType(), coord, possMoves.get(0)));
+					}
+					else allLegalMoves.add(new HantoMoveRecord(piece.getType(), coord, possMoves.get(randomIndex)));												
 				}
 			}
 		}
-
+		
+		Random rand = new Random();
+		int moveSize = allLegalMoves.size();
+		if (moveSize == 0) return null;
+		else if (moveSize == 1) return allLegalMoves.get(0);
+		int randomIndex = rand.nextInt(moveSize - 1);
+		legalMove = allLegalMoves.get(randomIndex);
 
 		return legalMove;
 	}
