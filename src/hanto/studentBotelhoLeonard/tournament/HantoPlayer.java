@@ -603,13 +603,14 @@ public class HantoPlayer implements HantoGamePlayer {
 					Random rand = new Random();
 					int moveSize = possMoves.size();
 					if (moveSize == 0) continue;
-					int randomIndex = rand.nextInt(moveSize - 1);
+					int randIndex = rand.nextInt(Integer.MAX_VALUE);
+					int randNum = randIndex % (moveSize-1);
 					// Grab a random move this piece can do, not necessarily an optimal one.
 					if (moveSize == 1) {
 						//legalMove = new HantoMoveRecord(piece.getType(), coord, possMoves.get(0));
 						allLegalMoves.add(new HantoMoveRecord(piece.getType(), coord, possMoves.get(0)));
 					}
-					else allLegalMoves.add(new HantoMoveRecord(piece.getType(), coord, possMoves.get(randomIndex)));												
+					else allLegalMoves.add(new HantoMoveRecord(piece.getType(), coord, possMoves.get(randNum)));												
 				}
 			}
 		}
@@ -618,8 +619,9 @@ public class HantoPlayer implements HantoGamePlayer {
 		int moveSize = allLegalMoves.size();
 		if (moveSize == 0) return null;
 		else if (moveSize == 1) return allLegalMoves.get(0);
-		int randomIndex = rand.nextInt(moveSize - 1);
-		legalMove = allLegalMoves.get(randomIndex);
+		int randIndex = rand.nextInt(Integer.MAX_VALUE);
+		int randNum = randIndex % (moveSize-1);
+		legalMove = allLegalMoves.get(randNum);
 
 		return legalMove;
 	}
