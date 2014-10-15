@@ -111,12 +111,29 @@ public class JumpValidator implements MoveValidator {
 
 		// When x doesn't change, subtract delta y, when it does, add delta y to y.
 		int multY = (deltaX == 0 && deltaY == -1) ? -1 : 1;
-
-		// Stop looping when from + i = destination
-		while (i != ((deltaY != 0) ? to.getY() - multY*deltaY : to.getX() - deltaX)) { // i is not equal to destination
-			tempCoord = new PieceCoordinate(tempCoord.getX() + deltaX, tempCoord.getY() + deltaY);
-			if (board.getPieceAt(tempCoord) == null) return false;
-			i += (deltaY != 0) ? deltaY : deltaX; // i++ or i--
+		
+		
+		if (deltaX == 0) {
+			while (i != to.getY() - deltaY) {
+				tempCoord = new PieceCoordinate(tempCoord.getX() + deltaX, tempCoord.getY() + deltaY);
+				if (board.getPieceAt(tempCoord) == null) return false;
+				i += deltaY;
+			}
+		}
+		else if (deltaY == 0) {
+			while (i != to.getX() - deltaX) {
+				tempCoord = new PieceCoordinate(tempCoord.getX() + deltaX, tempCoord.getY() + deltaY);
+				if (board.getPieceAt(tempCoord) == null) return false;
+				i += deltaX;
+			}
+		}
+		else { // both not 0
+			while (i != to.getY() - deltaY) {
+				tempCoord = new PieceCoordinate(tempCoord.getX() + deltaX, tempCoord.getY() + deltaY);
+				if (board.getPieceAt(tempCoord) == null) return false;
+				i += deltaY;
+			}
+			
 		}
 
 		return piecesInPath;
