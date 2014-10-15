@@ -89,6 +89,7 @@ public class HantoPlayer implements HantoGamePlayer {
 			catch (HantoException e) {
 				// If there are no mistakes this will never happen.
 				System.out.println("According to our rules, that move was illegal. Therefore we must resign.");
+				System.out.println(e);
 				return new HantoMoveRecord(null, null, null);
 			}
 			if (opponentsMove.getPiece() == HantoPieceType.BUTTERFLY) opponentButterflyLoc = new PieceCoordinate(opponentsMove.getTo());

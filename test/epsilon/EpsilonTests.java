@@ -274,4 +274,19 @@ public class EpsilonTests {
 		game.makeMove(CRANE, null, origin);
 	}
 	
+	@Test
+	public void jumpEdgeCase() throws HantoException {
+		testGame.setTurnNumber(10);
+		testGame.initializeBoard(
+				new PieceLocationPair[] {
+						new PieceLocationPair(BLUE, BUTTERFLY, origin),
+						new PieceLocationPair(RED, BUTTERFLY, new PieceCoordinate(-1, 1)),
+						new PieceLocationPair(RED, HORSE, new PieceCoordinate(-1, 0)),
+						new PieceLocationPair(BLUE, HORSE, new PieceCoordinate(-1, 2))
+				}
+				);
+		testGame.setPlayerMoving(BLUE);
+		game.makeMove(HORSE, new PieceCoordinate(-1, 2), new PieceCoordinate(-1, -1));
+	}
+	
 }
