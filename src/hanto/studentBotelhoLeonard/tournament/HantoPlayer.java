@@ -90,8 +90,7 @@ public class HantoPlayer implements HantoGamePlayer {
 			}
 			catch (HantoException e) {
 				// If there are no mistakes this will never happen.
-				System.out.println("According to our rules, that move was illegal. Therefore we must resign.");
-				System.out.println(e);
+				// This means our opponent gave us an illegal move
 				return new HantoMoveRecord(null, null, null);
 			}
 			if (opponentsMove.getPiece() == HantoPieceType.BUTTERFLY) opponentButterflyLoc = new PieceCoordinate(opponentsMove.getTo());
@@ -100,7 +99,7 @@ public class HantoPlayer implements HantoGamePlayer {
 		
 		// Our move logic
 		if (game.hasPlayerPlacedButterfly(opponentColor)) {
-			setButterflyDanger();
+			setButterflyDanger(); // determine if either butterfly is "in danger"
 			//Early Game
 			// For turn < 5 Place horse, horse, butterfly, horse, horse
 			// Horses close to butterfly
@@ -110,7 +109,7 @@ public class HantoPlayer implements HantoGamePlayer {
 			}
 
 			//Mid Game 
-			else if (!endNear) {
+			else if (!endNear) { // if opponent butterfly is not in danger, use midGame strategy
 				myMove = midGame();
 			}
 
@@ -130,7 +129,7 @@ public class HantoPlayer implements HantoGamePlayer {
 					System.out.println("BotelhoLeonard doesn't have a legal move -> Resign");
 					return new HantoMoveRecord(null, null, null);
 				}
-				else {
+				else { // if AI returned a null move but legal moves still exist, use backup randomLegalMove() method
 					myMove = randomLegalMove();
 				}
 			}
@@ -149,7 +148,7 @@ public class HantoPlayer implements HantoGamePlayer {
 		catch (HantoException e) {
 			System.out.println("BotelhoLeonard AI returned a HantoException when determining move. Calculating safer move...");
 			System.out.println(e);
-			myMove = randomLegalMove();
+			myMove = randomLegalMove(); // last-ditch try at getting a legal move
 			try {
 				game.makeMove(myMove.getPiece(), myMove.getFrom(), myMove.getTo());
 			}
@@ -161,6 +160,8 @@ public class HantoPlayer implements HantoGamePlayer {
 		}
 
 		if (myMove == null || myMove.getPiece() == null || myMove.getTo() == null) return new HantoMoveRecord(null, null, null);
+		
+		// update our butterfly position variable
 		if (myMove.getPiece() == HantoPieceType.BUTTERFLY) myButterflyLoc = new PieceCoordinate(myMove.getTo());
 		previousMove = new HantoMoveRecord(myMove.getPiece(), myMove.getFrom(), myMove.getTo());
 		return myMove;
@@ -189,6 +190,8 @@ public class HantoPlayer implements HantoGamePlayer {
 
 
 	// This assumes opponents butterfly is in play
+	// Calculate the current "utility" of the game state
+	// Utility is basically how many of our pieces are close to the opponent's butterfly
 	private double calculateUtility(HantoBoard board) {
 		double utility = 0.0;
 
@@ -212,6 +215,8 @@ public class HantoPlayer implements HantoGamePlayer {
 		return utility;
 	}
 
+	
+	// game strategy at start of game when opponent has already placed butterfly
 	private HantoMoveRecord earlyGameWithButterfly(int turnCount){
 		// will never get turn 0
 		PieceCoordinate to = null;
@@ -231,9 +236,11 @@ public class HantoPlayer implements HantoGamePlayer {
 
 	}
 
+	// "mid-game" strategy.  Opponent butterfly is not in danger
 	private HantoMoveRecord midGame() {
 		// Check for should move butterfly
 		// Move butterfly if need be
+		// Place Sparrow if possible
 		// Discover optimal move for every piece (non flying)
 		// Discover optimal place to put piece
 		// Do which is more optimal	
@@ -242,13 +249,14 @@ public class HantoPlayer implements HantoGamePlayer {
 		//(turnCount == 4 || turnCount == 5) ? HantoPieceType.BUTTERFLY : HantoPieceType.HORSE; CAN'T BE
 		HantoPieceType piece = null;
 
-		if (moveButterfly) {
+		if (moveButterfly) { // if our butterfly is in trouble
 			if (optimalButterflyMove() != null) {
 				return optimalButterflyMove();
 			}
 			else if (freeButterfly() != null) return freeButterfly();
 		}
 
+		// we want to place a sparrow far away from the action (getWorstAddLocation())
 		int sparrows = game.playerPieceTypeRemaining(myColor, HantoPieceType.SPARROW);
 		if (sparrows > 0) {
 			if (getWorstAddLocation() != null) {
@@ -258,6 +266,7 @@ public class HantoPlayer implements HantoGamePlayer {
 			}
 		}
 
+		// if no sparrows to place, determine best add/move from all other options
 		List<HantoMoveRecord> optimalMoves = new ArrayList<HantoMoveRecord>();		
 		int crabs = game.playerPieceTypeRemaining(myColor, HantoPieceType.CRAB);
 		if (crabs > 0) {
@@ -285,6 +294,8 @@ public class HantoPlayer implements HantoGamePlayer {
 
 	}
 
+	
+	// given a List of potential moves, this calculates which move would yield the best game state utility
 	private HantoMoveRecord calculateMostOptimal(List<HantoMoveRecord> possMoves) {
 		HantoBoard boardCopy = new HantoBoard(game.getHantoBoard());
 
@@ -296,6 +307,7 @@ public class HantoPlayer implements HantoGamePlayer {
 			PieceCoordinate tempFrom = null;
 			if (possMove.getFrom() != null) tempFrom = new PieceCoordinate(possMove.getFrom());
 
+			// if we're moving a piece
 			if (tempFrom != null) {
 				boardCopy.getBoardMap().remove(tempFrom);
 				boardCopy.getBoardMap().put(tempTo, game.getHantoBoard().getPieceAt(tempFrom));
@@ -312,7 +324,7 @@ public class HantoPlayer implements HantoGamePlayer {
 				boardCopy.getBoardMap().put(tempFrom, game.getHantoBoard().getPieceAt(tempFrom));
 			}
 
-			else {
+			else { // if we're placing a piece
 				boardCopy.getBoardMap().put(tempTo, game.getHantoBoard().getPieceAt(tempFrom));
 				double tempUtil = calculateUtility(boardCopy);
 				if (Math.abs(tempUtil - maxUtil) < .01) {
@@ -328,8 +340,7 @@ public class HantoPlayer implements HantoGamePlayer {
 
 		}	
 
-
-		Random rand = new Random();
+		Random rand = new Random(); // going to be used to randomly pick a move if there is a tie for most optimal
 		int moveSize = bestMoves.size();
 		if (moveSize == 0) return null;
 
@@ -364,6 +375,11 @@ public class HantoPlayer implements HantoGamePlayer {
 		return bestMoves.get(randNum);
 	}
 
+	/**
+	 * When the game determines that myButterfly is in danger (moveButterfly = true), then this 
+	 * method is called in order to try and move pieces away from being adjacent to the butterfly
+	 * @return a HantoMoveRecord that will try and free the butterfly
+	 */
 	public HantoMoveRecord freeButterfly() {
 		List<HantoMoveRecord> piecesAdjToButterfly = new ArrayList<HantoMoveRecord>();
 		for (PieceCoordinate coord : myButterflyLoc.getSixAdjacentCoordinates()) {
@@ -379,6 +395,9 @@ public class HantoPlayer implements HantoGamePlayer {
 		return calculateMostOptimal(piecesAdjToButterfly);
 	}
 	
+	// helper function for freeButterfly()
+	// Given a piece to move away from our butterfly, this method determines what is the most optimal move 
+	// and makes sure that this move is not still adjacent to our butterfly
 	private HantoMoveRecord optimalFreeButterflyMove(PieceCoordinate adjPiece) {
 	
 		MoveValidator validator = game.getValidator(game.getPieceAt(adjPiece).getType());
@@ -403,6 +422,12 @@ public class HantoPlayer implements HantoGamePlayer {
 	}
 
 
+	/**
+	 * Given a an occupied PieceCoordinate, this method will return a List of PieceCoordinates 
+	 * that represent valid moves for the piece occupying the given PieceCoordinate
+	 * @param pieceCoord the PieceCoordinate to find moves for
+	 * @return a List of PieceCoordinates that represent valid moves.
+	 */
 	public List<PieceCoordinate> findAllMoves(PieceCoordinate pieceCoord) {
 		HantoPiece piece = game.getPieceAt(pieceCoord);
 		// Concern
@@ -414,6 +439,9 @@ public class HantoPlayer implements HantoGamePlayer {
 		return validator.allMoves(pieceCoord);
 	}
 
+	
+	// given a piece coordinate, this method determines the most optimal move for that piece according to 
+	// that piece's MoveValidator
 	private HantoMoveRecord findOptimalPieceMove(PieceCoordinate coord) {
 		PieceCoordinate from = coord;
 		PieceCoordinate to = null;
@@ -427,6 +455,8 @@ public class HantoPlayer implements HantoGamePlayer {
 		return new HantoMoveRecord(piece, from, to);		
 	}
 
+	// when our butterfly is in danger, this method will be called to determine what is the most optimal
+	// move for our butterfly to make.  Optimality here is determined by the butterfly's number of neighbors
 	private HantoMoveRecord optimalButterflyMove() {
 		PieceCoordinate from = myButterflyLoc;
 		PieceCoordinate to = null;
@@ -460,6 +490,8 @@ public class HantoPlayer implements HantoGamePlayer {
 		return new HantoMoveRecord(piece, from, to);
 	}
 
+	
+	// called when opponent's butterfly is in danger.  Tries to move Sparrows close to opponent Butterfly
 	private HantoMoveRecord endGame() {
 		// Win, if possible move flying pieces next to butterfly
 		// Otherwise optimal jumps or walks
@@ -480,13 +512,17 @@ public class HantoPlayer implements HantoGamePlayer {
 					if (aMove != null) return aMove;
 				}
 			}
-
 		}
 
 		return midGame();
-
 	}
 
+
+	/**
+	 * Same strategy as endGame() in the sense that we are trying to move a sparrow.
+	 * This method is called during midGame() when no sparrow can be placed on board, and no other piece can be moved.
+	 * @return a HantoMoveRecord that will move a Sparrow
+	 */
 	public HantoMoveRecord endGameLogic() {
 		Iterator<Map.Entry<PieceCoordinate, HantoPiece>> pieceIter = game.getHantoBoard().getBoardMap().entrySet().iterator();
 		PieceCoordinate current;
@@ -506,6 +542,8 @@ public class HantoPlayer implements HantoGamePlayer {
 		return null;
 	}
 
+	// strategy at the beginning of the game when the opponent has not placed a butterfly
+	// assures that our first move is on either (0, 0) or (0, 1) depending on if we go first
 	private HantoMoveRecord earlyGameWithoutButterfly(int turnCount) {
 		PieceCoordinate to = null;
 		HantoPieceType piece = (turnCount == 4 || turnCount == 5) ? HantoPieceType.BUTTERFLY : HantoPieceType.HORSE;
@@ -525,6 +563,7 @@ public class HantoPlayer implements HantoGamePlayer {
 
 	}
 
+	// determines the valid add piece location that is closest to the opponent butterfly
 	private PieceCoordinate getOptimalAddLocation() {
 		Iterator<Entry<PieceCoordinate, HantoPiece>> pieces = game.getHantoBoard().getBoardMap().entrySet().iterator();
 		PieceCoordinate next;
@@ -550,6 +589,7 @@ public class HantoPlayer implements HantoGamePlayer {
 		return minDistCoord;
 	}
 
+	// determines the valid add piece location that is farthest away from the opponent butterfly
 	private PieceCoordinate getWorstAddLocation() {
 		Iterator<Entry<PieceCoordinate, HantoPiece>> pieces = game.getHantoBoard().getBoardMap().entrySet().iterator();
 		PieceCoordinate next;
@@ -576,6 +616,7 @@ public class HantoPlayer implements HantoGamePlayer {
 	}
 
 
+	// determines a random add piece location
 	private PieceCoordinate getRandomAddLocation() {		
 		Iterator<Entry<PieceCoordinate, HantoPiece>> pieces = game.getHantoBoard().getBoardMap().entrySet().iterator();
 		if (!pieces.hasNext()) return new PieceCoordinate(0, 0);
@@ -594,7 +635,14 @@ public class HantoPlayer implements HantoGamePlayer {
 		return null;
 	}
 
-
+	// calls butterflyInDanger for each butterfly to determine if either or "in danger"
+	private void setButterflyDanger() {
+		if (opponentButterflyLoc != null) endNear = butterflyInDanger(opponentColor);
+		if (myButterflyLoc != null) moveButterfly = butterflyInDanger(myColor);
+	}
+	
+	
+	// returns true if the given butterfly has at least 4 neighbors - this means the butterfly is in danger!
 	private boolean butterflyInDanger(HantoPlayerColor color) {
 		int occupiedNeighbors = 0;
 
@@ -606,13 +654,7 @@ public class HantoPlayer implements HantoGamePlayer {
 
 		return occupiedNeighbors >= 4;
 	}
-
-
-	private void setButterflyDanger() {
-		if (opponentButterflyLoc != null) endNear = butterflyInDanger(opponentColor);
-		if (myButterflyLoc != null) moveButterfly = butterflyInDanger(myColor);
-	}
-
+	
 
 	/**
 	 * Finds any random legal move - last ditch effort to make a legal move if AI fails us :(
