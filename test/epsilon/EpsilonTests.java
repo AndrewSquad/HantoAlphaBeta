@@ -21,6 +21,7 @@ import hanto.studentBotelhoLeonard.common.pieces.Butterfly;
 import hanto.studentBotelhoLeonard.common.pieces.Crab;
 import hanto.studentBotelhoLeonard.common.pieces.Horse;
 import hanto.studentBotelhoLeonard.common.pieces.Sparrow;
+import hanto.studentBotelhoLeonard.epsilon.EpsilonHantoGame;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -296,4 +297,43 @@ public class EpsilonTests {
 		
 		assertEquals(4, coord1.distanceFrom(coord2));
 	}
+	
+	@Test
+	public void testGetBoard() throws HantoException {
+		EpsilonHantoGame newGame = new EpsilonHantoGame(BLUE);
+		newGame.makeMove(BUTTERFLY, null, origin);
+		assertEquals(1, newGame.getHantoBoard().getBoardMap().size());
+	}
+	
+	@Test
+	public void bothButterfliesSurrounded() throws HantoException {
+		testGame.setTurnNumber(15);
+		testGame.initializeBoard(
+				new PieceLocationPair[] {
+						new PieceLocationPair(BLUE, BUTTERFLY, new PieceCoordinate(0, 0)),
+						new PieceLocationPair(RED, BUTTERFLY, new PieceCoordinate(0, 1)),
+						new PieceLocationPair(BLUE, SPARROW, new PieceCoordinate(-1, 1)),
+						new PieceLocationPair(BLUE, SPARROW, new PieceCoordinate(-1, 2)),
+						new PieceLocationPair(BLUE, SPARROW, new PieceCoordinate(0, 2)),
+						new PieceLocationPair(BLUE, SPARROW, new PieceCoordinate(1, 1)),
+						new PieceLocationPair(BLUE, SPARROW, new PieceCoordinate(1, 0)),
+						new PieceLocationPair(RED, SPARROW, new PieceCoordinate(1, -1)),
+						new PieceLocationPair(RED, SPARROW, new PieceCoordinate(-1, 0)),
+						new PieceLocationPair(RED, SPARROW, new PieceCoordinate(-1, -1)),
+				}
+		);
+		testGame.setPlayerMoving(RED);
+		MoveResult mv = game.makeMove(SPARROW, new PieceCoordinate(-1, -1), new PieceCoordinate(0, -1));
+		assertEquals(DRAW, mv);
+	}
+	
+	@Test(expected=HantoException.class)
+	public void testValidatePostMove() throws HantoException {
+		EpsilonHantoGame newGame = new EpsilonHantoGame(BLUE);
+		newGame.getHantoBoard().addPiece(origin, new Butterfly(BLUE));
+		newGame.getHantoBoard().addPiece(new PieceCoordinate(0, 1), new Butterfly(RED));
+		newGame.getHantoBoard().moveExistingPiece(new PieceCoordinate(0, 1), new PieceCoordinate(0, 2), new Butterfly(RED));
+		newGame.validatePostMove();
+	}
+
 }

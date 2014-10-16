@@ -253,7 +253,7 @@ public abstract class BaseHantoGame implements HantoGame {
 	 * Simply checks to see if the board is in a contiguous state or not.
 	 * @throws HantoException
 	 */
-	protected void validatePostMove() throws HantoException {
+	public void validatePostMove() throws HantoException {
 		if (!board.isBoardContiguous()) {
 			throw new HantoException("Invalid Move: The board is no longer contiguous!");
 		}

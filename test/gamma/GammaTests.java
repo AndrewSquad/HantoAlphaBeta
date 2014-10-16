@@ -378,5 +378,46 @@ public class GammaTests {
 		MoveResult mv = game.makeMove(SPARROW, null, new PieceCoordinate(0, 6));
 		assertEquals(mv, DRAW);
 	}
+	
+	@Test
+	public void blueWins() throws HantoException {
+		testGame.setTurnNumber(15);
+		testGame.initializeBoard(
+				new PieceLocationPair[] {
+						new PieceLocationPair(BLUE, BUTTERFLY, new PieceCoordinate(0, 0)),
+						new PieceLocationPair(RED, BUTTERFLY, new PieceCoordinate(0, 1)),
+						new PieceLocationPair(BLUE, SPARROW, new PieceCoordinate(-1, 1)),
+						new PieceLocationPair(BLUE, SPARROW, new PieceCoordinate(-1, 2)),
+						new PieceLocationPair(BLUE, SPARROW, new PieceCoordinate(0, 2)),
+						new PieceLocationPair(BLUE, SPARROW, new PieceCoordinate(1, 1)),
+						new PieceLocationPair(BLUE, SPARROW, new PieceCoordinate(2, 0)),
+				}
+		);
+		testGame.setPlayerMoving(BLUE);
+		MoveResult mv = game.makeMove(SPARROW, new PieceCoordinate(2, 0), new PieceCoordinate(1, 0));
+		assertEquals(BLUE_WINS, mv);
+	}
+	
+	@Test
+	public void bothButterfliesSurrounded() throws HantoException {
+		testGame.setTurnNumber(15);
+		testGame.initializeBoard(
+				new PieceLocationPair[] {
+						new PieceLocationPair(BLUE, BUTTERFLY, new PieceCoordinate(0, 0)),
+						new PieceLocationPair(RED, BUTTERFLY, new PieceCoordinate(0, 1)),
+						new PieceLocationPair(BLUE, SPARROW, new PieceCoordinate(-1, 1)),
+						new PieceLocationPair(BLUE, SPARROW, new PieceCoordinate(-1, 2)),
+						new PieceLocationPair(BLUE, SPARROW, new PieceCoordinate(0, 2)),
+						new PieceLocationPair(BLUE, SPARROW, new PieceCoordinate(1, 1)),
+						new PieceLocationPair(BLUE, SPARROW, new PieceCoordinate(1, 0)),
+						new PieceLocationPair(RED, SPARROW, new PieceCoordinate(1, -1)),
+						new PieceLocationPair(RED, SPARROW, new PieceCoordinate(-1, 0)),
+						new PieceLocationPair(RED, SPARROW, new PieceCoordinate(-1, -1)),
+				}
+		);
+		testGame.setPlayerMoving(RED);
+		MoveResult mv = game.makeMove(SPARROW, new PieceCoordinate(-1, -1), new PieceCoordinate(0, -1));
+		assertEquals(DRAW, mv);
+	}
 }
 
