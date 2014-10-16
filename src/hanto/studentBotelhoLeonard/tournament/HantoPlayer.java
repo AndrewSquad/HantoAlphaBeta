@@ -377,7 +377,7 @@ public class HantoPlayer implements HantoGamePlayer {
 	}
 
 
-	private List<PieceCoordinate> findAllMoves(PieceCoordinate pieceCoord) {
+	public List<PieceCoordinate> findAllMoves(PieceCoordinate pieceCoord) {
 		HantoPiece piece = game.getPieceAt(pieceCoord);
 		// Concern
 		if (piece == null) {

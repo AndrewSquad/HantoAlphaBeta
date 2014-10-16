@@ -5,6 +5,9 @@ import static hanto.common.HantoPlayerColor.*;
 import static hanto.common.HantoPieceType.*;
 import static hanto.studentBotelhoLeonard.common.MoveType.*;
 import static hanto.common.MoveResult.*;
+
+import java.util.List;
+
 import hanto.studentBotelhoLeonard.common.HantoBoard;
 import hanto.studentBotelhoLeonard.common.MoveValidator;
 import hanto.studentBotelhoLeonard.common.MoveValidatorFactory;
@@ -164,6 +167,32 @@ public class HantoPlayerTests {
 		
 		randomMove = redPlayer.randomLegalMove();
 		assertNotNull(randomMove.getTo());
+	}
+	
+	@Test
+	public void findAllMoves() {
+		HantoMoveRecord previousMove;
+		List<PieceCoordinate> moves = null;
+		previousMove = bluePlayer.makeMove(null);
+		PieceCoordinate sparrowCoord = null;
+		
+		while (true) {
+			previousMove = redPlayer.makeMove(previousMove);
+			if (previousMove.getPiece() == SPARROW) {
+				sparrowCoord = new PieceCoordinate(previousMove.getTo());
+				moves = redPlayer.findAllMoves(sparrowCoord);
+				break;
+			}
+			previousMove = bluePlayer.makeMove(previousMove);
+			if (previousMove.getPiece() == SPARROW) {
+				sparrowCoord = new PieceCoordinate(previousMove.getTo());
+				moves = bluePlayer.findAllMoves(sparrowCoord);
+				break;
+			}
+		}
+		
+		assertFalse(moves.isEmpty());
+		assertNull(bluePlayer.findAllMoves(new PieceCoordinate(100, 100)));
 	}
 	
 	

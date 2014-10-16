@@ -245,7 +245,9 @@ public class AlphaTests {
 	public void testToString() throws HantoException {
 		game.makeMove(HantoPieceType.BUTTERFLY, null, new PieceCoordinate(0, 0));
 		game.makeMove(HantoPieceType.BUTTERFLY, null, new PieceCoordinate(0, 1));
-		assertEquals("Butterfly RED (0, 1)\nButterfly BLUE (0, 0)\n", game.getPrintableBoard());
+		String printableBoard = game.getPrintableBoard();
+		assertTrue(printableBoard.contains("Butterfly RED (0, 1"));
+		assertTrue(printableBoard.contains("Butterfly BLUE (0, 0)"));
 	}
 	
 }
