@@ -71,9 +71,9 @@ public class JumpValidator implements MoveValidator {
 	//
 	private PieceCoordinate returnJump(PieceCoordinate from, PieceCoordinate neighbor) {
 		int deltaX = neighbor.getX() - from.getX();
-		if (deltaX != 0 ) deltaX = deltaX > 1 ? 1 : -1;
+		if (deltaX != 0 ) deltaX = deltaX > 0 ? 1 : -1;
 		int deltaY = neighbor.getY() - from.getY();
-		if (deltaY != 0 ) deltaY = deltaY > 1 ? 1 : -1;
+		if (deltaY != 0 ) deltaY = deltaY > 0 ? 1 : -1;
 
 		PieceCoordinate tempCoord = new PieceCoordinate(from.getX(), from.getY());
 

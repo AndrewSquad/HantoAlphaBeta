@@ -10,6 +10,7 @@ import hanto.studentBotelhoLeonard.common.MoveValidatorFactory;
 import hanto.studentBotelhoLeonard.common.PieceCoordinate;
 import hanto.studentBotelhoLeonard.common.pieces.Butterfly;
 import hanto.studentBotelhoLeonard.common.pieces.Crab;
+import hanto.studentBotelhoLeonard.common.pieces.Horse;
 import hanto.studentBotelhoLeonard.tournament.HantoPlayer;
 import hanto.tournament.HantoMoveRecord;
 import hanto.common.HantoGameID;
@@ -64,19 +65,19 @@ public class HantoPlayerTests {
 		assertEquals(new PieceCoordinate(-1, 0), optimalDest);
 	}
 	
-//	@Test
-//	public void jumpOptimalMove() {		
-//		HantoBoard board = new HantoBoard();
-//		board.addPiece(origin, new Butterfly(BLUE));
-//		board.addPiece(new PieceCoordinate(0, 1), new Crab(RED));
-//		board.addPiece(new PieceCoordinate(1, 1), new Butterfly(RED));
-//		board.addPiece(new PieceCoordinate(0, -1), new Crab(BLUE));
-//		board.addPiece(new PieceCoordinate(0, -2), new Horse(BLUE));
-//		
-//		MoveValidator validator = validatorFactory.makeMoveValidator(JUMP, board);
-//		PieceCoordinate optimalDest = validator.optimalMove(new PieceCoordinate(0, -2), new PieceCoordinate(1, 1));
-//		assertEquals(new PieceCoordinate(0, 2), optimalDest);
-//	}
+	@Test
+	public void jumpOptimalMove() {		
+		HantoBoard board = new HantoBoard();
+		board.addPiece(origin, new Butterfly(BLUE));
+		board.addPiece(new PieceCoordinate(0, 1), new Crab(RED));
+		board.addPiece(new PieceCoordinate(1, 1), new Butterfly(RED));
+		board.addPiece(new PieceCoordinate(0, -1), new Crab(BLUE));
+		board.addPiece(new PieceCoordinate(0, -2), new Horse(BLUE));
+		
+		MoveValidator validator = validatorFactory.makeMoveValidator(JUMP, board);
+		PieceCoordinate optimalDest = validator.optimalMove(new PieceCoordinate(0, -2), new PieceCoordinate(1, 1));
+		assertEquals(new PieceCoordinate(0, 2), optimalDest);
+	}
 	
 	@Test
 	public void redNeedsToMakeRandomMove() {
