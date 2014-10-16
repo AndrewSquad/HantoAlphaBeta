@@ -323,7 +323,7 @@ public abstract class BaseHantoGame implements HantoGame {
 	 * Determines if either player has any pieces left to place on the board
 	 * @return boolean indicating if either player has any pieces left to place on the board.
 	 */
-	protected boolean anyPiecesLeftToPlay() {
+	public boolean anyPiecesLeftToPlay() {
 		return redHasPiecesToPlay() || blueHasPiecesToPlay();
 		
 	}
@@ -333,7 +333,7 @@ public abstract class BaseHantoGame implements HantoGame {
 	 * Determines whether or not the red player has any more pieces to place on the board.
 	 * @return boolean indicating if red can place new pieces.
 	 */
-	private boolean redHasPiecesToPlay() {
+	public boolean redHasPiecesToPlay() {
 		int totalPiecesLeft = 0;
 		Iterator<Entry<HantoPieceType, Integer>> redPieceTotals = redPiecesLeft.entrySet().iterator();
 
@@ -350,7 +350,7 @@ public abstract class BaseHantoGame implements HantoGame {
 	 * Determines whether or not the blue player has any more pieces to place on the board.
 	 * @return boolean indicating if blue can place new pieces.
 	 */
-	private boolean blueHasPiecesToPlay() {
+	public boolean blueHasPiecesToPlay() {
 		int totalPiecesLeft = 0;
 		Iterator<Entry<HantoPieceType, Integer>> bluePieceTotals = bluePiecesLeft.entrySet().iterator();
 

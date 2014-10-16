@@ -48,23 +48,24 @@ public class JumpValidator implements MoveValidator {
 
 	@Override
 	public boolean existsLegalMove(PieceCoordinate coord) {
+		boolean moveExists = false;
 		// If it has any neighbor it can jump. If the board is contiguous after jump, move is legal
 		if (board.isAdjacentToAnyPiece(coord)) {
 			HantoBoard boardCopy = new HantoBoard(board);
 			boardCopy.getBoardMap().remove(coord);
 			if (boardCopy.isBoardContiguous()) {
-				return true;
+				moveExists = true;
 			}
 			else {
 				for (PieceCoordinate move : allMoves(coord)) {
 					boardCopy.getBoardMap().put(move, board.getPieceAt(coord));
-					if (boardCopy.isBoardContiguous()) return true;
+					if (boardCopy.isBoardContiguous()) moveExists = true;
 					boardCopy.getBoardMap().remove(move);
 				}
 			}
 		}
 
-		return false;
+		return moveExists;
 	}
 
 
