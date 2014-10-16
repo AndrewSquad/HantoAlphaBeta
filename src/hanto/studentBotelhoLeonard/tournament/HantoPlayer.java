@@ -43,7 +43,7 @@ public class HantoPlayer implements HantoGamePlayer {
 
 	private PieceCoordinate myButterflyLoc = null;
 	private PieceCoordinate opponentButterflyLoc = null;
-	
+
 	private HantoMoveRecord previousMove = null;
 
 
@@ -303,15 +303,41 @@ public class HantoPlayer implements HantoGamePlayer {
 				boardCopy.getBoardMap().remove(tempTo);
 			}
 
-		}
+		}	
+
 
 		Random rand = new Random();
 		int moveSize = bestMoves.size();
 		if (moveSize == 0) return null;
+
 		if (moveSize == 1) return bestMoves.get(0);
 
 		int randIndex = rand.nextInt(Integer.MAX_VALUE);
 		int randNum = randIndex % (moveSize-1);
+
+		// Look one move ahead and see the potential.
+		List<HantoMoveRecord> futureBestMoves = new ArrayList<HantoMoveRecord>();
+		for (HantoMoveRecord move : bestMoves) {
+			if (move == null) continue;
+			PieceCoordinate aFrom = null;
+			if (move.getFrom() != null) aFrom = new PieceCoordinate(move.getFrom());
+			if (aFrom != null && aFrom.isAdjacentTo(opponentButterflyLoc)) continue;
+			HantoPieceType aType = move.getPiece();
+			MoveValidator validator = game.getValidator(aType);
+			PieceCoordinate nextOptMove = validator.optimalMove(new PieceCoordinate(move.getTo()), opponentButterflyLoc);
+			if (nextOptMove != null && nextOptMove.isAdjacentTo(opponentButterflyLoc)) futureBestMoves.add(move);
+		}
+
+		moveSize = futureBestMoves.size();
+		if (moveSize != 0) {
+
+			if (moveSize == 1) return futureBestMoves.get(0);
+
+			randIndex = rand.nextInt(Integer.MAX_VALUE);
+			randNum = randIndex % (moveSize-1);
+			return futureBestMoves.get(randNum);
+		}
+
 		return bestMoves.get(randNum);
 	}
 
@@ -613,7 +639,7 @@ public class HantoPlayer implements HantoGamePlayer {
 				}
 			}
 		}
-		
+
 		Random rand = new Random();
 		int moveSize = allLegalMoves.size();
 		if (moveSize == 0) return null;
