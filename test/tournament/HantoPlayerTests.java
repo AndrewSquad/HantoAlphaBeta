@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 import static hanto.common.HantoPlayerColor.*;
 import static hanto.common.HantoPieceType.*;
 import static hanto.studentBotelhoLeonard.common.MoveType.*;
+import static hanto.common.MoveResult.*;
 import hanto.studentBotelhoLeonard.common.HantoBoard;
 import hanto.studentBotelhoLeonard.common.MoveValidator;
 import hanto.studentBotelhoLeonard.common.MoveValidatorFactory;
@@ -12,9 +13,13 @@ import hanto.studentBotelhoLeonard.common.pieces.Butterfly;
 import hanto.studentBotelhoLeonard.common.pieces.Crab;
 import hanto.studentBotelhoLeonard.common.pieces.Horse;
 import hanto.studentBotelhoLeonard.common.pieces.Sparrow;
+import hanto.studentBotelhoLeonard.epsilon.EpsilonHantoGame;
 import hanto.studentBotelhoLeonard.tournament.HantoPlayer;
 import hanto.tournament.HantoMoveRecord;
+import hanto.common.HantoException;
 import hanto.common.HantoGameID;
+import hanto.common.HantoPlayerColor;
+import hanto.common.MoveResult;
 
 
 import org.junit.Before;
@@ -143,6 +148,51 @@ public class HantoPlayerTests {
 		board.addPiece(new PieceCoordinate(2, -1), new Sparrow(BLUE));
 		MoveValidator validator = validatorFactory.makeMoveValidator(FLY, 4, board);
 		assertTrue(validator.existsLegalMove(new PieceCoordinate(1, 0)));
+	}
+	
+	@Test
+	public void randomLegalMove() {
+		HantoMoveRecord previousMove;
+		HantoMoveRecord randomMove;
+		
+		previousMove = bluePlayer.makeMove(null);
+		
+		for (int i = 0; i < 5; i++) {
+			previousMove = redPlayer.makeMove(previousMove);
+			previousMove = bluePlayer.makeMove(previousMove);
+		}
+		
+		randomMove = redPlayer.randomLegalMove();
+		assertNotNull(randomMove.getTo());
+	}
+	
+	
+	@Test
+	public void theGameCanEnd() throws HantoException {
+		EpsilonHantoGame theGame = new EpsilonHantoGame(HantoPlayerColor.BLUE);
+		MoveResult mv;
+		HantoMoveRecord previousMove;
+		
+		boolean running = true;
+		previousMove = bluePlayer.makeMove(null);
+		mv = theGame.makeMove(previousMove.getPiece(), previousMove.getFrom(), previousMove.getTo());
+		
+		while(running) {
+			previousMove = redPlayer.makeMove(previousMove);
+			mv = theGame.makeMove(previousMove.getPiece(), previousMove.getFrom(), previousMove.getTo());
+			if (mv != OK) {
+				running = false;
+				continue;
+			}
+			previousMove = bluePlayer.makeMove(previousMove);
+			mv = theGame.makeMove(previousMove.getPiece(), previousMove.getFrom(), previousMove.getTo());
+			if (mv != OK) {
+				running = false;
+			}
+		}
+		
+		boolean gameEndedProperly = (mv == OK || mv == RED_WINS || mv == BLUE_WINS);
+		assertTrue(gameEndedProperly);
 	}
 
 }

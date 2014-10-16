@@ -409,8 +409,9 @@ public class HantoPlayer implements HantoGamePlayer {
 		List<PieceCoordinate> moveLocs;
 		PieceCoordinate minNeighborsLoc = null;
 		int minNeighbors = Integer.MAX_VALUE;
-
-		if (!(moveLocs = game.getHantoBoard().getTwoTileOpenings(myButterflyLoc)).isEmpty()) {
+		
+		moveLocs = game.getHantoBoard().getTwoTileOpenings(myButterflyLoc);
+		if (!moveLocs.isEmpty()) {
 			for (PieceCoordinate move : moveLocs) {
 				HantoBoard tempBoard = new HantoBoard(game.getHantoBoard());
 				tempBoard.moveExistingPiece(from, move, tempBoard.getPieceAt(from));
@@ -586,10 +587,13 @@ public class HantoPlayer implements HantoGamePlayer {
 	}
 
 
-	// finds any random legal move - last ditch effort to make a legal move if AI fails us :(
-	private HantoMoveRecord randomLegalMove() {
+	/**
+	 * Finds any random legal move - last ditch effort to make a legal move if AI fails us :(
+	 * First tries to place a piece; moves an existing piece it can't place a new one.
+	 * @return HantoMoveRecord of the random move.
+	 */
+	public HantoMoveRecord randomLegalMove() {
 		HantoMoveRecord legalMove = null;
-		//boolean canIPlacePiece = game.getHantoBoard().canPlayerPlacePiece(myColor);
 		PieceCoordinate dest = getRandomAddLocation();
 
 		// place a piece somewhere
@@ -632,7 +636,6 @@ public class HantoPlayer implements HantoGamePlayer {
 					int randNum = randIndex % (moveSize-1);
 					// Grab a random move this piece can do, not necessarily an optimal one.
 					if (moveSize == 1) {
-						//legalMove = new HantoMoveRecord(piece.getType(), coord, possMoves.get(0));
 						allLegalMoves.add(new HantoMoveRecord(piece.getType(), coord, possMoves.get(0)));
 					}
 					else allLegalMoves.add(new HantoMoveRecord(piece.getType(), coord, possMoves.get(randNum)));												
@@ -642,7 +645,9 @@ public class HantoPlayer implements HantoGamePlayer {
 
 		Random rand = new Random();
 		int moveSize = allLegalMoves.size();
-		if (moveSize == 0) return null;
+		if (moveSize == 0) {
+			return null;
+		}
 		else if (moveSize == 1) return allLegalMoves.get(0);
 		int randIndex = rand.nextInt(Integer.MAX_VALUE);
 		int randNum = randIndex % (moveSize-1);
