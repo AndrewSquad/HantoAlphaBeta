@@ -95,6 +95,7 @@ public class HantoPlayer implements HantoGamePlayer {
 			if (opponentsMove.getPiece() == HantoPieceType.BUTTERFLY) opponentButterflyLoc = new PieceCoordinate(opponentsMove.getTo());
 		}
 
+		
 		// Our move logic
 		if (game.hasPlayerPlacedButterfly(opponentColor)) {
 			setButterflyDanger();
@@ -119,7 +120,6 @@ public class HantoPlayer implements HantoGamePlayer {
 			// For turn < 5  Place horse, horse, butterfly, horse, horse randomly
 			myMove = earlyGameWithoutButterfly(game.getTurnCount());
 		}
-
 
 		// Double checking
 		try {
